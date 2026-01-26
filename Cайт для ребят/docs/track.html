@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Раздел — Kids Code</title>
+  <link rel="stylesheet" href="./assets/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="btn ghost" href="./index.html">← На главную</a>
+      <div>
+        <div class="brandTitle" id="trackTitle">Раздел</div>
+        <div class="brandSub" id="trackDesc">Загрузка…</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn ghost" id="toggleTheme">Тема: тёмная</button>
+      <button class="btn" id="toggleAnim">Анимация: вкл</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="heroBg" id="heroBg"></div>
+      <div class="heroOverlay">
+        <h1 id="heroH1">Раздел</h1>
+        <p id="heroP">Список тем и шпаргалок.</p>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2 class="blockTitle">Темы</h2>
+      <div class="cardsGrid" id="topics"></div>
+    </section>
+
+    <section class="block">
+      <h2 class="blockTitle">Шпаргалки</h2>
+      <div class="cardsGrid" id="cheats"></div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.globe.min.js"></script>
+
+  <script src="./assets/main.js"></script>
+</body>
+</html>

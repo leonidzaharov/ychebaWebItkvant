@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HTML — Скелеты сайтов (4 примера)</title>
+
+  <!-- общий стиль сайта -->
+  <link rel="stylesheet" href="../assets/style.css" />
+
+  <!-- небольшой стиль только для этой страницы -->
+  <style>
+    .lessonWrap{ max-width: 1100px; margin: 0 auto; padding: 18px 16px 44px; }
+    .lessonBox{
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--panel) 75%, transparent);
+      padding: 14px;
+      box-shadow: var(--shadow);
+      margin-top: 14px;
+    }
+    .lessonBox h2{ margin: 0 0 8px 0; }
+    .lessonBox p{ margin: 0 0 10px 0; color: var(--muted); }
+    .hint{
+      border: 1px dashed var(--stroke);
+      border-radius: 14px;
+      padding: 10px;
+      background: color-mix(in srgb, var(--accent2) 8%, transparent);
+      color: var(--muted);
+      margin: 10px 0;
+    }
+    .mini{ font-size: 13px; }
+    .toc{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    .toc a{
+      text-decoration:none;
+      border: 1px solid var(--stroke);
+      border-radius: 999px;
+      padding: 8px 10px;
+      background: color-mix(in srgb, var(--panel) 70%, transparent);
+      color: var(--text);
+    }
+    .toc a:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+    .imgSlot{
+      margin-top: 18px;
+      border: 1px dashed var(--stroke);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: color-mix(in srgb, var(--panel) 65%, transparent);
+      color: var(--muted);
+    }
+    .imgSlot img{
+      width: 100%;
+      max-width: 900px;
+      border-radius: 16px;
+      border: 1px solid var(--stroke);
+      display:block;
+      margin-top: 10px;
+    }
+    details{ border-radius: 14px; }
+    summary{
+      cursor:pointer;
+      user-select:none;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="btn ghost" href="../track.html?t=html">← Назад к HTML</a>
+      <div>
+        <div class="brandTitle">HTML — 4 скелета сайта</div>
+        <div class="brandSub">Скопируй → вставь → поменяй текст → готово</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn ghost" id="toggleTheme" type="button">Тема: тёмная</button>
+    </div>
+  </header>
+
+  <main class="lessonWrap">
+    <section class="lessonBox">
+      <h2>Как пользоваться</h2>
+      <p>Выбери пример ниже, скопируй код, вставь в новый файл <b>.html</b> и меняй слова/картинки.</p>
+      <div class="hint mini">
+        Подсказка: файл лучше называть латиницей без пробелов, например: <b>site-01.html</b>
+      </div>
+
+      <div class="toc mini">
+        <a href="#s1">1) Минимум</a>
+        <a href="#s2">2) Визитка</a>
+        <a href="#s3">3) Карточки</a>
+        <a href="#s4">4) Большой</a>
+      </div>
+    </section>
+
+    <!-- 1 -->
+    <section class="lessonBox" id="s1">
+      <h2>1) Минимальный скелет страницы</h2>
+      <p>Самое главное: заголовок, текст, кнопка.</p>
+
+      <div class="hint">
+        Внутри <code>&lt;body&gt;</code> — всё, что видно на странице.
+      </div>
+
+      <pre><code>&lt;!doctype html&gt;
+&lt;html lang="ru"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8" /&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt;
+  &lt;title&gt;Мой первый сайт&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+  &lt;h1&gt;Привет!&lt;/h1&gt;
+  &lt;p&gt;Это мой первый сайт.&lt;/p&gt;
+
+  &lt;button&gt;Это кнопка&lt;/button&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <div class="hint mini">
+        Задание: поменяй заголовок и текст. Сделай кнопку: “Нажми меня”.
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="lessonBox" id="s2">
+      <h2>2) Скелет “Визитка” (header + main + footer)</h2>
+      <p>Уже похоже на нормальный сайт: сверху меню, в середине блоки, снизу подвал.</p>
+
+      <pre><code>&lt;!doctype html&gt;
+&lt;html lang="ru"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8" /&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt;
+  &lt;title&gt;Сайт-визитка&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;Мой клуб&lt;/h1&gt;
+    &lt;nav&gt;
+      &lt;a href="#about"&gt;О нас&lt;/a&gt; |
+      &lt;a href="#projects"&gt;Проекты&lt;/a&gt; |
+      &lt;a href="#contacts"&gt;Контакты&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;section id="about"&gt;
+      &lt;h2&gt;О нас&lt;/h2&gt;
+      &lt;p&gt;Мы учимся делать сайты и игры.&lt;/p&gt;
+    &lt;/section&gt;
+
+    &lt;section id="projects"&gt;
+      &lt;h2&gt;Проекты&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;Сайт-визитка&lt;/li&gt;
+        &lt;li&gt;Карточки с анимацией&lt;/li&gt;
+        &lt;li&gt;Мини-игра&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/section&gt;
+
+    &lt;section id="contacts"&gt;
+      &lt;h2&gt;Контакты&lt;/h2&gt;
+      &lt;p&gt;Напиши нам: &lt;a href="mailto:test@example.com"&gt;test@example.com&lt;/a&gt;&lt;/p&gt;
+    &lt;/section&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt;
+    &lt;p&gt;© 2026 Мой клуб&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <div class="hint mini">
+        Задание: добавь ещё 1 пункт в список проектов и поменяй email.
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="lessonBox" id="s3">
+      <h2>3) Скелет “Карточки-разделы” (как у нас на главной)</h2>
+      <p>Удобно для учебного сайта: 3–6 карточек, каждая ведёт на тему/урок.</p>
+
+      <details>
+        <summary>Скопируй этот скелет</summary>
+        <pre><code>&lt;!doctype html&gt;
+&lt;html lang="ru"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8" /&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt;
+  &lt;title&gt;Мои темы&lt;/title&gt;
+  &lt;style&gt;
+    body{ font-family: Arial; margin:20px; }
+    .grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:12px; }
+    .card{ border:1px solid #ccc; border-radius:12px; padding:12px; text-decoration:none; color:#111; }
+    .card:hover{ transform: translateY(-2px); }
+    .muted{ color:#555; font-size: 13px; }
+  &lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+  &lt;h1&gt;Темы&lt;/h1&gt;
+  &lt;p class="muted"&gt;Нажми на карточку, чтобы открыть тему.&lt;/p&gt;
+
+  &lt;div class="grid"&gt;
+    &lt;a class="card" href="lesson-1.html" target="_blank"&gt;
+      &lt;b&gt;HTML&lt;/b&gt;
+      &lt;div class="muted"&gt;Теги, ссылки, картинки&lt;/div&gt;
+    &lt;/a&gt;
+
+    &lt;a class="card" href="lesson-2.html" target="_blank"&gt;
+      &lt;b&gt;CSS&lt;/b&gt;
+      &lt;div class="muted"&gt;Цвета, отступы, анимации&lt;/div&gt;
+    &lt;/a&gt;
+
+    &lt;a class="card" href="lesson-3.html" target="_blank"&gt;
+      &lt;b&gt;JavaScript&lt;/b&gt;
+      &lt;div class="muted"&gt;Условия, циклы, игры&lt;/div&gt;
+    &lt;/a&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+      </details>
+
+      <div class="hint mini">
+        Задание: добавь 4-ю карточку “Шпаргалка” и сделай ссылку на свою шпаргалку.
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section class="lessonBox" id="s4">
+      <h2>4) Большой скелет “Мини-лендинг” (много блоков)</h2>
+      <p>Это уже “похож на настоящий сайт”: герой-блок, карточки, таблица, форма.</p>
+
+      <details>
+        <summary>Скопируй большой скелет</summary>
+        <pre><code>&lt;!doctype html&gt;
+&lt;html lang="ru"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8" /&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt;
+  &lt;title&gt;Мини-лендинг&lt;/title&gt;
+
+  &lt;style&gt;
+    body{ margin:0; font-family: Arial; background:#0b1022; color:#fff; }
+    header{ padding:16px 20px; background: rgba(0,0,0,.35); position: sticky; top:0; }
+    a{ color:#7cddff; }
+    .wrap{ max-width: 1000px; margin: 0 auto; padding: 20px; }
+    .hero{ border:1px solid rgba(255,255,255,.18); border-radius:16px; padding:20px; background: rgba(255,255,255,.06); }
+    .btn{ display:inline-block; padding:10px 12px; border-radius:12px; background:#7c5cff; color:#fff; text-decoration:none; font-weight:700; }
+    .grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top: 14px; }
+    .card{ border:1px solid rgba(255,255,255,.18); border-radius:16px; padding:14px; background: rgba(255,255,255,.06); }
+    table{ width:100%; border-collapse: collapse; margin-top: 12px; }
+    th,td{ border:1px solid rgba(255,255,255,.18); padding:10px; text-align:left; }
+    input,button{ padding:10px; border-radius:12px; border:1px solid rgba(255,255,255,.25); background: rgba(0,0,0,.25); color:#fff; }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; }
+  &lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;b&gt;Мой сайт&lt;/b&gt; •
+    &lt;a href="#topics"&gt;Темы&lt;/a&gt; •
+    &lt;a href="#table"&gt;Таблица&lt;/a&gt; •
+    &lt;a href="#form"&gt;Форма&lt;/a&gt;
+  &lt;/header&gt;
+
+  &lt;main class="wrap"&gt;
+    &lt;section class="hero"&gt;
+      &lt;h1&gt;Учимся как в игре&lt;/h1&gt;
+      &lt;p&gt;Скопируй шаблон и поменяй текст, чтобы получилось “твоё”.&lt;/p&gt;
+      &lt;a class="btn" href="#topics"&gt;Начать ↓&lt;/a&gt;
+    &lt;/section&gt;
+
+    &lt;section id="topics"&gt;
+      &lt;h2&gt;Темы&lt;/h2&gt;
+      &lt;div class="grid"&gt;
+        &lt;div class="card"&gt;&lt;b&gt;HTML&lt;/b&gt;&lt;div&gt;теги, ссылки&lt;/div&gt;&lt;/div&gt;
+        &lt;div class="card"&gt;&lt;b&gt;CSS&lt;/b&gt;&lt;div&gt;цвета, отступы&lt;/div&gt;&lt;/div&gt;
+        &lt;div class="card"&gt;&lt;b&gt;JS&lt;/b&gt;&lt;div&gt;логика, игры&lt;/div&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;section id="table"&gt;
+      &lt;h2&gt;Таблица уроков&lt;/h2&gt;
+      &lt;table&gt;
+        &lt;tr&gt;&lt;th&gt;Тема&lt;/th&gt;&lt;th&gt;Сложность&lt;/th&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;Теги&lt;/td&gt;&lt;td&gt;Легко&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;Ссылки&lt;/td&gt;&lt;td&gt;Легко&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;Таблицы&lt;/td&gt;&lt;td&gt;Средне&lt;/td&gt;&lt;/tr&gt;
+      &lt;/table&gt;
+    &lt;/section&gt;
+
+    &lt;section id="form"&gt;
+      &lt;h2&gt;Форма (пример)&lt;/h2&gt;
+      &lt;p&gt;Это как “анкета”. Пока без JavaScript.&lt;/p&gt;
+
+      &lt;div class="row"&gt;
+        &lt;input type="text" placeholder="Имя" /&gt;
+        &lt;input type="number" placeholder="Возраст" /&gt;
+        &lt;button&gt;Отправить&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;footer style="margin-top:18px; opacity:.8;"&gt;
+      © 2026 Мой сайт
+    &lt;/footer&gt;
+  &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+      </details>
+
+      <div class="hint mini">
+        Задание: поменяй цвета, названия карточек и добавь ещё одну строку в таблицу.
+      </div>
+    </section>
+
+    <!-- место под картинку -->
+    <section class="imgSlot">
+      <!-- ✅ ЗАМЕНИ src НА СВОЙ -->
+      <img src="/docs/img/shablon-html-stranicy.jpg" alt="Твоя картинка (замени src)" />
+    </section>
+  </main>
+
+  <!-- подключаем общий JS только для тумблера темы (не обязателен) -->
+  <script src="../assets/main.js"></script>
+</body>
+</html>
