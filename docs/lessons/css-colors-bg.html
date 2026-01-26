@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CSS — Цвета и фон (color / background)</title>
+
+  <!-- общий стиль сайта -->
+  <link rel="stylesheet" href="../assets/style.css" />
+
+  <style>
+    .lessonWrap{ max-width: 1100px; margin: 0 auto; padding: 18px 16px 44px; }
+    .lessonBox{
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--panel) 75%, transparent);
+      padding: 14px;
+      box-shadow: var(--shadow);
+      margin-top: 14px;
+    }
+    .lessonBox h2{ margin: 0 0 8px 0; }
+    .lessonBox p{ margin: 0 0 10px 0; color: var(--muted); line-height: 1.45; }
+    .hint{
+      border: 1px dashed var(--stroke);
+      border-radius: 14px;
+      padding: 10px;
+      background: color-mix(in srgb, var(--accent2) 8%, transparent);
+      color: var(--muted);
+      margin: 10px 0;
+      font-size: 13px;
+    }
+
+    /* Демоблок с фоном */
+    .demoHero{
+      position: relative;
+      border-radius: var(--radius);
+      border: 1px solid var(--stroke);
+      overflow: hidden;
+      min-height: 260px;
+      box-shadow: var(--shadow);
+      background:
+        radial-gradient(700px 360px at 20% 10%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%),
+        radial-gradient(700px 460px at 80% 20%, color-mix(in srgb, var(--accent2) 18%, transparent), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+    }
+    .dotsBg{
+      position:absolute; inset:0;
+      pointer-events:none; /* чтобы можно было кликать по кнопкам */
+    }
+    .demoOverlay{
+      position: relative;
+      z-index: 2;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.20));
+    }
+    html[data-theme="light"] .demoOverlay{
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.18));
+    }
+    .demoOverlay h1{ margin: 0 0 6px 0; font-size: 28px; }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
+    .mini{ font-size: 13px; color: var(--muted); }
+
+    .colorPick{
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      padding: 10px;
+      display:flex; gap:12px; align-items:center;
+      background: color-mix(in srgb, var(--panel) 70%, transparent);
+    }
+    .colorPick input{ width: 46px; height: 34px; border: none; background: transparent; }
+    .pill{
+      display:inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: color-mix(in srgb, var(--panel) 70%, transparent);
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="btn ghost" href="../track.html?t=css">← Назад к CSS</a>
+      <div>
+        <div class="brandTitle">CSS — Цвета и фон</div>
+        <div class="brandSub">color / background + “вау-фон” через Vanta Dots</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn ghost" id="toggleTheme" type="button">Тема: тёмная</button>
+    </div>
+  </header>
+
+  <main class="lessonWrap">
+    <section class="lessonBox">
+      <h2>1) Что такое color и background?</h2>
+      <p>
+        <b>color</b> — цвет текста.<br>
+        <b>background</b> / <b>background-color</b> — фон элемента (цвет/картинка/градиент).
+      </p>
+
+      <pre><code>h1 {
+  color: white;              /* цвет текста */
+}
+
+.card {
+  background-color: #101428; /* цвет фона */
+}</code></pre>
+
+      <div class="hint">
+        Правило: если “не видно текст” — чаще всего проблема в <b>контрасте</b> (фон и текст слишком похожи).
+      </div>
+    </section>
+
+    <section class="lessonBox">
+      <h2>2) Градиенты — это тоже фон</h2>
+      <p>Можно делать красиво без картинок — только CSS.</p>
+
+      <pre><code>body{
+  background:
+    radial-gradient(700px 360px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
+    radial-gradient(700px 460px at 80% 20%, rgba(0,224,255,.18), transparent 60%),
+    linear-gradient(180deg, #070913, #0b0f22);
+}</code></pre>
+
+      <div class="hint">
+        Это “фолбэк”: даже если анимации не будет, сайт всё равно выглядит круто.
+      </div>
+    </section>
+
+    <section class="lessonBox">
+      <h2>3) Dots (подключается “как модуль”)</h2>
+      <p>
+        Есть сайты/библиотеки с готовыми анимированными фонами. Мы просто подключаем скрипты и запускаем эффект на блоке.
+        <span class="pill">WebGL</span> <span class="pill">three.js</span> <span class="pill">Vanta</span>
+      </p>
+
+      <div class="demoHero">
+        <div class="dotsBg" id="dotsBg"></div>
+
+        <div class="demoOverlay">
+          <h1>Это блок с фоном Dots</h1>
+          <div class="mini">Снизу — цветовые настройки. Меняешь — и видишь разницу.</div>
+
+          <div class="row">
+            <div class="colorPick">
+              <div>
+                <div class="mini"><b>Accent</b> (точки)</div>
+                <div class="mini">меняет цвет эффекта</div>
+              </div>
+              <input id="c1" type="color" value="#7c5cff">
+            </div>
+
+            <div class="colorPick">
+              <div>
+                <div class="mini"><b>Accent2</b> (второй цвет)</div>
+                <div class="mini">тоже влияет на эффект</div>
+              </div>
+              <input id="c2" type="color" value="#00e0ff">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hint">
+        Подключение всегда одинаковое: <b>HTML блок</b> + <b>2 script</b> (three.js и эффект) + <b>инициализация</b> (JS).
+      </div>
+
+      <details class="lessonBox" style="margin-top:12px;">
+        <summary>Скопируй шаблон подключения Dots</summary>
+        <pre><code>&lt;div id="dotsBg"&gt;&lt;/div&gt;
+
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.dots.min.js"&gt;&lt;/script&gt;
+
+&lt;script&gt;
+  VANTA.DOTS({
+    el: "#dotsBg",
+    color: 0x7c5cff,
+    color2: 0x00e0ff,
+    backgroundColor: 0x070913,
+    showLines: true,
+    size: 2.6,
+    spacing: 18.0
+  });
+&lt;/script&gt;</code></pre>
+      </details>
+    </section>
+
+    <section class="lessonBox">
+      <h2>4) Аналоги (другие “готовые фоны”)</h2>
+      <p>Все подключаются похожим способом: подключил библиотеку → вызвал функцию → получил фон.</p>
+
+      <pre><code>1) Vanta (WebGL) — эффекты: dots, globe, waves, net...
+2) tsParticles (Canvas) — звёзды, линии, кометы, частицы.
+3) Granim (Canvas) — анимированные градиенты.
+4) Чистый CSS — градиенты + animation (без библиотек).</code></pre>
+
+      <div class="hint">
+        Важно: библиотека может “упасть” (нет интернета/CDN). Поэтому у нас всегда есть красивый <b>CSS-фон</b> как запасной вариант.
+      </div>
+    </section>
+  </main>
+
+  <!-- общий JS для темы -->
+  <script src="../assets/main.js"></script>
+
+  <!-- Vanta Dots только для ЭТОГО урока -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.dots.min.js"></script>
+
+  <script>
+    // Демо: запускаем dots на блоке
+    let dots = null;
+
+    function hexToInt(hex) {
+      return parseInt(hex.replace("#","0x"), 16);
+    }
+
+    function startDots() {
+      if (!window.VANTA || !VANTA.DOTS) return;
+      if (dots) return;
+
+      const isLight = document.documentElement.dataset.theme === "light";
+      const bg = isLight ? 0xe9eeff : 0x070913;
+
+      dots = VANTA.DOTS({
+        el: "#dotsBg",
+        color: hexToInt(document.getElementById("c1").value),
+        color2: hexToInt(document.getElementById("c2").value),
+        backgroundColor: bg,
+        showLines: true,
+        size: 2.6,
+        spacing: 18.0
+      });
+    }
+
+    function restartDots() {
+      if (dots && dots.destroy) dots.destroy();
+      dots = null;
+      startDots();
+    }
+
+    // старт
+    startDots();
+
+    // менять цвета
+    document.getElementById("c1").addEventListener("input", restartDots);
+    document.getElementById("c2").addEventListener("input", restartDots);
+
+    // если меняем тему — пересоздаём, чтобы backgroundColor совпал
+    const themeBtn = document.getElementById("toggleTheme");
+    if (themeBtn) {
+      themeBtn.addEventListener("click", () => setTimeout(restartDots, 50));
+    }
+
+    // когда вкладка скрыта — гасим
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        if (dots && dots.destroy) dots.destroy();
+        dots = null;
+      } else {
+        startDots();
+      }
+    });
+  </script>
+</body>
+</html>
+

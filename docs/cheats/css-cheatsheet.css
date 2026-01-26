@@ -1,0 +1,815 @@
+/* БАЗОВЫЕ НАСТРОЙКИ */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f4f5fb; /* светлый фон страницы */
+    color: #111827;
+}
+
+/* ОБЩИЙ ЛЕЙАУТ: СЛЕВА МЕНЮ, СПРАВА КОНТЕНТ */
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ЛЕВАЯ ПАНЕЛЬ: ОГЛАВЛЕНИЕ */
+
+.sidebar {
+    width: 230px;
+    background: #ffffff;
+    border-right: 1px solid #e5e7eb;
+    padding: 16px 18px;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+}
+
+.logo {
+    font-size: 20px;
+    margin: 0 0 10px;
+    color: #2563eb;
+}
+
+.toc {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 16px;
+}
+
+.toc a {
+    font-size: 14px;
+    color: #374151;
+    text-decoration: none;
+    padding: 6px 8px;
+    border-radius: 8px;
+    transition: background-color 0.15s, color 0.15s, transform 0.15s;
+}
+
+.toc a:hover {
+    background-color: #e0edff;
+    color: #1d4ed8;
+    transform: translateX(2px);
+}
+
+.sidebar-note {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* ОСНОВНАЯ ЧАСТЬ */
+
+.content {
+    flex: 1;
+    padding: 20px 24px 32px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* СЕКЦИИ: ДВЕ КОЛОНКИ — ТЕОРИЯ И ПОДСКАЗКИ */
+
+.section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 22px;
+    padding: 16px 18px 18px;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+    border: 1px solid #e5e7eb;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+}
+
+.section-main {
+    flex: 2 1 260px;
+}
+
+.section-notes {
+    flex: 1 1 220px;
+    background: #f9fafb;
+    border-radius: 14px;
+    padding: 10px 12px;
+    border: 1px dashed #e5e7eb;
+}
+
+.section h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 20px;
+}
+
+.section-notes h3 {
+    margin-top: 0;
+    margin-bottom: 6px;
+    font-size: 15px;
+}
+
+/* ТЕКСТ И КОД */
+
+p {
+    margin: 4px 0;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+ul {
+    padding-left: 20px;
+    margin: 4px 0;
+}
+
+li {
+    margin-bottom: 2px;
+}
+
+pre {
+    background: #0f172a;
+    color: #e5e7eb;
+    border-radius: 10px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 6px 0;
+}
+
+code {
+    font-family: "Consolas", "Fira Code", monospace;
+}
+
+.small-note {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* ЦВЕТА: НЕБОЛЬШИЕ ПЛАШКИ HEX */
+
+.color-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.color-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+}
+
+/* раскрашиваем по data-hex с помощью конкретных классов */
+.color-swatch[data-hex="#ffffff"] { background: #ffffff; }
+.color-swatch[data-hex="#000000"] { background: #000000; }
+.color-swatch[data-hex="#ff0000"] { background: #ff0000; }
+.color-swatch[data-hex="#00aaff"] { background: #00aaff; }
+.color-swatch[data-hex="#f5f0e8"] { background: #f5f0e8; }
+
+/* КАРТОЧКА ДЕМО */
+
+.card {
+    background-color: #ffffff;
+    padding: 16px;
+    margin: 12px 0 2px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 6px 14px rgba(15,23,42,0.08);
+}
+
+.demo-card {
+    font-size: 14px;
+}
+
+/* ДЕМО АНИМАЦИЙ */
+
+.demo-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-top: 8px;
+}
+
+/* Кнопка с плавным hover */
+
+.demo-button {
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: none;
+    background: #2563eb;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(37,99,235,0.45);
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+.demo-button:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 20px rgba(37,99,235,0.55);
+    background-color: #1d4ed8;
+}
+
+/* Блок, подпрыгивающий при наведении */
+
+.demo-box {
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: #e0f2fe;
+    border: 1px solid #93c5fd;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+.demo-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(59,130,246,0.5);
+    background-color: #bfdbfe;
+}
+
+/* СВЕЧКА в секции анимаций (простая) */
+
+.candle {
+    width: 36px;
+    height: 70px;
+    position: relative;
+    background: #ffffff;
+    border-radius: 10px 10px 4px 4px;
+    box-shadow: 0 8px 16px rgba(15,23,42,0.25);
+    margin-left: 8px;
+}
+
+.candle-body {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(to bottom, #ffffff, #e5e7eb);
+}
+
+.candle-flame {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    width: 16px;
+    height: 24px;
+    margin-left: -8px;
+    background: radial-gradient(circle at 30% 20%, #ffffcc, #f97316 60%, #b91c1c 100%);
+    border-radius: 50% 50% 50% 50%;
+    box-shadow: 0 0 18px rgba(249,115,22,0.8);
+    transform-origin: 50% 100%;
+    animation: flame 0.7s infinite alternate;
+}
+
+/* АНИМАЦИЯ ОГОНЬКА (простая) */
+
+@keyframes flame {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.9;
+    }
+    50% {
+        transform: translateY(-2px) scale(1.05) skewX(-2deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(1px) scale(0.95) skewX(2deg);
+        opacity: 0.8;
+    }
+}
+
+/* АДАПТИВ ДЛЯ УЗКИХ ЭКРАНОВ */
+
+@media (max-width: 800px) {
+    .layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        position: static;
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .content {
+        padding: 16px;
+    }
+
+    .section {
+        padding: 14px;
+    }
+}
+
+/* ========================================= */
+/*   СЛОЖНАЯ АНИМАЦИЯ СВЕЧЕК В ПРАВОМ ВЕРХУ  */
+/* ========================================= */
+
+.candle-widget {
+    position: absolute;
+    top: 80px;
+    right: 16px;
+    width: 260px;
+    height: 260px;
+    pointer-events: none; /* чтобы не мешать кликам по странице */
+    z-index: 100;
+}
+
+/* всё, что внутри, — адаптированная версия твоего кода */
+
+.candle-widget .wrapper {
+    position: absolute;
+    left: 50%;
+    top: 70%;
+    transform: scale(1.2, 1.2) translate(-50%, -50%);
+}
+
+.candle-widget .floor {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 350px;
+    height: 5px;
+    background: #673C63;
+    transform: translate(-50%, -50%);
+    box-shadow: 0px 2px 5px #111;
+    z-index: 2;
+}
+
+.candle-widget .candles {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 250px;
+    height: 150px;
+    transform: translate(-50%, -100%);
+    z-index: 1;
+}
+
+.candle-widget .candle1 {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 35px;
+    height: 100px;
+    background: #fff;
+    border: 3px solid #673C63;
+    border-bottom: 0px;
+    border-radius: 3px;
+    transform-origin: center right;
+    transform: translate(60%, -25%);
+    box-shadow: -2px 0px 0px #95c6f2 inset;
+    animation: expand-body 3s infinite linear;
+}
+
+.candle-widget .candle1__stick,
+.candle-widget .candle2__stick {
+    position: absolute;
+    left: 50%;
+    top: 0%;
+    width: 3px;
+    height: 15px;
+    background: #673C63;
+    border-radius: 8px;
+    transform: translate(-50%, -100%);
+}
+
+.candle-widget .candle2__stick {
+    height: 12px;
+    transform-origin: bottom center;
+    animation: stick-animation 3s infinite linear;
+}
+
+.candle-widget .candle1__eyes,
+.candle-widget .candle2__eyes {
+    position: absolute;
+    left: 50%;
+    top: 0%;
+    width: 35px;
+    height: 30px;
+    transform: translate(-50%, 0%);
+}
+
+.candle-widget .candle1__eyes-one {
+    position: absolute;
+    left: 30%;
+    top: 20%;
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    background: #673C63;
+    transform: translate(-70%, 0%);
+    animation: blink-eyes 3s infinite linear;
+}
+
+.candle-widget .candle1__eyes-two {
+    position: absolute;
+    left: 70%;
+    top: 20%;
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    background: #673C63;
+    transform: translate(-70%, 0%);
+    animation: blink-eyes 3s infinite linear;
+}
+
+.candle-widget .candle1__mouth {
+    position: absolute;
+    left: 40%;
+    top: 20%;
+    width: 0px;
+    height: 0px;
+    border-radius: 20px;
+    background: #673C63;
+    transform: translate(-50%, -50%);
+    animation: uff 3s infinite linear;
+}
+
+.candle-widget .candle__smoke-one {
+    position: absolute;
+    left: 30%;
+    top: 50%;
+    width: 30px;
+    height: 3px;
+    background: grey;
+    transform: translate(-50%, -50%);
+    animation: move-left 3s infinite linear;
+}
+
+.candle-widget .candle__smoke-two {
+    position: absolute;
+    left: 30%;
+    top: 40%;
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    background: grey;
+    transform: translate(-50%, -50%);
+    animation: move-top 3s infinite linear;
+}
+
+.candle-widget .candle2 {
+    position: absolute;
+    left: 20%;
+    top: 65%;
+    width: 42px;
+    height: 60px;
+    background: #fff;
+    border: 3px solid #673C63;
+    border-bottom: 0px;
+    border-radius: 3px;
+    transform: translate(60%, -15%);
+    transform-origin: center right;
+    box-shadow: -2px 0px 0px #95c6f2 inset;
+    animation: shake-left 3s infinite linear;
+}
+
+.candle-widget .candle2__eyes-one {
+    position: absolute;
+    left: 30%;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    display: inline-block;
+    border: 0px solid #673C63;
+    border-radius: 100%;
+    float: left;
+    background: #673C63;
+    transform: translate(-80%, 0%);
+    animation: changeto-lower 3s infinite linear;
+}
+
+.candle-widget .candle2__eyes-two {
+    position: absolute;
+    left: 70%;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    display: inline-block;
+    border: 0px solid #673C63;
+    border-radius: 100%;
+    float: left;
+    background: #673C63;
+    transform: translate(-80%, 0%);
+    animation: changeto-greater 3s infinite linear;
+}
+
+.candle-widget .light__wave {
+    position: absolute;
+    top: 35%;
+    left: 35%;
+    width: 75px;
+    height: 75px;
+    border-radius: 100%;
+    z-index: 0;
+    transform: translate(-25%, -50%) scale(2.5, 2.5);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    animation: expand-light 3s infinite linear;
+}
+
+.candle-widget .candle2__fire {
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    display: block;
+    width: 16px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    background: #FF9800;
+    transform: translate(-50%, -50%);
+    animation: dance-fire 3s infinite linear;
+}
+
+/* KEYFRAMES ИЗ ТВОЕГО ПРИМЕРА */
+
+@keyframes blink-eyes {
+  0%,35% {
+    opacity: 1;
+    transform: translate(-70%, 0%);
+  }
+  36%,39% {
+    opacity: 0;
+    transform: translate(-70%, 0%);
+  }
+  40% {
+    opacity: 1;
+    transform: translate(-70%, 0%);
+  }
+  50%,65% {
+    transform: translate(-140%, 0%);
+  }
+  66% {
+    transform: translate(-70%, 0%);
+  }
+}
+
+@keyframes expand-body {
+  0%,40% {
+    transform: scale(1, 1) translate(60%, -25%);
+  }
+  45%,55% {
+    transform: scale(1.1, 1.1) translate(60%, -28%);
+  }
+  60% {
+    transform: scale(0.89, 0.89) translate(60%, -25%);
+  }
+  65% {
+    transform: scale(1, 1) translate(60%, -25%);
+  }
+  70% {
+    transform: scale(0.95, 0.95) translate(60%, -25%);
+  }
+  75% {
+    transform: scale(1, 1) translate(60%, -25%);
+  }
+}
+
+@keyframes uff {
+  0%,40% {
+    width: 0px;
+    height: 0px;
+  }
+  50%,54% {
+    width: 15px;
+    height: 15px;
+    left: 30%;
+  }
+  59% {
+    width: 5px;
+    height: 5px;
+    left: 20%;
+  }
+  62% {
+    width: 2px;
+    height: 2px;
+    left: 20%;
+  }
+  67% {
+    width: 0px;
+    height: 0px;
+    left: 30%;
+  }
+}
+
+@keyframes change-background {
+  0%,59%,98%,100% {
+    background: #FFF;
+  }
+  61%,97% {
+    background: #000;
+  }
+}
+
+@keyframes move-left {
+  0%,59%,100% {
+    width: 0px;
+    left: 40%;
+  }
+  60% {
+    width: 30px;
+    left: 30%;
+  }
+  68% {
+    width: 0px;
+    left: 20%;
+  }
+}
+
+@keyframes move-top {
+  0%,64%,100% {
+    width: 0px;
+    height: 0px;
+    top: 0%;
+  }
+  65% {
+    width: 10px;
+    height: 10px;
+    top: 40%;
+    left: 40%;
+  }
+  80% {
+    width: 0px;
+    height: 0px;
+    top: 20%;
+  }
+}
+
+@keyframes shake-left {
+  0%,40% {
+    left: 20%;
+    transform: translate(60%, -15%);
+  }
+  50%,54% {
+    left: 20%;
+    transform: translate(60%, -15%);
+  }
+  59% {
+    left: 20%;
+    transform: translate(60%, -15%);
+  }
+  62% {
+    left: 18%;
+    transform: translate(60%, -15%);
+  }
+  65% {
+    left: 21%;
+    transform: translate(60%, -15%);
+  }
+  67% {
+    left: 20%;
+    transform: translate(60%, -15%);
+  }
+  75% {
+    left: 20%;
+    transform: scale(1.15, 0.85) translate(60%, -15%);
+    background: #fff;
+    border-color: #673C63;
+  }
+  91% {
+    left: 20%;
+    transform: scale(1.18, 0.82) translate(60%, -10%);
+    background: #F44336;
+    border-color: #F44336;
+    box-shadow: -2px 0px 0px #F44336 inset;
+  }
+  92% {
+    left: 20%;
+    transform: scale(0.85, 1.15) translate(60%, -15%);
+  }
+  95% {
+    left: 20%;
+    transform: scale(1.05, 0.95) translate(60%, -15%);
+  }
+  97% {
+    left: 20%;
+    transform: scale(1, 1) translate(60%, -15%);
+  }
+}
+
+@keyframes stick-animation {
+  0%,40% {
+    left: 50%;
+    top: 0%;
+    transform: translate(-50%, -100%);
+  }
+  50%,54% {
+    left: 50%;
+    top: 0%;
+    transform: translate(-50%, -100%);
+  }
+  59% {
+    left: 50%;
+    top: 0%;
+    transform: translate(-50%, -100%);
+  }
+  62% {
+    left: 50%;
+    top: 0%;
+    transform: rotateZ(-15deg) translate(-50%, -100%);
+  }
+  65% {
+    left: 50%;
+    top: 0%;
+    transform: rotateZ(15deg) translate(-50%, -100%);
+  }
+  70% {
+    left: 50%;
+    top: 0%;
+    transform: rotateZ(-5deg) translate(-50%, -100%);
+  }
+  72% {
+    left: 50%;
+    top: 0%;
+    transform: rotateZ(5deg) translate(-50%, -100%);
+  }
+  74%,84% {
+    left: 50%;
+    top: 0%;
+    transform: rotateZ(0deg) translate(-50%, -100%);
+  }
+  85% {
+    transform: rotateZ(180deg) translate(0%, 120%);
+  }
+  92% {
+    left: 50%;
+    top: 0%;
+    transform: translate(-50%, -100%);
+  }
+}
+
+@keyframes expand-light {
+  10%,29%,59%,89% {
+    transform: translate(-25%, -50%) scale(0, 0);
+    border: 2px solid rgba(255, 255, 255, 0);
+  }
+  90%,20%,50% {
+    transform: translate(-25%, -50%) scale(1, 1);
+  }
+  95%,96%,26%,27%,56%,57% {
+    transform: translate(-25%, -50%) scale(2, 2);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+  }
+  0%,28%,58%,100% {
+    transform: translate(-25%, -50%) scale(2.5, 2.5);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+@keyframes dance-fire {
+  59%,89% {
+    left: 38%;
+    width: 0px;
+    height: 0px;
+  }
+  90%,0%,7%,15%,23%,31%,39%,47%,55% {
+    left: 38.8%;
+    width: 16px;
+    height: 20px;
+    background: #FFC107;
+  }
+  94%,3%,11%,19%,27%,35%,43%,51%,58% {
+    left: 39.2%;
+    width: 16px;
+    height: 20px;
+    background: #FF9800;
+  }
+}
+       .my-button {
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: none;
+    background: orange;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 8px;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.my-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(249, 115, 22, 0.45);
+    background-color: #ea580c;
+}

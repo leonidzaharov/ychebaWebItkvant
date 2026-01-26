@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JavaScript — Операторы и подвохи</title>
+  <style>
+    :root{
+      --bg1:#eef2ff;
+      --bg2:#e9f7ff;
+      --card:#ffffffcc;
+      --stroke:rgba(148,163,184,.35);
+      --text:#0f172a;
+      --muted:#475569;
+      --shadow: 0 18px 45px rgba(15,23,42,.12);
+      --shadow2: 0 10px 30px rgba(15,23,42,.10);
+      --radius: 22px;
+      --accent:#2563eb;
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(1000px 500px at 12% 0%, #c7d2fe 0%, transparent 55%),
+        radial-gradient(900px 480px at 88% 10%, #bae6fd 0%, transparent 55%),
+        radial-gradient(800px 500px at 20% 85%, #ddd6fe 0%, transparent 55%),
+        linear-gradient(180deg, var(--bg2), var(--bg1));
+      min-height: 100vh;
+    }
+
+    .wrap{ width:min(1180px, 92vw); margin: 28px auto 70px; }
+
+    .hero{
+      position: relative;
+      padding: 26px 26px 22px;
+      border-radius: calc(var(--radius) + 10px);
+      background: linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,255,255,.65));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .hero h1{ margin:0 0 8px; font-size: clamp(34px, 4vw, 56px); letter-spacing: .2px; }
+    .hero p{ margin:0; font-size: clamp(16px, 2vw, 22px); color: var(--muted); }
+
+    /* декоративка как в “обычном вашем” стиле */
+    .hero svg{
+      position:absolute;
+      right:-90px;
+      top:-30px;
+      width:min(720px, 65vw);
+      opacity:.95;
+      pointer-events:none;
+      filter: drop-shadow(0 18px 30px rgba(2,6,23,.12));
+    }
+
+    h2{ margin: 18px 0 10px; font-size: clamp(22px, 2.5vw, 34px); }
+    .sub{ margin:0 0 12px; color: var(--muted); font-size: 16px; }
+
+    .grid{
+      margin-top: 18px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (min-width: 980px){
+      .grid{ grid-template-columns: 1.25fr .75fr; }
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 18px;
+      backdrop-filter: blur(8px);
+    }
+
+    .row{ display:flex; gap: 10px; flex-wrap: wrap; align-items:center; }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,.45);
+      background: rgba(255,255,255,.7);
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .kbd{
+      font-family: var(--mono);
+      padding: 2px 7px;
+      border-radius: 10px;
+      border:1px solid rgba(148,163,184,.55);
+      background: rgba(255,255,255,.75);
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .exprList{ display:grid; gap: 10px; margin-top: 10px; }
+    .expr{
+      padding: 12px;
+      border-radius: 18px;
+      border:1px solid rgba(148,163,184,.35);
+      background: rgba(255,255,255,.8);
+      box-shadow: 0 10px 22px rgba(15,23,42,.06);
+      display:grid;
+      gap:10px;
+    }
+    .exprTop{
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      gap:10px;
+      flex-wrap: wrap;
+    }
+    .code{
+      font-family: var(--mono);
+      font-size: 15px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,.40);
+      background: rgba(241,245,249,.85);
+      color: #0b1220;
+      user-select: all;
+    }
+
+    input, select, textarea{
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,.55);
+      background: rgba(255,255,255,.9);
+      color: var(--text);
+      font-size: 16px;
+      outline:none;
+    }
+    input{ min-width: 170px; }
+
+    textarea{
+      width:100%;
+      min-height: 160px;
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.35;
+      resize: vertical;
+    }
+
+    button{
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(37,99,235,.25);
+      background: linear-gradient(180deg, rgba(37,99,235,.95), rgba(29,78,216,.95));
+      color: white;
+      font-weight: 800;
+      cursor:pointer;
+      font-size: 15px;
+      box-shadow: 0 10px 22px rgba(37,99,235,.18);
+    }
+    button:active{ transform: translateY(1px); }
+
+    .btn2{
+      border: 1px solid rgba(148,163,184,.55);
+      background: rgba(255,255,255,.9);
+      color: var(--text);
+      box-shadow: 0 10px 22px rgba(15,23,42,.06);
+      font-weight: 800;
+    }
+
+    .out{
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(148,163,184,.35);
+      background: rgba(255,255,255,.9);
+      min-height: 46px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color: var(--text);
+      font-size: 16px;
+    }
+    .dot{ width:12px; height:12px; border-radius:999px; display:inline-block; }
+    .dot.ok{ background: var(--ok); }
+    .dot.warn{ background: var(--warn); }
+    .dot.bad{ background: var(--bad); }
+
+    details{
+      border-radius: 18px;
+      border:1px solid rgba(148,163,184,.35);
+      background: rgba(255,255,255,.78);
+      padding: 10px 12px;
+      margin-top: 10px;
+    }
+    summary{ cursor:pointer; font-weight: 900; color: var(--text); }
+    .hint{ color: var(--muted); margin: 0; }
+
+    .img-slot{
+      margin-top: 14px;
+      border-radius: 18px;
+      border:1px dashed rgba(148,163,184,.55);
+      background: rgba(255,255,255,.65);
+      padding: 12px;
+      display:grid;
+      gap:10px;
+    }
+    .img-slot img{
+      max-width: 100%;
+      border-radius: 16px;
+      border:1px solid rgba(148,163,184,.35);
+      display:block;
+    }
+
+    .footer{
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      border:1px solid rgba(148,163,184,.35);
+      background: rgba(255,255,255,.65);
+      color: var(--muted);
+    }
+    .hero{ position:relative; }
+.heroBg{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  opacity:.95;
+}
+.heroContent{
+  position:relative;
+  z-index:1;
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <section class="hero">
+  <!-- настоящий фон Vanta -->
+  <div class="heroBg" id="heroBg" aria-hidden="true"></div>
+
+  <!-- контент поверх -->
+  <div class="heroContent">
+    <h1>JavaScript</h1>
+    <p>Операторы + преобразование типов. Сначала “подвохи”, потом 2 сложные практики с автотестами. AI — по желанию.</p>
+  </div>
+</section>
+
+
+    <div class="grid">
+      <!-- ЛЕВО: ПОДВОХИ -->
+      <section class="card">
+        <h2>1) Примеры-подвохи (угадай результат)</h2>
+        <p class="sub">
+          В каждом примере: напиши ответ → <b>Проверить</b>. Если застрял — <b>Подсказка</b>.
+          <span class="pill"><span class="kbd">typeof</span> показывает тип</span>
+        </p>
+
+        <div class="exprList" id="exprList"></div>
+
+        <details>
+          <summary>Мини-шпаргалка (5 правил)</summary>
+          <p class="hint">
+            1) <span class="kbd">prompt()</span> и <span class="kbd">input.value</span> → <b>строка</b><br/>
+            2) <span class="kbd">+</span> со строкой → <b>склейка</b><br/>
+            3) <span class="kbd">- * /</span> → пытаются сделать <b>число</b><br/>
+            4) <span class="kbd">null</span> в числах часто становится <span class="kbd">0</span><br/>
+            5) <span class="kbd">undefined</span> в числах → <span class="kbd">NaN</span>
+          </p>
+        </details>
+
+        <h2 style="margin-top:18px;">Место для картинки</h2>
+        <div class="img-slot">
+          <div class="hint">Если доступ к моим картинкам пропадёт — вставишь свою: <span class="kbd">img/your-image.png</span></div>
+          <img src="img/your-image.png" alt="Тут будет ваша картинка">
+        </div>
+      </section>
+
+      <!-- ПРАВО: ПРАКТИКА + AI -->
+      <aside class="card">
+        <h2>2) Практика</h2>
+        <p class="sub">2 сложных задания, автотесты. AI — только как помощник (промпт скрыт и не редактируется).</p>
+
+        <details open>
+          <summary>Задание №1: строка “A±B” (первое действие — плюс или минус)</summary>
+          <p class="hint" style="margin:10px 0 0;">
+            Дано <b>expr</b> — строка вида <span class="kbd">"12-5"</span> или <span class="kbd">"12+5"</span> (могут быть пробелы).
+            Верни число-результат. Если знак <b>минус</b> — вычитай, если <b>плюс</b> — складывай.
+          </p>
+
+          <textarea id="codeSolve">function solve(expr) {
+  // 1) убрать пробелы: expr = expr.replaceAll(" ", "")
+  // 2) найти индекс "+" или "-"
+  // 3) взять левую/правую часть через slice, сделать Number(...)
+  // 4) if (op === "-") return left - right; else return left + right;
+}</textarea>
+
+          <div class="row" style="margin-top:10px;">
+            <button id="runSolveTests">Проверить</button>
+<button class="btn2" id="solveHint1">Подсказка 1</button>
+<button class="btn2" id="solveHint2">Подсказка 2</button>
+<button class="btn2" id="solveAnswer">Ответ (учитель)</button>
+
+          </div>
+
+          <div class="out" id="solveOut">Результат тестов: —</div>
+        </details>
+
+        <details>
+          <summary>Задание №2: “бесконечная” проверка if / else if / else + %</summary>
+          <p class="hint" style="margin:10px 0 0;">
+            Напиши функцию <b>analyze(n)</b> (n — число). Возвращай <b>одну</b> строку:
+            <br>• если n не число → <span class="kbd">"not a number"</span>
+            <br>• если n &lt; 0 → <span class="kbd">"negative"</span>
+            <br>• если n === 0 → <span class="kbd">"zero"</span>
+            <br>• если n кратно 2 и 3 → <span class="kbd">"divisible by 2 and 3"</span>
+            <br>• если n чётное → <span class="kbd">"even"</span>
+            <br>• если n кратно 3 → <span class="kbd">"divisible by 3"</span>
+            <br>• иначе → <span class="kbd">"odd"</span>
+          </p>
+<details>
+  <summary>Похожий пример (сделай так же)</summary>
+  <p class="hint" style="margin:10px 0 0;">
+    Пример: <span class="kbd">"  12 - 5  "</span><br>
+    1) убираем пробелы → <span class="kbd">"12-5"</span><br>
+    2) знак: <span class="kbd">-</span><br>
+    3) left=12, right=5 → ответ 7
+  </p>
+</details>
+          <textarea id="codeAnalyze">function analyze(n) {
+  // подсказка: Number.isFinite(n), if/else if/else, остаток %
+}</textarea>
+
+          <div class="row" style="margin-top:10px;">
+            <button id="runAnalyzeTests">Проверить</button>
+            <button class="btn2" id="fillAnalyzeHint">Вставить шаблон</button>
+          </div>
+
+          <div class="out" id="analyzeOut">Результат тестов: —</div>
+        </details>
+
+        <details id="aiBox">
+          <summary>🤖 AI-подсказка (WebGPU, локально в браузере)</summary>
+          <p class="hint" style="margin:10px 0 0;">
+            Работает, если страницу открыть через <b>http/https</b> (GitHub Pages / Live Server), и в браузере есть WebGPU.
+            Первый раз модель скачивается, потом берётся из кэша.
+          </p>
+
+          <div class="row" style="margin-top:10px;">
+            <select id="aiModel">
+              <option value="Llama-3.2-1B-Instruct-q4f16_1-MLC">Llama 3.2 1B (быстрее)</option>
+              <option value="Llama-3.2-3B-Instruct-q4f16_1-MLC">Llama 3.2 3B (умнее)</option>
+            </select>
+            <button id="aiLoad">Загрузить модель</button>
+          </div>
+
+          <div class="out" id="aiStatus">AI: выключен</div>
+
+          <div class="row" style="margin-top:10px;">
+            <button class="btn2" id="aiHelpSolve">Подсказать по №1</button>
+            <button class="btn2" id="aiHelpAnalyze">Подсказать по №2</button>
+          </div>
+
+          <div class="out" id="aiOut">Ответ AI появится тут…</div>
+        </details>
+      </aside>
+    </div>
+
+    <div class="footer">
+      <b>Учителю:</b> “подвохи” — быстрый прогрев на 10–20 минут. Потом практика 1 (строка A±B) и практика 2 (if/else if/else + %).
+    </div>
+  </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.globe.min.js"></script>
+
+  <script>
+    "use strict";
+// ===== VANTA GLOBE (фон) =====
+let vanta = null;
+
+function supportsWebGL(){
+  try{
+    const c = document.createElement("canvas");
+    return !!(c.getContext("webgl") || c.getContext("experimental-webgl"));
+  }catch(e){ return false; }
+}
+function prefersReducedMotion(){
+  return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+function initVanta(){
+  const el = document.getElementById("heroBg");
+  if (!el || vanta) return;
+  if (!supportsWebGL() || prefersReducedMotion()) return;
+
+  vanta = VANTA.GLOBE({
+    el,
+    mouseControls: true,
+    touchControls: true,
+    gyroControls: false,
+    minHeight: 240,
+    minWidth: 240,
+    scale: 1.0,
+    scaleMobile: 0.8,
+    color: 0xff00ff,      
+    color2:0x7df9ff,     
+    backgroundColor: 0xEEF2FF
+  });
+}
+function destroyVanta(){
+  if (vanta && vanta.destroy) vanta.destroy();
+  vanta = null;
+}
+window.addEventListener("load", initVanta);
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) destroyVanta();
+  else initVanta();
+});
+const TEACHER_CODE = "1234"; // поменяй на свой
+
+function teacherOK(){
+  return prompt("Код учителя?") === TEACHER_CODE;
+}
+
+    // ===== UI helpers =====
+    function dot(kind){ return '<span class="dot ' + kind + '"></span>'; }
+    function ok(msg){ return dot("ok") + msg; }
+    function warn(msg){ return dot("warn") + msg; }
+    function bad(msg){ return dot("bad") + msg; }
+
+    function pretty(v){
+      const t = typeof v;
+      if (Number.isNaN(v)) return 'NaN (type: number)';
+      if (v === Infinity) return 'Infinity (type: number)';
+      if (v === -Infinity) return '-Infinity (type: number)';
+      if (t === "string") return JSON.stringify(v) + " (type: string)";
+      if (t === "number") return String(v) + " (type: number)";
+      if (t === "boolean") return String(v) + " (type: boolean)";
+      if (v === null) return "null (type: object)";
+      return String(v) + " (type: " + t + ")";
+    }
+
+    // ===== 1) Примеры-подвохи (без eval пользовательского ввода) =====
+    // ВАЖНО: calc — функция, которая реально считает выражение.
+    const tasks = [
+      { expr: '"" + 1 + 0', calc: () => "" + 1 + 0, hint: 'Есть строка → "+" будет склеивать: сначала "" + 1, потом + 0.' },
+      { expr: '"" - 1 + 0', calc: () => "" - 1 + 0, hint: '"-" пытается превратить в число. "" станет 0. Потом прибавится 0.' },
+      { expr: 'true + false', calc: () => true + false, hint: 'В числах: true → 1, false → 0.' },
+      { expr: '6 / "3"', calc: () => 6 / "3", hint: '"/" превращает в числа. "3" станет 3.' },
+      { expr: '"2" * "3"', calc: () => "2" * "3", hint: '"*" превращает в числа. Оба станут числами.' },
+      { expr: '4 + 5 + "px"', calc: () => 4 + 5 + "px", hint: 'Сначала 4+5=9, потом 9 + "px" → строка.' },
+      { expr: '"$" + 4 + 5', calc: () => "$" + 4 + 5, hint: 'Строка есть сразу → всё дальше склейка: "$4" потом "$45".' },
+      { expr: '"4" - 2', calc: () => "4" - 2, hint: '"-" превращает "4" в число.' },
+      { expr: '"4px" - 2', calc: () => "4px" - 2, hint: '"4px" не становится числом → NaN.' },
+      { expr: '"  -9  " + 5', calc: () => "  -9  " + 5, hint: 'Плюс со строкой склеивает. Пробелы остаются.' },
+      { expr: '"  -9  " - 5', calc: () => "  -9  " - 5, hint: 'Минус превращает строку в число: пробелы “не мешают”.' },
+      { expr: 'null + 1', calc: () => null + 1, hint: 'В числах null обычно становится 0.' },
+      { expr: 'undefined + 1', calc: () => undefined + 1, hint: 'undefined в числах → NaN.' },
+      { expr: '" \\t \\n" - 2', calc: () => " \t \n" - 2, hint: 'Пробельная строка превращается в 0, потом 0 - 2.' },
+    ];
+
+    const exprList = document.getElementById("exprList");
+
+    function normalizeSpaces(s){
+      return String(s).replace(/\s+/g, " ").trim();
+    }
+
+    function buildExprRow(t, idx){
+      const wrap = document.createElement("div");
+      wrap.className = "expr";
+
+      wrap.innerHTML = `
+        <div class="exprTop">
+          <div class="code">(${idx+1}) ${t.expr}</div>
+          <span class="pill">введи ответ и проверь</span>
+        </div>
+
+       <div class="row">
+  <input type="text" id="guess_${idx}" placeholder="Твой ответ (например: 22)" />
+  <button class="btn2" id="hintBtn_${idx}">Подсказка</button>
+  <button class="btn2" id="ansBtn_${idx}">Ответ (учитель)</button>
+  <button id="checkBtn_${idx}">Проверить</button>
+</div>
+
+
+        <div class="out" id="out_${idx}">Результат: —</div>
+
+        <details id="hint_${idx}" style="display:none;">
+          <summary>Подсказка</summary>
+          <p class="hint">${t.hint}</p>
+        </details>
+      `;
+
+      const checkBtn = wrap.querySelector("#checkBtn_" + idx);
+      const out = wrap.querySelector("#out_" + idx);
+      const guess = wrap.querySelector("#guess_" + idx);
+      const hintBtn = wrap.querySelector("#hintBtn_" + idx);
+      const hintDet = wrap.querySelector("#hint_" + idx);
+const ansBtn = wrap.querySelector("#ansBtn_" + idx);
+let attempts = 0;
+
+ansBtn.addEventListener("click", () => {
+  if (!teacherOK()) return;
+  out.innerHTML = ok(`Ответ (учитель): <b>${pretty(real)}</b>`);
+});
+
+      let real;
+      try { real = t.calc(); } catch(e){ real = "ERROR: " + e.message; }
+
+      checkBtn.addEventListener("click", () => {
+        const userRaw = guess.value.trim();
+        const realText = pretty(real);
+
+        if (typeof real === "string"){
+          // Строковые ответы сравниваем “мягко”, чтобы пробелы не убивали идею
+          const u = normalizeSpaces(userRaw.replace(/^["']|["']$/g, "")); // если ввели в кавычках — ок
+          const r = normalizeSpaces(real);
+          if (u === r){
+            out.innerHTML = ok(`Верно ✅ Ответ: <b>${realText}</b>`);
+          } else {
+           attempts++;
+out.innerHTML = warn(`Не совпало ❌ Попробуй ещё раз. (попытка: ${attempts})`);
+
+          }
+          return;
+        }
+
+        if (Number.isNaN(real)){
+          if (userRaw.toLowerCase() === "nan"){
+            out.innerHTML = ok(`Верно ✅ Ответ: <b>${realText}</b>`);
+          } else {
+           attempts++;
+out.innerHTML = warn(`Не совпало ❌ Попробуй ещё раз. (попытка: ${attempts})`);
+
+          }
+          return;
+        }
+
+        // для чисел/булевых — простое сравнение по строке
+        const accepted = new Set([ String(real), realText.split(" (type:")[0] ]);
+        if (accepted.has(userRaw)){
+          out.innerHTML = ok(`Верно ✅ Ответ: <b>${realText}</b>`);
+        } else {
+         attempts++;
+out.innerHTML = warn(`Не совпало ❌ Попробуй ещё раз. (попытка: ${attempts})`);
+
+        }
+      });
+
+      hintBtn.addEventListener("click", () => {
+        const isOpen = hintDet.style.display !== "none";
+        hintDet.style.display = isOpen ? "none" : "block";
+        if (!isOpen) hintDet.open = true;
+      });
+
+      guess.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") checkBtn.click();
+      });
+
+      return wrap;
+    }
+
+    tasks.forEach((t, i) => exprList.appendChild(buildExprRow(t, i)));
+
+    // ===== 2) Практика №1: solve(expr) =====
+    const codeSolve = document.getElementById("codeSolve");
+    const runSolveTests = document.getElementById("runSolveTests");
+    const solveOut = document.getElementById("solveOut");
+    const solveHint1Btn = document.getElementById("solveHint1");
+const solveHint2Btn = document.getElementById("solveHint2");
+const solveAnswerBtn = document.getElementById("solveAnswer");
+
+function appendOnce(el, marker, text){
+  if (el.value.includes(marker)) return;
+  el.value += "\n" + text + "\n";
+}
+
+solveHint1Btn.addEventListener("click", () => {
+  appendOnce(codeSolve, "// HINT1", `// HINT1: убери пробелы и найди знак
+// expr = expr.replaceAll(" ", "");
+// opIndex = expr.indexOf("+") или expr.indexOf("-")`);
+});
+
+solveHint2Btn.addEventListener("click", () => {
+  appendOnce(codeSolve, "// HINT2", `// HINT2: вытащи левую/правую часть и преврати в число
+// const left = Number(expr.slice(0, opIndex));
+// const right = Number(expr.slice(opIndex + 1));`);
+}); 
+
+solveAnswerBtn.addEventListener("click", () => {
+  if (!teacherOK()) return;
+  codeSolve.value = solveHint; // полное решение только учителю
+});
+
+
+    fillSolveHint.addEventListener("click", () => {
+      codeSolve.value = solveHint;
+    });
+
+    function runSolve(fn){
+      const tests = [
+        { in: "12+5", out: 17 },
+        { in: "12-5", out: 7 },
+        { in: "  100  - 7  ", out: 93 },
+        { in: "9999999999-1", out: 9999999998 }, // до 10 знаков
+        { in: "8+0002", out: 10 },
+      ];
+      for (const t of tests){
+        const got = fn(t.in);
+        if (got !== t.out){
+          return { ok:false, msg:`Ошибка: solve("${t.in}") ожидали ${t.out}, получили ${got}. Проверь: пробелы, поиск знака, Number().` };
+        }
+      }
+      return { ok:true, msg:"Задание №1: все тесты пройдены ✅" };
+    }
+
+    runSolveTests.addEventListener("click", () => {
+      try{
+        const userJs = codeSolve.value;
+        const getFn = new Function(userJs + "\nreturn typeof solve === 'function' ? solve : null;");
+        const fn = getFn();
+        if (!fn){
+          solveOut.innerHTML = bad("Не вижу функцию solve(expr). Проверь имя и скобки.");
+          return;
+        }
+        const res = runSolve(fn);
+        solveOut.innerHTML = res.ok ? ok(res.msg) : warn(res.msg);
+      } catch(e){
+        solveOut.innerHTML = bad("Ошибка в коде: " + e.message);
+      }
+    });
+
+    // ===== 3) Практика №2: analyze(n) =====
+    const codeAnalyze = document.getElementById("codeAnalyze");
+    const runAnalyzeTests = document.getElementById("runAnalyzeTests");
+    const analyzeOut = document.getElementById("analyzeOut");
+    const fillAnalyzeHint = document.getElementById("fillAnalyzeHint");
+
+    const analyzeHint =
+`function analyze(n) {
+  if (!Number.isFinite(n)) return "not a number";
+  if (n < 0) return "negative";
+  if (n === 0) return "zero";
+  if (n % 2 === 0 && n % 3 === 0) return "divisible by 2 and 3";
+  if (n % 2 === 0) return "even";
+  if (n % 3 === 0) return "divisible by 3";
+  return "odd";
+}`;
+
+    fillAnalyzeHint.addEventListener("click", () => {
+      codeAnalyze.value = analyzeHint;
+    });
+
+    function runAnalyze(fn){
+      const tests = [
+        { in: NaN, out: "not a number" },
+        { in: Infinity, out: "not a number" },
+        { in: -5, out: "negative" },
+        { in: 0, out: "zero" },
+        { in: 12, out: "divisible by 2 and 3" },
+        { in: 8, out: "even" },
+        { in: 9, out: "divisible by 3" },
+        { in: 7, out: "odd" },
+      ];
+      for (const t of tests){
+        const got = fn(t.in);
+        if (got !== t.out){
+          return { ok:false, msg:`Ошибка: analyze(${t.in}) ожидали "${t.out}", получили "${got}". Проверь if/else if и %.` };
+        }
+      }
+      return { ok:true, msg:"Задание №2: все тесты пройдены ✅" };
+    }
+
+    runAnalyzeTests.addEventListener("click", () => {
+      try{
+        const userJs = codeAnalyze.value;
+        const getFn = new Function(userJs + "\nreturn typeof analyze === 'function' ? analyze : null;");
+        const fn = getFn();
+        if (!fn){
+          analyzeOut.innerHTML = bad("Не вижу функцию analyze(n). Проверь имя и скобки.");
+          return;
+        }
+        const res = runAnalyze(fn);
+        analyzeOut.innerHTML = res.ok ? ok(res.msg) : warn(res.msg);
+      } catch(e){
+        analyzeOut.innerHTML = bad("Ошибка в коде: " + e.message);
+      }
+    });
+
+    // ===== 4) AI helper (WebGPU) — PROMPT LOCKED (дети не трогают) =====
+    const aiLoad = document.getElementById("aiLoad");
+    const aiHelpSolve = document.getElementById("aiHelpSolve");
+    const aiHelpAnalyze = document.getElementById("aiHelpAnalyze");
+    const aiStatus = document.getElementById("aiStatus");
+    const aiOut = document.getElementById("aiOut");
+    const aiModel = document.getElementById("aiModel");
+
+    const AI = { webllm:null, engine:null, ready:false, loading:false };
+
+    function aiSet(html){ aiStatus.innerHTML = html; }
+    function aiWarnMsg(msg){ aiSet(warn(msg)); }
+    function aiOkMsg(msg){ aiSet(ok(msg)); }
+    function aiBadMsg(msg){ aiSet(bad(msg)); }
+
+    async function ensureWebLLM(){
+      if (AI.webllm) return AI.webllm;
+      aiWarnMsg("Подключаю WebLLM…");
+      // Модуль с CDN
+      AI.webllm = await import("https://esm.run/@mlc-ai/web-llm");
+      return AI.webllm;
+    }
+
+    function formatProgress(p){
+      if (typeof p === "number") return Math.round(p * 100) + "%";
+      if (p && typeof p === "object"){
+        if (typeof p.progress === "number") return Math.round(p.progress * 100) + "%";
+        if (typeof p.percentage === "number") return Math.round(p.percentage) + "%";
+      }
+      return "…";
+    }
+
+    async function loadAI(){
+      if (AI.loading) return;
+      AI.loading = true;
+      AI.ready = false;
+      AI.engine = null;
+
+      try{
+        const webllm = await ensureWebLLM();
+        const modelId = aiModel.value;
+        const initProgressCallback = (p) => aiWarnMsg("Загрузка модели: " + formatProgress(p));
+        aiWarnMsg("Загружаю модель (первый раз долго)…");
+        AI.engine = await webllm.CreateMLCEngine(modelId, { initProgressCallback });
+        AI.ready = true;
+        aiOkMsg("AI готов ✅");
+      } catch(e){
+        aiBadMsg("AI не запустился: " + e.message + " (открой страницу через http/https)");
+      } finally{
+        AI.loading = false;
+      }
+    }
+
+    // PROMPT LOCKED
+    const SYSTEM_PROMPT =
+`Ты помощник учителя JavaScript для детей 10–14.
+Дай короткую, понятную подсказку по коду ученика.
+Строго формат:
+1) Главная ошибка (1 предложение)
+2) Что исправить (до 3 пунктов)
+3) Мини-правильный пример (до 10 строк кода)
+Не пиши длинных лекций.`;
+
+    async function askAI(userPayload){
+      if (!AI.ready || !AI.engine){
+        aiWarnMsg("Сначала нажми “Загрузить модель”.");
+        return;
+      }
+      aiOut.textContent = "AI думает…";
+      try{
+        const reply = await AI.engine.chat.completions.create({
+          messages: [
+            { role:"system", content: SYSTEM_PROMPT },
+            { role:"user", content: userPayload }
+          ],
+          temperature: 0.2
+        });
+        aiOut.textContent = reply.choices?.[0]?.message?.content || "Пустой ответ.";
+      } catch(e){
+        aiOut.textContent = "Ошибка AI: " + e.message;
+      }
+    }
+
+    aiLoad.addEventListener("click", loadAI);
+
+    aiHelpSolve.addEventListener("click", async () => {
+      const code = codeSolve.value;
+      const tests = (solveOut.innerText || "").trim();
+      const payload =
+`Задание №1: функция solve(expr) считает строку "A+B" или "A-B" (могут быть пробелы).
+Код ученика:
+${code}
+
+Результат тестов:
+${tests}
+
+Подскажи, что исправить.`;
+      await askAI(payload);
+    });
+
+    aiHelpAnalyze.addEventListener("click", async () => {
+      const code = codeAnalyze.value;
+      const tests = (analyzeOut.innerText || "").trim();
+      const payload =
+`Задание №2: функция analyze(n) делает цепочку if/else if/else с % и возвращает одну строку.
+Код ученика:
+${code}
+
+Результат тестов:
+${tests}
+
+Подскажи, что исправить.`;
+      await askAI(payload);
+    });
+
+    aiSet(warn("AI: выключен"));
+    
+  </script>
+</body>
+</html>

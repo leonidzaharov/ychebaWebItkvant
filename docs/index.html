@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kids Code</title>
+  <link rel="stylesheet" href="./assets/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">✦</div>
+      <div>
+        <div class="brandTitle">Kids Code</div>
+        <div class="brandSub">HTML • CSS • JavaScript</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn ghost" id="toggleTheme">Тема: тёмная</button>
+      <button class="btn" id="toggleAnim">Анимация: вкл</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <section class="hero">
+  <!-- ФОН: сюда будет прикрепляться Vanta -->
+  <div class="heroBg" id="heroBg"></div>
+
+  <!-- КОНТЕНТ -->
+  <div class="heroOverlay">
+    <h1>Учимся как в игре</h1>
+    <p>Открывай раздел → тема → практика.</p>
+
+    <div class="heroActions">
+      <a class="btn" href="https://tenor.com/ru/view/james-doakes-dexter-dexter-meme-gif-1302676710766719675"
+         target="_blank" rel="noopener">
+        Не нажимай!
+      </a>
+
+      <button class="btn ghost" id="howBtn" type="button"
+              aria-haspopup="dialog" aria-expanded="false" aria-controls="howCard">
+        Как это работает
+      </button>
+
+      <div class="howCard" id="howCard" hidden>
+        <div class="howHead">
+          <div class="howTitle">Как это работает</div>
+          <button class="iconBtn" id="howClose" type="button" aria-label="Закрыть">×</button>
+        </div>
+
+        <div class="howBody">
+          <div class="howStep"><span class="stepDot">1</span> Выбери раздел: <b>HTML</b>, <b>CSS</b> или <b>JavaScript</b>.</div>
+          <div class="howStep"><span class="stepDot">2</span> Открой тему и посмотри пример.</div>
+          <div class="howStep"><span class="stepDot">3</span> Повтори в практике и получи результат.</div>
+          <div class="howStep"><span class="stepDot">4</span> Переходи к следующей теме.</div>
+
+          <div class="howHint">Подсказка: закрыть можно <b>Esc</b> или кликом вне карточки.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <section class="tracks" id="tracks">
+      <a class="card" href="./track.html?t=html">
+        <div class="cardIcon">&#128526</div>
+        <div class="cardTitle">HTML</div>
+        <div class="cardText">Строим страницу: теги, ссылки, картинки, блоки.</div>
+      </a>
+
+      <a class="card" href="./track.html?t=css">
+        <div class="cardIcon">✦</div>
+        <div class="cardTitle">CSS</div>
+        <div class="cardText">Делаем красиво: цвета, отступы, анимации, эффекты.</div>
+      </a>
+
+      <a class="card" href="./track.html?t=js">
+        <div class="cardIcon">⚡</div>
+        <div class="cardTitle">JavaScript</div>
+        <div class="cardText">Добавляем магию: условия, циклы, игры, интерактив.</div>
+      </a>
+    </section>
+
+    <section class="about" id="about">
+      <h2>Что здесь будет дальше</h2>
+      <ul>
+        <li>Список тем внутри каждого раздела</li>
+        <li>Быстрое добавление новой темы “одним файлом”</li>
+        <li>Единый стиль, кнопки, карточки и анимации</li>
+      </ul>
+    </section>
+  </main>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.globe.min.js"></script>
+
+  <script src="./assets/main.js"></script>
+</body>
+</html>

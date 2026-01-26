@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Шпаргалка по CSS</title>
+    <link rel="stylesheet" href="./css-cheatsheet.css">
+</head>
+<body>
+
+<div class="layout">
+
+    <!-- ЛЕВАЯ КОЛОНКА: ОГЛАВЛЕНИЕ -->
+    <aside class="sidebar">
+        <h1 class="logo">CSS шпаргалка</h1>
+        <nav class="toc">
+            <a href="#intro">1. Что такое CSS</a>
+            <a href="#syntax">2. Синтаксис</a>
+            <a href="#colors">3. Цвета и HEX</a>
+            <a href="#text-bg">4. Текст и фон</a>
+            <a href="#box">5. Блоки и рамки</a>
+            <a href="#animation">6. Анимации</a>
+            </a>
+          <a class="my-button" href="/docs/cheats/html-cheatsheet.html">Перейти к HTML
+</a>
+        </nav>
+    </aside>
+
+    <!-- ПРАВАЯ ЧАСТЬ: ОСНОВНОЙ КОНТЕНТ -->
+    <main class="content">
+
+        <!-- СЕКЦИЯ 1: ЧТО ТАКОЕ CSS -->
+        <section id="intro" class="section">
+            <div class="section-main">
+                <h2>1. Что такое CSS</h2>
+                <p>
+                    HTML отвечает за то, <b>что</b> есть на странице: текст, заголовки, картинки, списки.
+                </p>
+                <p>
+                    CSS отвечает за то, <b>как</b> всё выглядит: цвета, фон, размер текста, рамки, кнопки, анимации.
+                </p>
+                <p>
+                    Обычно мы думаем так: «Сначала я придумал структуру в HTML, потом
+                    нарядил её с помощью CSS».
+                </p>
+            </div>
+            <div class="section-notes">
+                <h3>Подсказки</h3>
+                <ul>
+                    <li>CSS — это стили, оформление.</li>
+                    <li>Стили можно менять, не трогая сам HTML.</li>
+                    <li>В CodePen есть отдельное окошко для CSS — туда пишутся стили.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- СЕКЦИЯ 2: СИНТАКСИС -->
+        <section id="syntax" class="section">
+            <div class="section-main">
+                <h2>2. Синтаксис CSS</h2>
+                <p>Одна «правилка» в CSS выглядит так:</p>
+                <pre><code>селектор {
+    свойство: значение;
+}</code></pre>
+
+                <p>Пример: покрасить все абзацы в красный:</p>
+                <pre><code>p {
+    color: red;
+}</code></pre>
+            </div>
+            <div class="section-notes">
+                <h3>Разбор по строчкам</h3>
+                <ul>
+                    <li><b>селектор</b> — к чему применяем стили (например, <code>p</code> или <code>.card</code>).</li>
+                    <li><b>свойство</b> — что меняем (<code>color</code>, <code>background-color</code> и т.д.).</li>
+                    <li><b>значение</b> — на что меняем (<code>red</code>, <code>20px</code> и т.п.).</li>
+                    <li>Точка с запятой <code>;</code> в конце строки — обязательна.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- СЕКЦИЯ 3: ЦВЕТА И HEX -->
+        <section id="colors" class="section">
+            <div class="section-main">
+                <h2>3. Цвета и HEX</h2>
+                <p>
+                    В CSS цвет можно задавать по имени (<code>red</code>, <code>blue</code>, <code>green</code>),
+                    но чаще используют <b>HEX-коды</b>.
+                </p>
+                <p>
+                    HEX-код — это цвет вида <code>#RRGGBB</code>, где:
+                </p>
+                <ul>
+                    <li><code>RR</code> — сколько красного;</li>
+                    <li><code>GG</code> — сколько зелёного;</li>
+                    <li><code>BB</code> — сколько синего.</li>
+                </ul>
+                <p>
+                    <code>00</code> — нет этого цвета, <code>FF</code> — максимум.
+                </p>
+
+                <pre><code>/* примеры полезных HEX-цветов */
+body {
+    background-color: #f5f0e8; /* бежевый фон */
+}
+
+h1 {
+    color: #2563eb;            /* синий заголовок */
+}
+
+p {
+    color: #333333;            /* тёмно-серый текст */
+}</code></pre>
+            </div>
+            <div class="section-notes">
+                <h3>Примеры HEX</h3>
+                <div class="color-row">
+                    <div class="color-swatch" data-hex="#ffffff"></div>
+                    <span>#ffffff — белый</span>
+                </div>
+                <div class="color-row">
+                    <div class="color-swatch" data-hex="#000000"></div>
+                    <span>#000000 — чёрный</span>
+                </div>
+                <div class="color-row">
+                    <div class="color-swatch" data-hex="#ff0000"></div>
+                    <span>#ff0000 — красный</span>
+                </div>
+                <div class="color-row">
+                    <div class="color-swatch" data-hex="#00aaff"></div>
+                    <span>#00aaff — ярко-голубой</span>
+                </div>
+                <div class="color-row">
+                    <div class="color-swatch" data-hex="#f5f0e8"></div>
+                    <span>#f5f0e8 — бежевый фон</span>
+                </div>
+                <p class="small-note">
+                    Для начала достаточно знать: цвет = <code>#</code> + 6 символов.
+                </p>
+            </div>
+        </section>
+
+        <!-- СЕКЦИЯ 4: ТЕКСТ И ФОН -->
+        <section id="text-bg" class="section">
+            <div class="section-main">
+                <h2>4. Текст и фон</h2>
+                <p>Чаще всего мы настраиваем:</p>
+                <ul>
+                    <li><code>color</code> — цвет текста;</li>
+                    <li><code>background-color</code> — цвет фона;</li>
+                    <li><code>font-size</code> — размер текста;</li>
+                    <li><code>text-align</code> — выравнивание текста.</li>
+                </ul>
+
+                <pre><code>body {
+    background-color: #f5f0e8;
+    font-family: system-ui, sans-serif;
+}
+
+h1 {
+    color: #2563eb;
+    text-align: center;
+}
+
+p {
+    color: #333333;
+    font-size: 16px;
+}</code></pre>
+            </div>
+            <div class="section-notes">
+                <h3>Что здесь происходит?</h3>
+                <ul>
+                    <li><code>body</code> — фон и шрифт для всей страницы.</li>
+                    <li><code>h1</code> — заголовок по центру, синий.</li>
+                    <li><code>p</code> — обычный текст, удобный для чтения.</li>
+                </ul>
+                <p class="small-note">
+                    Главное правило: не делай яркий текст на ярком фоне — должно быть
+                    контрастно и спокойно для глаз.
+                </p>
+            </div>
+        </section>
+
+        <!-- СЕКЦИЯ 5: БЛОКИ И РАМКИ -->
+        <section id="box" class="section">
+            <div class="section-main">
+                <h2>5. Блоки, отступы и рамки</h2>
+                <p>Для красивых «карточек» полезны:</p>
+                <ul>
+                    <li><code>padding</code> — отступ внутри блока;</li>
+                    <li><code>margin</code> — отступ снаружи;</li>
+                    <li><code>border</code> — рамка;</li>
+                    <li><code>border-radius</code> — скруглённые уголки;</li>
+                    <li><code>box-shadow</code> — тень.</li>
+                </ul>
+
+                <pre><code>.card {
+    background-color: #ffffff;
+    padding: 16px;
+    margin: 16px 0;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 6px 14px rgba(15,23,42,0.08);
+}</code></pre>
+
+                <div class="card demo-card">
+                    Это пример «карточки».  
+                    У неё есть фон, скруглённые уголки, рамка и лёгкая тень.
+                </div>
+            </div>
+            <div class="section-notes">
+                <h3>Подсказки</h3>
+                <ul>
+                    <li><code>padding: 16px;</code> — текст не прилипает к краям.</li>
+                    <li><code>margin: 16px 0;</code> — расстояние между карточками.</li>
+                    <li><code>border-radius: 12px;</code> — «пилюльки», а не квадраты.</li>
+                    <li><code>box-shadow</code> — блок будто приподнят над фоном.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- СЕКЦИЯ 6: АНИМАЦИИ -->
+        <section id="animation" class="section">
+            <div class="section-main">
+                <h2>6. Анимации и hover</h2>
+                <p>
+                    В CSS можно делать простые анимации без JavaScript:
+                </p>
+                <ul>
+                    <li><b>transition</b> — плавный переход при наведении;</li>
+                    <li><b>:hover</b> — состояние «мышка наведена»;</li>
+                    <li><b>@keyframes</b> — собственная анимация (например, мигающая свечка).</li>
+                </ul>
+
+                <div class="demo-row">
+                    <button class="demo-button">Наведи на меня</button>
+                    <div class="demo-box">И на меня тоже</div>
+
+                    <div class="candle">
+                        <div class="candle-body"></div>
+                        <div class="candle-flame"></div>
+                    </div>
+                </div>
+                <p class="small-note">
+                    Попробуй навести мышку на кнопку и на блок.  
+                    Свечка мигает сама — это анимация через <code>@keyframes</code>.
+                </p>
+            </div>
+            <div class="section-notes">
+                <h3>Как это выглядит в CSS</h3>
+                <pre><code>.demo-button {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.demo-button:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 8px 18px rgba(37,99,235,0.4);
+}</code></pre>
+
+                <pre><code>@keyframes flame {
+    0%   { transform: translateY(0) scale(1); }
+    50%  { transform: translateY(-2px) scale(1.05); }
+    100% { transform: translateY(0) scale(0.95); }
+}</code></pre>
+
+                <p class="small-note">
+                    Главное — сначала сделать обычный вид,  
+                    а потом добавить к нему плавные эффекты.
+                </p>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- ВИДЖЕТ СО СВЕЧКАМИ В ПРАВОМ ВЕРХНЕМ УГЛУ -->
+<div class="candle-widget">
+  <div class="wrapper">
+    <div class="candles">
+      <div class="light__wave"></div>
+      <div class="candle1">
+        <div class="candle1__body">
+          <div class="candle1__eyes">
+            <span class="candle1__eyes-one"></span>
+            <span class="candle1__eyes-two"></span>
+          </div>
+          <div class="candle1__mouth"></div>
+        </div>
+        <div class="candle1__stick"></div>
+      </div>
+      
+      <div class="candle2">
+        <div class="candle2__body">
+          <div class="candle2__eyes">
+            <div class="candle2__eyes-one"></div>
+            <div class="candle2__eyes-two"></div>
+          </div>
+        </div>
+        <div class="candle2__stick"></div>
+      </div>
+
+      <div class="candle2__fire"></div>
+      <div class="sparkles-one"></div>
+      <div class="sparkles-two"></div>
+      <div class="candle__smoke-one"></div>
+      <div class="candle__smoke-two"></div>
+    </div>
+
+    <div class="floor"></div>
+  </div>
+</div>
+
+</body>
+</html>

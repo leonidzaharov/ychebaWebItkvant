@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CSS — Отступы (margin / padding)</title>
+
+  <link rel="stylesheet" href="../assets/style.css" />
+
+  <style>
+    .lessonWrap{ max-width: 1100px; margin: 0 auto; padding: 18px 16px 44px; }
+    .lessonBox{
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--panel) 75%, transparent);
+      padding: 14px;
+      box-shadow: var(--shadow);
+      margin-top: 14px;
+    }
+    .lessonBox h2{ margin: 0 0 8px 0; }
+    .lessonBox p{ margin: 0 0 10px 0; color: var(--muted); line-height: 1.45; }
+    .hint{
+      border: 1px dashed var(--stroke);
+      border-radius: 14px;
+      padding: 10px;
+      background: color-mix(in srgb, var(--accent2) 8%, transparent);
+      color: var(--muted);
+      margin: 10px 0;
+      font-size: 13px;
+    }
+
+    .toc{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    .toc a{
+      text-decoration:none;
+      border: 1px solid var(--stroke);
+      border-radius: 999px;
+      padding: 8px 10px;
+      background: color-mix(in srgb, var(--panel) 70%, transparent);
+      color: var(--text);
+      transition: transform .15s ease, filter .15s ease;
+      font-size: 13px;
+    }
+    .toc a:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+
+    .pill{
+      display:inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: color-mix(in srgb, var(--panel) 70%, transparent);
+      font-size: 12px;
+      color: var(--muted);
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+
+    /* мини-игра */
+    .gameWrap{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 12px;
+      align-items:start;
+    }
+    @media (max-width: 900px){
+      .gameWrap{ grid-template-columns: 1fr; }
+    }
+
+    .arena{
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      overflow:hidden;
+      background:
+        radial-gradient(700px 320px at 20% 10%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%),
+        linear-gradient(180deg, color-mix(in srgb, var(--panel) 60%, transparent), color-mix(in srgb, var(--panel) 35%, transparent));
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .target{
+      border: 2px dashed color-mix(in srgb, var(--accent2) 50%, var(--stroke));
+      border-radius: 18px;
+      min-height: 230px;
+      padding: 16px;           /* padding "рамки" */
+      position: relative;
+      background: color-mix(in srgb, var(--panel) 60%, transparent);
+    }
+
+    .targetLabel{
+      position:absolute;
+      top: 10px; left: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--panel) 70%, transparent);
+      border: 1px solid var(--stroke);
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+
+    /* Блок, который двигаем */
+    .box{
+      width: 180px;
+      border-radius: 16px;
+      border: 1px solid var(--stroke);
+      background: linear-gradient(135deg,
+        color-mix(in srgb, var(--accent) 55%, transparent),
+        color-mix(in srgb, var(--accent2) 25%, transparent)
+      );
+      color: var(--text);
+      font-weight: 900;
+      box-shadow: 0 16px 40px rgba(0,0,0,.25);
+
+      /* базовые значения, их будем менять */
+      margin: 0px;
+      padding: 12px;
+    }
+
+    .box small{
+      display:block;
+      font-weight: 700;
+      opacity: .85;
+      margin-top: 6px;
+    }
+
+    /* Внутренний блок внутри .box */
+    .inner{
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px dashed rgba(255,255,255,.35);
+      background: rgba(0,0,0,.12);
+      font-weight: 700;
+      opacity: .95;
+    }
+
+    /* Панель управления */
+    .panel{
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--panel) 70%, transparent);
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+    .panel h3{ margin:0 0 10px 0; }
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 120px;
+      gap: 10px;
+      align-items:center;
+      margin-bottom: 10px;
+    }
+    .row label{ color: var(--muted); font-size: 13px; }
+    .row input[type="range"]{ width: 100%; }
+    .val{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      padding: 8px 10px;
+      background: color-mix(in srgb, var(--panel) 80%, transparent);
+      color: var(--text);
+      text-align:center;
+      font-size: 13px;
+    }
+
+    .btnLine{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    .mini{ font-size: 13px; color: var(--muted); }
+
+    .success{
+      margin-top: 10px;
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      padding: 10px;
+      background: color-mix(in srgb, var(--accent2) 10%, transparent);
+      color: var(--muted);
+      display:none;
+    }
+    .success.show{ display:block; }
+
+    /* подсветка: где margin и где padding */
+    .legend{
+      display:flex; gap:10px; flex-wrap:wrap; margin-top: 8px;
+    }
+    .chip{
+      display:flex; gap:8px; align-items:center;
+      border:1px solid var(--stroke);
+      border-radius:999px;
+      padding:6px 10px;
+      background: color-mix(in srgb, var(--panel) 70%, transparent);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .dot{ width: 10px; height: 10px; border-radius: 999px; }
+    .dot.m{ background: color-mix(in srgb, var(--accent2) 70%, transparent); }
+    .dot.p{ background: color-mix(in srgb, var(--accent) 70%, transparent); }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="btn ghost" href="../track.html?t=css">← Назад к CSS</a>
+      <div>
+        <div class="brandTitle">CSS — Отступы</div>
+        <div class="brandSub">margin / padding — мини-игра “попади блоком в рамку”</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn ghost" id="toggleTheme" type="button">Тема: тёмная</button>
+    </div>
+  </header>
+
+  <main class="lessonWrap">
+    <section class="lessonBox">
+      <h2>1) Главное правило</h2>
+      <p>
+        <span class="pill"><b>margin</b> — снаружи</span>
+        <span class="pill"><b>padding</b> — внутри</span>
+      </p>
+
+      <div class="legend">
+        <div class="chip"><span class="dot m"></span> margin — отступ между блоками</div>
+        <div class="chip"><span class="dot p"></span> padding — “воздух” внутри блока</div>
+      </div>
+
+      <pre><code>.card{
+  margin: 12px;   /* снаружи */
+  padding: 16px;  /* внутри */
+}</code></pre>
+
+      <div class="hint">
+        Если блок “слишком прижат” к краям — добавь <b>padding</b>.
+        Если блок “слишком близко” к другим — добавь <b>margin</b>.
+      </div>
+
+      <div class="toc">
+        <a href="#game">Мини-игра</a>
+        <a href="#shortcuts">Шпаргалка сокращений</a>
+        <a href="#tasks">Задания</a>
+      </div>
+    </section>
+
+    <section class="lessonBox" id="game">
+      <h2>2) Мини-игра: “попади блоком в рамку”</h2>
+      <p>Двигай <b>margin</b> (снаружи) и меняй <b>padding</b> (внутри). Твоя цель — сделать так, чтобы блок выглядел “красиво”: он не прилип к краям, и текст внутри не прижат.</p>
+
+      <div class="gameWrap">
+        <div class="arena">
+          <div class="target" id="target">
+            <div class="targetLabel">Рамка (target)</div>
+
+            <div class="box" id="box">
+              Я — блок
+              <small>Меня двигает margin</small>
+              <div class="inner">А это внутренний блок (видно padding)</div>
+            </div>
+          </div>
+
+          <div class="success" id="success">
+            ✅ Отлично! Похоже на аккуратный блок: есть воздух снаружи и внутри.
+          </div>
+
+          <div class="hint mini" style="margin-top:12px;">
+            Подсказка: попробуй сделать <b>margin 18–26</b>, а <b>padding 14–22</b>. Потом поэкспериментируй!
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Настройки</h3>
+
+          <div class="row">
+            <label for="mTop">margin-top (сверху)</label>
+            <input id="mTop" type="range" min="0" max="60" value="0">
+            <div class="val" id="mTopVal">0px</div>
+          </div>
+
+          <div class="row">
+            <label for="mLeft">margin-left (слева)</label>
+            <input id="mLeft" type="range" min="0" max="60" value="0">
+            <div class="val" id="mLeftVal">0px</div>
+          </div>
+
+          <div class="row">
+            <label for="pad">padding (внутри)</label>
+            <input id="pad" type="range" min="0" max="40" value="12">
+            <div class="val" id="padVal">12px</div>
+          </div>
+
+          <div class="btnLine">
+            <button class="btn" id="nice" type="button">Сделай красиво ✨</button>
+            <button class="btn ghost" id="reset" type="button">Сброс</button>
+          </div>
+
+          <div class="hint mini" style="margin-top:10px;">
+            Как запомнить: <b>padding</b> — “подушка” внутри, <b>margin</b> — “расстояние до других”.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lessonBox" id="shortcuts">
+      <h2>3) Шпаргалка сокращений</h2>
+      <p>В CSS можно писать коротко.</p>
+
+      <pre><code>/* 1 значение */
+margin: 20px;        /* везде 20 */
+
+/* 2 значения: (верх/низ) (лево/право) */
+margin: 10px 30px;   /* вверх-вниз 10, лево-право 30 */
+
+/* 4 значения: верх право низ лево */
+padding: 8px 12px 16px 12px;</code></pre>
+
+      <div class="hint mini">
+        Быстрая проверка: если 2 значения — это “вверх/низ” и “лево/право”.
+      </div>
+    </section>
+
+    <section class="lessonBox" id="tasks">
+      <h2>4) Задания (на 3–7 минут)</h2>
+      <div class="hint">
+        <b>Задание 1:</b> сделай блок так, чтобы он не касался рамки и выглядел аккуратно.<br>
+        <b>Задание 2:</b> поставь margin-left больше, чем margin-top (блок уедет вправо).<br>
+        <b>Задание 3:</b> поставь padding = 0 и посмотри, что стало с текстом. Верни padding обратно.<br>
+        <b>Задание 4:</b> придумай свои “идеальные” значения и запиши их в тетрадь.
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/main.js"></script>
+
+  <script>
+    const box = document.getElementById("box");
+    const success = document.getElementById("success");
+
+    const mTop = document.getElementById("mTop");
+    const mLeft = document.getElementById("mLeft");
+    const pad = document.getElementById("pad");
+
+    const mTopVal = document.getElementById("mTopVal");
+    const mLeftVal = document.getElementById("mLeftVal");
+    const padVal = document.getElementById("padVal");
+
+    function apply(){
+      const mt = Number(mTop.value);
+      const ml = Number(mLeft.value);
+      const p = Number(pad.value);
+
+      box.style.marginTop = mt + "px";
+      box.style.marginLeft = ml + "px";
+      box.style.padding = p + "px";
+
+      mTopVal.textContent = mt + "px";
+      mLeftVal.textContent = ml + "px";
+      padVal.textContent = p + "px";
+
+      // "условие победы": не слишком мало и не слишком много
+      const okMargin = mt >= 16 && mt <= 32 && ml >= 16 && ml <= 32;
+      const okPad = p >= 12 && p <= 24;
+      success.classList.toggle("show", okMargin && okPad);
+    }
+
+    mTop.addEventListener("input", apply);
+    mLeft.addEventListener("input", apply);
+    pad.addEventListener("input", apply);
+
+    document.getElementById("reset").addEventListener("click", () => {
+      mTop.value = 0;
+      mLeft.value = 0;
+      pad.value = 12;
+      apply();
+    });
+
+    document.getElementById("nice").addEventListener("click", () => {
+      mTop.value = 22;
+      mLeft.value = 22;
+      pad.value = 16;
+      apply();
+    });
+
+    apply();
+  </script>
+</body>
+</html>
