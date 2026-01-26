@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JavaScript — Операторы и подвохи</title>
+  <style>
+    :root{
+      --bg1:#eef2ff;
+      --bg2:#e9f7ff;
+      --card:#ffffffcc;
+      --stroke:rgba(148,163,184,.35);
+      --text:#0f172a;
+      --muted:#475569;
+      --shadow: 0 18px 45px rgba(15,23,42,.12);
+      --shadow2: 0 10px 30px rgba(15,23,42,.10);
+      --radius: 22px;
+      --accent:#2563eb;
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(1000px 500px at 12% 0%, #c7d2fe 0%, transparent 55%),
+        radial-gradient(900px 480px at 88% 10%, #bae6fd 0%, transparent 55%),
+        radial-gradient(800px 500px at 20% 85%, #ddd6fe 0%, transparent 55%),
+        linear-gradient(180deg, var(--bg2), var(--bg1));
+      min-height: 100vh;
+    }
+
+    .wrap{ width:min(1180px, 92vw); margin: 28px auto 70px; }
+
+    .hero{
+      position: relative;
+      padding: 26px 26px 22px;
+      border-radius: calc(var(--radius) + 10px);
+      background: linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,255,255,.65));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .hero h1{ margin:0 0 8px; font-size: clamp(34px, 4vw, 56px); letter-spacing: .2px; }
+    .hero p{ margin:0; font-size: clamp(16px, 2vw, 22px); color: var(--muted); }
+
+    /* декоративка как в “обычном вашем” стиле */
+    .hero svg{
+      position:absolute;
+      right:-90px;
+      top:-30px;
+      width:min(720px, 65vw);
+      opacity:.95;
+      pointer-events:none;
+      filter: drop-shadow(0 18px 30px rgba(2,6,23,.12));
+    }
+
+    h2{ margin: 18px 0 10px; font-size: clamp(22px, 2.5vw, 34px); }
+    .sub{ margin:0 0 12px; color: var(--muted); font-size: 16px; }
+
+    .grid{
+      margin-top: 18px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (min-width: 980px){
+      .grid{ grid-template-columns: 1fr 1fr; }
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 18px;
+      backdrop-filter: blur(8px);
+    }
+    .taskCard{
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      border:1px solid rgba(148,163,184,.35);
+      background: rgba(255,255,255,.82);
+      box-shadow: 0 10px 22px rgba(15,23,42,.06);
+    }
+    .taskCard h3{
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+
+    .row{ display:flex; gap: 10px; flex-wrap: wrap; align-items:center; }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,.45);
+      background: rgba(255,255,255,.7);
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .kbd{
+      font-family: var(--mono);
+      padding: 2px 7px;
+      border-radius: 10px;
+      border:1px solid rgba(148,163,184,.55);
+      background: rgba(255,255,255,.75);
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .exprList{ display:grid; gap: 10px; margin-top: 10px; }
+    .expr{
+      padding: 12px;
+      border-radius: 18px;
+      border:1px solid rgba(148,163,184,.35);
+      background: rgba(255,255,255,.8);
+      box-shadow: 0 10px 22px rgba(15,23,42,.06);
+      display:grid;
+      gap:10px;
+    }
+    .exprTop{
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      gap:10px;
+      flex-wrap: wrap;
+    }
+    .code{
+      font-family: var(--mono);
+      font-size: 15px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,.40);
+      background: rgba(241,245,249,.85);
+      color: #0b1220;
+      user-select: all;
+    }
+
+    input, select, textarea{
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,.55);
+      background: rgba(255,255,255,.9);
+      color: var(--text);
+      font-size: 16px;
+      outline:none;
+    }
+    input{ min-width: 170px; }
+
+    textarea{
+      width:100%;
+      min-height: 160px;
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.35;
+      resize: vertical;
+    }
+
+    button{
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(37,99,235,.25);
+      background: linear-gradient(180deg, rgba(37,99,235,.95), rgba(29,78,216,.95));
+      color: white;
+      font-weight: 800;
+      cursor:pointer;
+      font-size: 15px;
+      box-shadow: 0 10px 22px rgba(37,99,235,.18);
+    }
+    button:active{ transform: translateY(1px); }
+
+    .btn2{
+      border: 1px solid rgba(148,163,184,.55);
+      background: rgba(255,255,255,.9);
+      color: var(--text);
+      box-shadow: 0 10px 22px rgba(15,23,42,.06);
+      font-weight: 800;
+    }
+
+    .out{
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(148,163,184,.35);
+      background: rgba(255,255,255,.9);
+      min-height: 46px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color: var(--text);
+      font-size: 16px;
+    }
+    .dot{ width:12px; height:12px; border-radius:999px; display:inline-block; }
+    .dot.ok{ background: var(--ok); }
+    .dot.warn{ background: var(--warn); }
+    .dot.bad{ background: var(--bad); }
+
+    details{
+      border-radius: 18px;
+      border:1px solid rgba(148,163,184,.35);
+      background: rgba(255,255,255,.78);
+      padding: 10px 12px;
+      margin-top: 10px;
+    }
+    summary{ cursor:pointer; font-weight: 900; color: var(--text); }
+    .hint{ color: var(--muted); margin: 0; }
+
+    .img-slot{
+      margin-top: 14px;
+      border-radius: 18px;
+      border:1px dashed rgba(148,163,184,.55);
+      background: rgba(255,255,255,.65);
+      padding: 12px;
+      display:grid;
+      gap:10px;
+    }
+    .img-slot img{
+      max-width: 100%;
+      border-radius: 16px;
+      border:1px solid rgba(148,163,184,.35);
+      display:block;
+    }
+
+    .footer{
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      border:1px solid rgba(148,163,184,.35);
+      background: rgba(255,255,255,.65);
+      color: var(--muted);
+    }
+    .hero{ position:relative; }
+.heroBg{
+  position:absolute;
+  inset:-120px;
+  pointer-events:none;
+  z-index:0;
+  opacity:.95;
+  transform: translate(70px, -35px);
+}
+.heroContent{
+  position:relative;
+  z-index:1;
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <section class="hero">
+  <!-- настоящий фон Vanta -->
+  <div class="heroBg" id="heroBg" aria-hidden="true"></div>
+
+  <!-- контент поверх -->
+  <div class="heroContent">
+    <h1>JavaScript</h1>
+    <p>Операторы + преобразование типов. Сначала “подвохи”, потом 2 сложные практики с автотестами. </p>
+  </div>
+</section>
+
+
+    <div class="grid">
+      <!-- ЛЕВО: ПОДВОХИ -->
+      <section class="card">
+        <h2>1) Примеры-подвохи (угадай результат)</h2>
+        <p class="sub">
+          В каждом примере: напиши ответ → <b>Проверить</b>. Если застрял — <b>Подсказка</b>.
+          <span class="pill"><span class="kbd">typeof</span> показывает тип</span>
+        </p>
+
+        <div class="exprList" id="exprList"></div>
+
+        <details>
+          <summary>Мини-шпаргалка (5 правил)</summary>
+          <p class="hint">
+            1) <span class="kbd">prompt()</span> и <span class="kbd">input.value</span> → <b>строка</b><br/>
+            2) <span class="kbd">+</span> со строкой → <b>склейка</b><br/>
+            3) <span class="kbd">- * /</span> → пытаются сделать <b>число</b><br/>
+            4) <span class="kbd">null</span> в числах часто становится <span class="kbd">0</span><br/>
+            5) <span class="kbd">undefined</span> в числах → <span class="kbd">NaN</span>
+          </p>
+        </details>
+
+        <h2 style="margin-top:18px;">Место для картинки</h2>
+        <div class="img-slot">
+          <div class="hint">Если доступ к моим картинкам пропадёт — вставишь свою: <span class="kbd">img/your-image.png</span></div>
+          <img src="img/your-image.png" alt="Тут будет ваша картинка">
+        </div>
+      </section>
+
+      <!-- ПРАВО: ПРАКТИКА -->
+      <aside class="card">
+        <h2>2) Практика</h2>
+        <p class="sub">Задания карточками. В каждой — код, кнопка запуска и подсказки.</p>
+
+        <!-- Адская цепочка (практика: отдельная от примера №15; ответ не показываем) -->
+        <div class="taskCard" id="hellCard">
+          <h3>7) Адская цепочка (другая цепочка, ответ не показывается)</h3>
+          <div class="code" style="margin:8px 0;">console.log(10 + 7 + "3" + 8 * 2 - 6 + "4" * 2 - 3 + 18 / 3 + "1" + 0 - 5);</div>
+
+          <div class="row" style="margin-top:10px;">
+            <input id="hellGuess" type="text" placeholder="Твой ответ" />
+            <button id="hellCheck">Проверить</button>
+            <button class="btn2" id="hellHintBtn">Подсказка</button>
+          </div>
+
+          <div class="out" id="hellOut">Результат: —</div>
+
+          <details id="hellHint" style="display:none;">
+            <summary>Подсказка</summary>
+            <p class="hint">
+              1) Сначала посчитай <span class="kbd">*</span> и <span class="kbd">/</span>.<br/>
+              2) Потом иди слева направо.<br/>
+              3) Как только появляется строка (кавычки) — <span class="kbd">+</span> начинает <b>склеивать</b>.<br/>
+              4) <span class="kbd">-</span> снова превращает в <b>число</b>.
+            </p>
+          </details>
+
+          <div class="hint" style="margin-top:8px; opacity:.9;">Попытки: <b id="hellRuns">0</b></div>
+        </div>
+<div class="row" style="margin-top:10px;">
+            <button id="hellCheck">Проверить</button>
+            <button class="btn2" id="hellHintBtn">Подсказка</button>
+          </div>
+
+          <div class="out" id="hellOut">Результат: —</div>
+
+          <details id="hellHint" style="display:none;">
+            <summary>Подсказка</summary>
+            <p class="hint">
+              Следи за порядком действий: <span class="kbd">*</span> и <span class="kbd">/</span> считаются раньше.
+              А ещё в какой-то момент выражение станет <b>строкой</b> — и <span class="kbd">+</span> начнёт <b>склеивать</b>.
+            </p>
+          </details>
+
+          <div class="hint" style="margin-top:8px; opacity:.9;">Попытки проверки: <b id="hellRuns">0</b></div>
+        </div>
+
+        <!-- Практика 1 -->
+        <div class="taskCard" id="p1Card">
+          <h3>🔥 Практика 1: Строка A±B</h3>
+          <p class="hint" style="margin:10px 0 0;">
+            Пользователь вводит два числа (через <span class="kbd">prompt</span>). Выведи через <span class="kbd">alert</span>:
+            <br>• их сумму
+            <br>• их разность
+            <br><br><b>Подвох:</b> <span class="kbd">prompt</span> возвращает строку → используй <span class="kbd">Number()</span> или <span class="kbd">+</span> перед переменной.
+          </p>
+
+          <textarea id="p1Code">// Твой код здесь
+let a = prompt('Введи первое число');
+let b = prompt('Введи второе число');
+// ...</textarea>
+
+          <div class="row" style="margin-top:10px;">
+            <button id="p1Run">▶ Запустить</button>
+            <button class="btn2" id="p1Hint1">Подсказка 1</button>
+            <button class="btn2" id="p1Hint2">Подсказка 2</button>
+          </div>
+
+          <div class="out" id="p1Out">Статус: —</div>
+          <details id="p1Hints" style="display:none;">
+            <summary>Подсказки</summary>
+            <div class="hint" id="p1HintsText"></div>
+          </details>
+          <div class="hint" style="margin-top:8px; opacity:.9;">Попытки запуска: <b id="p1Runs">0</b></div>
+        </div>
+
+        <!-- Практика 2 -->
+        <div class="taskCard" id="p2Card">
+          <h3>💰 Практика 2: Калькулятор скидки</h3>
+          <p class="hint" style="margin:10px 0 0;">
+            Пользователь вводит цену товара. Программа спрашивает процент скидки (5, 10 или 15).
+            <br>• Если 5% → вычти 5%
+            <br>• Если 10% → вычти 10%
+            <br>• Если 15% → вычти 15%
+            <br>• Иначе → <span class="kbd">"Неверная скидка"</span>
+            <br><br>Используй <span class="kbd">if</span>, <span class="kbd">else if</span>, <span class="kbd">else</span>.
+          </p>
+
+          <textarea id="p2Code">// Твой код здесь
+let price = Number(prompt('Введи цену товара'));
+let discount = Number(prompt('Введи процент скидки: 5, 10 или 15'));
+// ...</textarea>
+
+          <div class="row" style="margin-top:10px;">
+            <button id="p2Run">▶ Запустить</button>
+            <button class="btn2" id="p2Hint1">Подсказка 1</button>
+            <button class="btn2" id="p2Hint2">Подсказка 2</button>
+          </div>
+
+          <div class="out" id="p2Out">Статус: —</div>
+          <details id="p2Hints" style="display:none;">
+            <summary>Подсказки</summary>
+            <div class="hint" id="p2HintsText"></div>
+          </details>
+          <div class="hint" style="margin-top:8px; opacity:.9;">Попытки запуска: <b id="p2Runs">0</b></div>
+        </div>
+
+        <!-- Практика 3 -->
+        <div class="taskCard" id="p3Card">
+          <h3>🎮 Практика 3: Битва Геймеров (Сложно!)</h3>
+          <p class="hint" style="margin:10px 0 0;">
+            1) С помощью <span class="kbd">prompt</span> узнай очки Игрока 1 и Игрока 2.<br>
+            2) Узнай их «уровень удачи» (число от 1 до 10).<br><br>
+            <b>Логика победы:</b><br>
+            🏆 Побеждает тот, у кого больше очков.<br>
+            🎲 Если очки равны — побеждает тот, у кого больше удачи.<br>
+            🤝 Если и очки, и удача равны — <span class="kbd">alert("Ничья! Мир во всем мире")</span>.
+          </p>
+
+          <textarea id="p3Code">// Твой код здесь
+let score1 = Number(prompt('Очки Игрока 1'));
+let score2 = Number(prompt('Очки Игрока 2'));
+let luck1 = Number(prompt('Удача Игрока 1 (1-10)'));
+let luck2 = Number(prompt('Удача Игрока 2 (1-10)'));
+// ...</textarea>
+
+          <div class="row" style="margin-top:10px;">
+            <button id="p3Run">▶ Запустить</button>
+            <button class="btn2" id="p3Hint1">Подсказка 1</button>
+            <button class="btn2" id="p3Hint2">Подсказка 2</button>
+          </div>
+
+          <div class="out" id="p3Out">Статус: —</div>
+          <details id="p3Hints" style="display:none;">
+            <summary>Подсказки</summary>
+            <div class="hint" id="p3HintsText"></div>
+          </details>
+          <div class="hint" style="margin-top:8px; opacity:.9;">Попытки запуска: <b id="p3Runs">0</b></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="footer">
+      <div class="hint">Прогресс сохраняется на этом компьютере (обновление страницы не сбрасывает попытки).</div>
+    </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.globe.min.js"></script>
+
+  <script>
+    "use strict";
+// ===== VANTA GLOBE (фон) =====
+let vanta = null;
+
+function supportsWebGL(){
+  try{
+    const c = document.createElement("canvas");
+    return !!(c.getContext("webgl") || c.getContext("experimental-webgl"));
+  }catch(e){ return false; }
+}
+function prefersReducedMotion(){
+  return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+function initVanta(){
+  const el = document.getElementById("heroBg");
+  if (!el || vanta) return;
+  if (!supportsWebGL() || prefersReducedMotion()) return;
+
+  vanta = VANTA.GLOBE({
+    el,
+    mouseControls: true,
+    touchControls: true,
+    gyroControls: false,
+    minHeight: 240,
+    minWidth: 240,
+    scale: 1.0,
+    scaleMobile: 0.8,
+    color: 0xff00ff,      
+    color2:0x7df9ff,     
+    backgroundColor: 0xEEF2FF
+  });
+}
+function destroyVanta(){
+  if (vanta && vanta.destroy) vanta.destroy();
+  vanta = null;
+}
+window.addEventListener("load", initVanta);
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) destroyVanta();
+  else initVanta();
+});
+
+    // ===== UI helpers =====
+    function dot(kind){ return '<span class="dot ' + kind + '"></span>'; }
+    function ok(msg){ return dot("ok") + msg; }
+    function warn(msg){ return dot("warn") + msg; }
+    function bad(msg){ return dot("bad") + msg; }
+
+    function pretty(v){
+      const t = typeof v;
+      if (Number.isNaN(v)) return 'NaN (type: number)';
+      if (v === Infinity) return 'Infinity (type: number)';
+      if (v === -Infinity) return '-Infinity (type: number)';
+      if (t === "string") return JSON.stringify(v) + " (type: string)";
+      if (t === "number") return String(v) + " (type: number)";
+      if (t === "boolean") return String(v) + " (type: boolean)";
+      if (v === null) return "null (type: object)";
+      return String(v) + " (type: " + t + ")";
+    }
+
+    // ===== 1) Примеры-подвохи (без eval пользовательского ввода) =====
+    // ВАЖНО: calc — функция, которая реально считает выражение.
+    const tasks = [
+      { expr: '"" + 1 + 0', calc: () => "" + 1 + 0, hint: 'Есть строка → "+" будет склеивать: сначала "" + 1, потом + 0.' },
+      { expr: '"" - 1 + 0', calc: () => "" - 1 + 0, hint: '"-" пытается превратить в число. "" станет 0. Потом прибавится 0.' },
+      { expr: 'true + false', calc: () => true + false, hint: 'В числах: true → 1, false → 0.' },
+      { expr: '6 / "3"', calc: () => 6 / "3", hint: '"/" превращает в числа. "3" станет 3.' },
+      { expr: '"2" * "3"', calc: () => "2" * "3", hint: '"*" превращает в числа. Оба станут числами.' },
+      { expr: '4 + 5 + "px"', calc: () => 4 + 5 + "px", hint: 'Сначала 4+5=9, потом 9 + "px" → строка.' },
+      { expr: '"$" + 4 + 5', calc: () => "$" + 4 + 5, hint: 'Строка есть сразу → всё дальше склейка: "$4" потом "$45".' },
+      { expr: '"4" - 2', calc: () => "4" - 2, hint: '"-" превращает "4" в число.' },
+      { expr: '"4px" - 2', calc: () => "4px" - 2, hint: '"4px" не становится числом → NaN.' },
+      { expr: '"  -9  " + 5', calc: () => "  -9  " + 5, hint: 'Плюс со строкой склеивает. Пробелы остаются.' },
+      { expr: '"  -9  " - 5', calc: () => "  -9  " - 5, hint: 'Минус превращает строку в число: пробелы “не мешают”.' },
+      { expr: 'null + 1', calc: () => null + 1, hint: 'В числах null обычно становится 0.' },
+      { expr: 'undefined + 1', calc: () => undefined + 1, hint: 'undefined в числах → NaN.' },
+      { expr: '" \\t \\n" - 2', calc: () => " \t \n" - 2, hint: 'Пробельная строка превращается в 0, потом 0 - 2.' },
+      { expr: '10 + 5 + "10" + 20 + 2 * 5 - 15 + "5" * 2 - 10 + 20 / 2 + 5 + "7"', calc: () => 10 + 5 + "10" + 20 + 2 * 5 - 15 + "5" * 2 - 10 + 20 / 2 + 5 + "7", hint: 'Адская цепочка: следи за приоритетом (* и / раньше) и за тем, когда выражение становится строкой.' },
+    ];
+
+    const exprList = document.getElementById("exprList");
+
+    function normalizeSpaces(s){
+      return String(s).replace(/\s+/g, " ").trim();
+    }
+
+    
+    const STORAGE_KEY = "ops_practice_state_v2";
+
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      }catch(e){
+        return {};
+      }
+    }
+    function saveState(){
+      try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+    }
+
+    const state = loadState();
+    state.tasks ??= {};
+    state.practice ??= { solveRuns: 0, analyzeRuns: 0, battleRuns: 0 };
+    state.code ??= { solve: null, analyze: null, battle: null };
+
+    function getTaskState(i){
+      if (!state.tasks[i]) state.tasks[i] = { attempts: 0, solved: false, last: "" };
+      return state.tasks[i];
+    }
+
+    function setSolvedUI(metaEl, checkBtn, guessEl, outEl, ts){
+      metaEl.textContent = `Решено ✅ • попыток: ${ts.attempts}`;
+      checkBtn.disabled = true;
+      guessEl.disabled = true;
+      outEl.innerHTML = ok("Верно ✅");
+    }
+
+    function buildExprRow(t, idx){
+      const wrap = document.createElement("div");
+      wrap.className = "expr";
+
+      wrap.innerHTML = `
+        <div class="exprTop">
+          <div class="code">(${idx+1}) ${t.expr}</div>
+          <span class="pill" id="meta_${idx}">Попыток: 0</span>
+        </div>
+
+        <div class="row">
+          <input type="text" id="guess_${idx}" placeholder="Твой ответ (например: 22)" />
+          <button class="btn2" id="hintBtn_${idx}">Подсказка</button>
+          <button id="checkBtn_${idx}">Проверить</button>
+        </div>
+
+        <div class="out" id="out_${idx}">Результат: —</div>
+
+        <details id="hint_${idx}" style="display:none;">
+          <summary>Подсказка</summary>
+          <p class="hint">${t.hint}</p>
+        </details>
+      `;
+
+      const ts = getTaskState(idx);
+
+      const checkBtn = wrap.querySelector("#checkBtn_" + idx);
+      const out = wrap.querySelector("#out_" + idx);
+      const guess = wrap.querySelector("#guess_" + idx);
+      const hintBtn = wrap.querySelector("#hintBtn_" + idx);
+      const hintDet = wrap.querySelector("#hint_" + idx);
+      const meta = wrap.querySelector("#meta_" + idx);
+
+      // восстановление
+      meta.textContent = ts.solved ? `Решено ✅ • попыток: ${ts.attempts}` : `Попыток: ${ts.attempts}`;
+      if (typeof ts.last === "string" && ts.last.length) guess.value = ts.last;
+
+      let real;
+      try { real = t.calc(); } catch(e){ real = "ERROR"; }
+
+      // если уже решено — блокируем
+      if (ts.solved){
+        checkBtn.disabled = true;
+        guess.disabled = true;
+        out.innerHTML = ok("Уже решено ✅");
+      }
+
+      function isCorrect(userRaw){
+        if (typeof real === "string"){
+          const u = normalizeSpaces(userRaw.replace(/^["']|["']$/g, ""));
+          const r = normalizeSpaces(real);
+          return u === r;
+        }
+        if (Number.isNaN(real)){
+          return userRaw.trim().toLowerCase() === "nan";
+        }
+        // числа/булевы: сравнение по строке
+        const realText = pretty(real);
+        const accepted = new Set([ String(real), realText.split(" (type:")[0] ]);
+        return accepted.has(userRaw.trim());
+      }
+
+      function onFail(){
+        ts.attempts += 1;
+        meta.textContent = `Попыток: ${ts.attempts}`;
+        out.innerHTML = warn(`Не совпало ❌ Попробуй ещё раз. (попытка: ${ts.attempts})`);
+
+        // после 3 ошибок — автоматически показать подсказку
+        if (ts.attempts >= 3){
+          hintDet.style.display = "block";
+          hintDet.open = true;
+        }
+        saveState();
+      }
+
+      function onSuccess(){
+        ts.solved = true;
+        // ВАЖНО: не показываем правильный ответ!
+        setSolvedUI(meta, checkBtn, guess, out, ts);
+        saveState();
+      }
+
+      checkBtn.addEventListener("click", () => {
+        if (ts.solved) return;
+        const userRaw = guess.value.trim();
+        ts.last = guess.value;
+        saveState();
+
+        if (!userRaw){
+          out.innerHTML = warn("Сначала введи ответ 🙂");
+          return;
+        }
+        if (isCorrect(userRaw)) onSuccess();
+        else onFail();
+      });
+
+      hintBtn.addEventListener("click", () => {
+        const isOpen = hintDet.style.display !== "none";
+        hintDet.style.display = isOpen ? "none" : "block";
+        if (!isOpen) hintDet.open = true;
+      });
+
+      guess.addEventListener("input", () => {
+        ts.last = guess.value;
+        saveState();
+      });
+
+      guess.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") checkBtn.click();
+      });
+
+      return wrap;
+    }
+
+
+    tasks.forEach((t, i) => exprList.appendChild(buildExprRow(t, i)));
+
+    const resetBtn = document.getElementById("resetProgress");
+    if (resetBtn) resetBtn.addEventListener("click", () => {
+      if (!confirm("Сбросить прогресс на этом компьютере?")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    });
+
+    
+    // ===== 2) Практика (обновлённая) =====
+    // Сохраняем код и счётчики в localStorage через уже существующий state.
+    state.practice ??= {};
+    state.code ??= {};
+
+    state.practice.hellRuns ??= 0;
+    state.practice.p1Runs ??= 0;
+    state.practice.p2Runs ??= 0;
+    state.practice.p3Runs ??= 0;
+
+    function toggleDetails(detailsEl){
+      if (!detailsEl) return;
+      const isOpen = detailsEl.style.display !== "none";
+      detailsEl.style.display = isOpen ? "none" : "block";
+      if (!isOpen) detailsEl.open = true;
+    }
+
+    function showHint(detailsId, textId, html){
+      const d = document.getElementById(detailsId);
+      const t = document.getElementById(textId);
+      if (!d || !t) return;
+      d.style.display = "block";
+      d.open = true;
+      t.innerHTML = html;
+      // прокрутим чуть-чуть, чтобы было видно
+      d.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    // --- Адская цепочка (практика: ввод ответа, без показа правильного) ---
+    const hellCheck = document.getElementById("hellCheck");
+    const hellOut = document.getElementById("hellOut");
+    const hellHintBtn = document.getElementById("hellHintBtn");
+    const hellHint = document.getElementById("hellHint");
+    const hellRunsEl = document.getElementById("hellRuns");
+    const hellGuess = document.getElementById("hellGuess");
+
+    state.practice.hellRuns ??= 0;
+    state.practice.hellLast ??= "";
+
+    if (hellRunsEl) hellRunsEl.textContent = String(state.practice.hellRuns);
+
+    function normalizeAnswer(x){
+      let s = String(x ?? "").trim();
+      // разрешим кавычки вокруг ответа
+      if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
+        s = s.slice(1, -1).trim();
+      }
+      // убираем пробелы внутри (на всякий случай)
+      s = s.replace(/\s+/g, "");
+      return s;
+    }
+
+    if (hellGuess){
+      hellGuess.value = state.practice.hellLast;
+      hellGuess.addEventListener("input", () => {
+        state.practice.hellLast = hellGuess.value;
+        saveState();
+      });
+      hellGuess.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") hellCheck?.click();
+      });
+    }
+
+    if (hellHintBtn) hellHintBtn.addEventListener("click", () => toggleDetails(hellHint));
+
+    function hellIsCorrect(userRaw){
+      const user = normalizeAnswer(userRaw);
+
+      const val = 10 + 7 + "3" + 8 * 2 - 6 + "4" * 2 - 3 + 18 / 3 + "1" + 0 - 5;
+
+      // NaN отдельно
+      if (typeof val === "number" && Number.isNaN(val)) {
+        return user.toLowerCase() === "nan";
+      }
+
+      // строка: сравним как строку (без пробелов)
+      if (typeof val === "string") {
+        return user === normalizeAnswer(val);
+      }
+
+      // число/boolean и т.п.
+      return user === String(val);
+    }
+
+    if (hellCheck && hellOut){
+      hellCheck.addEventListener("click", () => {
+        state.practice.hellRuns += 1;
+        if (hellRunsEl) hellRunsEl.textContent = String(state.practice.hellRuns);
+        saveState();
+
+        const user = hellGuess ? hellGuess.value : "";
+        if (!user.trim()) {
+          hellOut.innerHTML = warn("Сначала введи ответ 🙂");
+          return;
+        }
+
+        if (hellIsCorrect(user)) {
+          hellOut.innerHTML = ok("Верно ✅");
+        } else {
+          hellOut.innerHTML = warn("Не совпало ❌ Попробуй ещё раз.");
+          // после 5 попыток — показать подсказку автоматически
+          if (state.practice.hellRuns >= 5 && hellHint) {
+            hellHint.style.display = "block";
+            hellHint.open = true;
+          }
+        }
+      });
+    }
+
+    // Общая функция запуска (prompt/alert настоящие)
+    function bindRunner(textareaId, outId, runBtnId, runsKey, runsLabelId, codeKey){
+      const ta = document.getElementById(textareaId);
+      const out = document.getElementById(outId);
+      const btn = document.getElementById(runBtnId);
+      const runsEl = document.getElementById(runsLabelId);
+
+      if (!ta || !out || !btn || !runsEl) return;
+
+      if (state.code[codeKey]) ta.value = state.code[codeKey];
+      ta.addEventListener("input", () => { state.code[codeKey] = ta.value; saveState(); });
+
+      runsEl.textContent = String(state.practice[runsKey] || 0);
+
+      btn.addEventListener("click", () => {
+        state.practice[runsKey] = (state.practice[runsKey] || 0) + 1;
+        runsEl.textContent = String(state.practice[runsKey]);
+        saveState();
+
+        try{
+          new Function(ta.value)();
+          out.innerHTML = ok("Запущено ✅ (смотри prompt/alert)");
+        }catch(e){
+          out.innerHTML = bad("Ошибка: " + e.message);
+        }
+      });
+    }
+
+    bindRunner("p1Code", "p1Out", "p1Run", "p1Runs", "p1Runs", "p1");
+    bindRunner("p2Code", "p2Out", "p2Run", "p2Runs", "p2Runs", "p2");
+    bindRunner("p3Code", "p3Out", "p3Run", "p3Runs", "p3Runs", "p3");
+
+    // --- Подсказки Практика 1 ---
+    const p1Hint1 = document.getElementById("p1Hint1");
+    const p1Hint2 = document.getElementById("p1Hint2");
+    if (p1Hint1) p1Hint1.addEventListener("click", () => {
+      showHint("p1Hints", "p1HintsText",
+        "Подсказка 1: после prompt сделай числа:<br>" +
+        "<span class='kbd'>a = Number(a)</span> и <span class='kbd'>b = Number(b)</span> (или <span class='kbd'>+a</span>, <span class='kbd'>+b</span>)."
+      );
+    });
+    if (p1Hint2) p1Hint2.addEventListener("click", () => {
+      showHint("p1Hints", "p1HintsText",
+        "Подсказка 2: два alert подряд:<br>" +
+        "<span class='kbd'>alert('Сумма: ' + (a + b))</span><br>" +
+        "<span class='kbd'>alert('Разность: ' + (a - b))</span>"
+      );
+    });
+
+    // --- Подсказки Практика 2 ---
+    const p2Hint1 = document.getElementById("p2Hint1");
+    const p2Hint2 = document.getElementById("p2Hint2");
+    if (p2Hint1) p2Hint1.addEventListener("click", () => {
+      showHint("p2Hints", "p2HintsText",
+        "Подсказка 1: ветвление по скидке:<br>" +
+        "<span class='kbd'>if (discount === 5) ... else if (discount === 10) ... else if (discount === 15) ... else ...</span>"
+      );
+    });
+    if (p2Hint2) p2Hint2.addEventListener("click", () => {
+      showHint("p2Hints", "p2HintsText",
+        "Подсказка 2: формула цены:<br>" +
+        "<span class='kbd'>let final = price - price * (discount / 100)</span><br>" +
+        "и потом <span class='kbd'>alert('Цена со скидкой: ' + final)</span>.<br>" +
+        "Если скидка не 5/10/15 → <span class='kbd'>alert('Неверная скидка')</span>"
+      );
+    });
+
+    // --- Подсказки Практика 3 ---
+    const p3Hint1 = document.getElementById("p3Hint1");
+    const p3Hint2 = document.getElementById("p3Hint2");
+    if (p3Hint1) p3Hint1.addEventListener("click", () => {
+      showHint("p3Hints", "p3HintsText",
+        "Подсказка 1: сначала сравни очки:<br>" +
+        "<span class='kbd'>if (score1 > score2) ... else if (score2 > score1) ...</span><br>" +
+        "Иначе — очки равны."
+      );
+    });
+    if (p3Hint2) p3Hint2.addEventListener("click", () => {
+      showHint("p3Hints", "p3HintsText",
+        "Подсказка 2: если очки равны — сравни удачу:<br>" +
+        "<span class='kbd'>if (luck1 > luck2) ... else if (luck2 > luck1) ... else alert('Ничья! Мир во всем мире')</span>"
+      );
+    });
+
+
+  </script>
+</body>
+</html>
