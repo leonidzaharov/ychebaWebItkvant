@@ -6,8 +6,7 @@
       "globe": { "color": "0xff7a00", "color2": "0xff3d6e" },
       "topics": [
         {"title": "Скелеты сайтов (4 примера)","meta": "копируй и меняй","href": "./lessons/html-skeletons.html"}, 
-       {"title": "Ссылки и картинки: a, img", "meta": "фишки + практика","href": "./lessons/html-links-img.html"
-}
+       {"title": "Ссылки и картинки: a, img", "meta": "фишки + практика","href": "./lessons/html-links-img.html"}
 
       ],
       "cheats": [
@@ -34,7 +33,7 @@
       "globe": { "color": "0xffcc00", "color2": "0x00e0ff" },
       "topics": [
         { "title": "Переменные: let/const", "meta": "база", "href": "./lessons/js-vars.html" },
-        {title": "Практика: операторы","meta": "теория → практика","href": "./lessons/js-operators-module.html"}
+        {title: "Практика: операторы","meta": "теория → практика","href": "./lessons/js-operators-module.html"}
 
 
       ],
@@ -44,5 +43,6 @@
     }
   }
 }
+
 
 
