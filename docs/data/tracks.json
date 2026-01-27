@@ -34,7 +34,8 @@
       "globe": { "color": "0xffcc00", "color2": "0x00e0ff" },
       "topics": [
         { "title": "Переменные: let/const", "meta": "база", "href": "./lessons/js-vars.html" },
-        {"title": "Практика: операторы","meta": "подвохи + проверка","href": "./lessons/operators_practice_final_v3_custom_practice.html"}
+        {title": "Практика: операторы","meta": "теория → практика","href": "./lessons/js-operators-module.html"}
+
 
       ],
       "cheats": [
@@ -43,4 +44,5 @@
     }
   }
 }
+
 
