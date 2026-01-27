@@ -38,8 +38,9 @@
 
       ],
       "cheats": [
-        { "title": "Шпаргалка: операторы", "meta": "PDF", "href": "./files/js-cheat.pdf" }
+        { "title": "Шпаргалка: операторы", "meta": "PDF", "href": "./lessons/js-uroksravneni.html" }
       ]
     }
   }
 }
+
