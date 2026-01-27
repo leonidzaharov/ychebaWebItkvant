@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>JS — Операторы (модуль)</title>
+
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    .wrap{ max-width: 1100px; margin:0 auto; padding:18px 16px 44px; }
+    .box{
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--panel) 75%, transparent);
+      padding:14px;
+      box-shadow: var(--shadow);
+      margin-top:14px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .cardLink{
+      display:block;
+      text-decoration:none;
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--panel) 70%, transparent);
+      padding:14px;
+      box-shadow: var(--shadow);
+      transition: transform .15s ease, filter .15s ease;
+      color: var(--text);
+    }
+    .cardLink:hover{ transform: translateY(-2px); filter: brightness(1.06); }
+    .title{ font-weight: 900; margin:0 0 6px 0; }
+    .meta{ color: var(--muted); font-size: 13px; margin:0; line-height:1.4; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="btn ghost" href="../track.html?t=js">← Назад к JavaScript</a>
+      <div>
+        <div class="brandTitle">Практика: операторы</div>
+        <div class="brandSub">Модуль: теория → практика (будем дополнять)</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn ghost" id="toggleTheme" type="button">Тема: тёмная</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="box">
+      <h2 style="margin:0 0 8px 0;">Что внутри модуля</h2>
+      <p style="margin:0;color:var(--muted);line-height:1.45;">
+        Сначала короткая теория/презентация, потом большая практика с проверками.
+      </p>
+
+      <div class="grid">
+        <a class="cardLink" href="./js-logic-operators.html" target="_blank" rel="noopener">
+          <div class="title">1) Презентация: логические операторы</div>
+          <p class="meta">&&, ||, ! + примеры и тренажёр</p>
+        </a>
+
+        <a class="cardLink" href="./operators_practice_final_v3_custom_practice.html" target="_blank" rel="noopener">
+          <div class="title">2) Практика: операторы</div>
+          <p class="meta">подвохи + проверка</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="box">
+      <h2 style="margin:0 0 8px 0;">Дальше добавим</h2>
+      <p style="margin:0;color:var(--muted);line-height:1.45;">
+        3) Домашка • 4) Мини-квиз • 5) Шпаргалка (HTML внутри сайта, не PDF)
+      </p>
+    </section>
+  </main>
+
+  <script src="../assets/main.js"></script>
+</body>
+</html>

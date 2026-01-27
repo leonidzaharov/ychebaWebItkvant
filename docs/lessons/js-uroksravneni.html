@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Сравнение в JavaScript</title>
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    background: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+.slide {
+    display: none;
+    padding: 40px;
+    background: white;
+    margin: 20px auto;
+    max-width: 700px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+.slide.active {
+    display: block;
+}
+h1 { font-size: 2.5em; }
+h2 { font-size: 2em; }
+p { font-size: 1.5em; }
+code {
+    background: #eee;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 1.5em;
+}
+.nav {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 40px;
+    box-sizing: border-box;
+}
+button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1em;
+}
+button:disabled {
+    background: #ccc;
+    color: #888;
+}
+</style>
+</head>
+<body>
+
+<div class="slide"><h1>Сравнение в JavaScript</h1></div>
+<div class="slide"><h2>✅ Сравнение возвращает <code>true</code> или <code>false</code>.</h2></div>
+<div class="slide"><h2>Операторы сравнения для чисел:<br><code>&gt;</code> <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code>.</h2></div>
+<div class="slide"><p><code>5 > 3</code> ➡️ <code>true</code></p><p><code>3 < 7</code> ➡️ <code>true</code></p></div>
+<div class="slide"><h2>🔤 Строки сравниваются посимвольно (лексикографически).</h2></div>
+<div class="slide"><p><code>'a' < 'b'</code> ➡️ <code>true</code></p><p><code>'2' > '10'</code> ➡️ <code>true</code> (потому что '2' > '1')</p></div>
+<div class="slide"><h2>⚠️ При сравнении разных типов выполняется преобразование типов.</h2></div>
+<div class="slide"><p><code>'2' > 1</code> ➡️ <code>true</code> (строка '2' преобразуется в число 2)</p></div>
+<div class="slide"><h2><code>==</code> и <code>!=</code>: нестрогое сравнение (с приведением типов).</h2></div>
+<div class="slide"><p><code>5 == '5'</code> ➡️ <code>true</code> (строка '5' становится число 5)</p></div>
+<div class="slide"><h2><code>===</code> и <code>!==</code>: строгое сравнение (без преобразования типов).</h2></div>
+<div class="slide"><p><code>5 === '5'</code> ➡️ <code>false</code> (число не равно строке)</p></div>
+<div class="slide"><h2>⚠️ 0 == false ➡️ <code>true</code>, но 0 === false ➡️ <code>false</code>.<br><code>true == 1</code> ➡️ <code>true</code>, <code>false == 0</code> ➡️ <code>true</code>.</h2></div>
+<div class="slide"><h2>🔍 <code>null == undefined</code> ➡️ <code>true</code>, но <code>null === undefined</code> ➡️ <code>false</code>.</h2></div>
+<div class="slide"><h2>👀 При сравнении с числом <code>null</code> становится 0:</h2><p><code>null >= 0</code> ➡️ <code>true</code> (0 ≥ 0), <code>null > 0</code> ➡️ <code>false</code>.</p></div>
+<div class="slide"><h2>👀 При сравнении с числом <code>undefined</code> становится NaN:</h2><p><code>undefined > 0</code> ➡️ <code>false</code> (undefined → NaN).</p></div>
+<div class="slide"><h2>⚠️ <code>NaN</code> не равен ничему (даже самому себе):</h2><p><code>NaN == NaN</code> ➡️ <code>false</code>.</p></div>
+<div class="slide"><h2>👀 Лучше использовать <code>===</code> и <code>!==</code> вместо <code>==</code> и <code>!=</code>.</h2></div>
+
+<div class="slide"><h2>Проверим себя!</h2></div>
+<div class="slide"><h2>Пример 1</h2><p><code>5 > 3</code> = ?</p></div>
+<div class="slide"><h2>Пример 2</h2><p><code>2 < 10</code> = ?</p></div>
+<div class="slide"><h2>Пример 3</h2><p><code>10 >= 10</code> = ?</p></div>
+<div class="slide"><h2>Пример 4</h2><p><code>7 <= 8</code> = ?</p></div>
+<div class="slide"><h2>Пример 5</h2><p><code>5 == '5'</code> = ?</p></div>
+<div class="slide"><h2>Пример 6</h2><p><code>5 === '5'</code> = ?</p></div>
+<div class="slide"><h2>Пример 7</h2><p><code>'2' > 1</code> = ?</p></div>
+<div class="slide"><h2>Пример 8</h2><p><code>'2' > '10'</code> = ?</p></div>
+<div class="slide"><h2>Пример 9</h2><p><code>true == 1</code> = ?</p></div>
+<div class="slide"><h2>Пример 10</h2><p><code>false == 0</code> = ?</p></div>
+<div class="slide"><h2>Пример 11</h2><p><code>false === 0</code> = ?</p></div>
+<div class="slide"><h2>Пример 12</h2><p><code>null == undefined</code> = ?</p></div>
+<div class="slide"><h2>Пример 13</h2><p><code>NaN == NaN</code> = ?</p></div>
+<div class="slide"><h2>Пример 14</h2><p><code>null >= 0</code> = ?</p></div>
+<div class="slide"><h2>Пример 15</h2><p><code>undefined > 0</code> = ?</p></div>
+
+<div class="nav">
+    <button id="prev" onclick="prevSlide()">← Назад</button>
+    <button id="next" onclick="nextSlide()">Вперёд →</button>
+</div>
+
+<script>
+let slides = document.querySelectorAll('.slide');
+let current = 0;
+function showSlide(n) {
+    if (n < 0 || n >= slides.length) return;
+    slides[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    document.getElementById('prev').disabled = (current === 0);
+    document.getElementById('next').disabled = (current === slides.length - 1);
+}
+function prevSlide() {
+    showSlide(current - 1);
+}
+function nextSlide() {
+    showSlide(current + 1);
+}
+document.onkeydown = function(e) {
+    if (e.key === 'ArrowLeft') prevSlide();
+    if (e.key === 'ArrowRight') nextSlide();
+};
+window.onload = function() {
+    slides[current].classList.add('active');
+    document.getElementById('prev').disabled = true;
+};
+</script>
+
+</body>
+</html>
