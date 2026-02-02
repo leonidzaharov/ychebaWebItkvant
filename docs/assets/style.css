@@ -27,14 +27,20 @@ html[data-theme="light"]{
 }
 
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  color:var(--text);
+
+html{
+  min-height: 100%;
   background:
     radial-gradient(900px 520px at 20% 10%, color-mix(in srgb, var(--accent) 25%, transparent), transparent 60%),
     radial-gradient(900px 640px at 80% 20%, color-mix(in srgb, var(--accent2) 20%, transparent), transparent 60%),
     linear-gradient(180deg, var(--bg0), var(--bg1));
+}
+body{
+  margin:0;
+  min-height: 100vh;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  color:var(--text);
+  background: transparent;
 }
 
 .topbar{
@@ -130,9 +136,22 @@ html[data-theme="light"] .heroOverlay{
   background: color-mix(in srgb, var(--panel) 75%, transparent);
   color:var(--text);
   text-decoration:none;
-  transition: transform .15s ease, border-color .15s ease;
+   transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
 }
 .card:hover{transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent2) 45%, var(--stroke))}
+/* Нормальная подсветка при клике/табом */
+.card:focus,
+.card:focus-visible{
+  outline: none;
+  border-color: color-mix(in srgb, var(--accent2) 55%, var(--stroke));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent2) 22%, transparent);
+}
+
+/* Эффект "нажал" */
+.card:active{
+  transform: translateY(0);
+}
+
 .cardIcon{font-size:20px}
 .cardTitle{font-weight:900; margin-top:8px}
 .cardText{color:var(--muted); font-size:13px; margin-top:6px; line-height:1.4}
@@ -266,4 +285,35 @@ html[data-theme="light"] .heroOverlay{
   margin-top: 6px;
   color: var(--muted);
   font-size: 12px;
+}
+/* Уроки: всегда строчками (1 колонка) */
+#lessons { grid-template-columns: 1fr; }
+
+/* Ограничиваем высоту и даём внутренний скролл */
+.lessonsScroll{
+   max-height: 340px;
+  overflow: auto;
+  padding: 4px 6px; 
+}
+.bgToggle{
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 9999;
+
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  background: rgba(10, 14, 39, 0.65);
+  color: #e2e8f0;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: transform .15s ease, background .2s ease, border-color .2s ease;
+}
+
+.bgToggle:hover{
+  transform: translateY(-1px);
+  border-color: rgba(0, 212, 255, 0.65);
+  background: rgba(10, 14, 39, 0.8);
 }

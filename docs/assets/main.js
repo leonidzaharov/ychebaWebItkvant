@@ -170,6 +170,7 @@ setAnimEnabled(getAnimEnabled());
   const titleEl = document.getElementById("trackTitle");
   const topicsEl = document.getElementById("topics");
   const cheatsEl = document.getElementById("cheats");
+  const lessonsEl = document.getElementById("lessons");
   if (!titleEl || !topicsEl || !cheatsEl) return; // мы не на track.html
 
   const params = new URLSearchParams(location.search);
@@ -198,6 +199,30 @@ setAnimEnabled(getAnimEnabled());
         destroyVanta();
         initVanta();
       }
+      // --- Уроки (по датам) ---
+if (lessonsEl) {
+  lessonsEl.innerHTML = "";
+
+  const lessons = track.lessons || [];
+  if (lessons.length === 0) {
+    // если уроков нет — скрываем секцию целиком
+    lessonsEl.parentElement.style.display = "none";
+  } else {
+    lessonsEl.parentElement.style.display = "";
+    lessons.forEach(item => {
+      const a = document.createElement("a");
+      a.className = "card small";
+      a.href = item.href;
+
+      // чтобы не плодить вкладки у детей:
+      a.target = "_self";
+
+      a.innerHTML = `<div class="cardTitle">${item.date} — ${item.title}</div>
+                     <div class="cardMeta">${item.meta || ""}</div>`;
+      lessonsEl.appendChild(a);
+    });
+  }
+}
 
       // рендер карточек
       topicsEl.innerHTML = "";

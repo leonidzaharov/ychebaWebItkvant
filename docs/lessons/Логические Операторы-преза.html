@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Логические Операторы в JavaScript</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .presentation {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .slide-container {
+            padding: 40px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide h2 {
+            color: #667eea;
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .slide h3 {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .slide p, .slide li {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .slide ul {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .slide li {
+            margin-bottom: 12px;
+        }
+
+        .code-example {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            overflow-x: auto;
+            color: #333;
+        }
+
+        .table-comparison {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 1em;
+        }
+
+        .table-comparison th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .table-comparison td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            color: #333;
+        }
+
+        .table-comparison tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .truth-table {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .example-box {
+            background: #f0f4ff;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 1.05em;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .example-box strong {
+            color: #764ba2;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: #f9f9f9;
+            border-top: 1px solid #ddd;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .result-true {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .result-false {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .slide:nth-child(1) .slide-content {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .emoji-large {
+            font-size: 4em;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="presentation">
+            <div class="header">
+                <h1>🧠 Логические Операторы в JavaScript</h1>
+                <p>Простое объяснение для всех!</p>
+            </div>
+
+            <div class="slide-container">
+                <!-- Слайд 1: Вступление -->
+                <div class="slide" :class="{ active: currentSlide === 0 }">
+                    <div class="slide-content" style="text-align: center;">
+                        <div class="emoji-large">🤔</div>
+                        <h2>Что такое логические операторы?</h2>
+                        <p style="font-size: 1.2em; margin-top: 30px;">Это специальные символы, которые помогают нам проверять условия:</p>
+                        <p style="font-size: 1.1em; margin-top: 20px;"><strong>Правда это или ложь?</strong></p>
+                        <p style="font-size: 1.1em; margin-top: 20px;">✅ Я сегодня написал код?</p>
+                        <p style="font-size: 1.1em;">❌ Небо зелёное?</p>
+                        <p style="font-size: 1.1em; margin-top: 30px; color: #667eea;"><strong>На этом слайде мы научимся работать с ними!</strong></p>
+                    </div>
+                </div>
+
+                <!-- Слайд 2: && (И) -->
+                <div class="slide" :class="{ active: currentSlide === 1 }">
+                    <h2>🔗 Оператор И (&&)</h2>
+                    <p><strong>Что это?</strong> Проверка: правда ЛИ оба условия одновременно?</p>
+                    
+                    <h3>Простой пример:</h3>
+                    <div class="example-box">
+                        <strong>Проверяем:</strong> Тебе 18+ лет И у тебя есть права?<br><br>
+                        ✅ 25 лет И права есть = <span class="result-true">МОЖНО ЕЗДИТЬ</span><br>
+                        ❌ 25 лет И прав НЕТ = <span class="result-false">НЕЛЬЗЯ ЕЗДИТЬ</span><br>
+                        ❌ 16 лет И права есть = <span class="result-false">НЕЛЬЗЯ ЕЗДИТЬ</span><br>
+                        ❌ 16 лет И прав НЕТ = <span class="result-false">НЕЛЬЗЯ ЕЗДИТЬ</span>
+                    </div>
+
+                    <h3>Код:</h3>
+                    <div class="code-example">
+if (age >= 18 && hasLicense) {<br>
+&nbsp;&nbsp;console.log('Ты можешь ездить!');<br>
+}<br><br>
+// Примеры:<br>
+true && true = <span class="result-true">true</span><br>
+true && false = <span class="result-false">false</span><br>
+false && true = <span class="result-false">false</span><br>
+false && false = <span class="result-false">false</span>
+                    </div>
+                    <p><strong>✨ Запомни:</strong> && значит "И ТО И ЭТО должны быть правдой!"</p>
+                </div>
+
+                <!-- Слайд 3: || (ИЛИ) -->
+                <div class="slide" :class="{ active: currentSlide === 2 }">
+                    <h2>🤷 Оператор ИЛИ (||)</h2>
+                    <p><strong>Что это?</strong> Проверка: правда ЛИ хотя бы одно условие?</p>
+                    
+                    <h3>Простой пример:</h3>
+                    <div class="example-box">
+                        <strong>Проверяем:</strong> У тебя есть рубли ИЛИ доллары?<br><br>
+                        ✅ Есть рубли И доллары = <span class="result-true">МОЖЕШЬ КУПИТЬ</span><br>
+                        ✅ Есть только рубли = <span class="result-true">МОЖЕШЬ КУПИТЬ</span><br>
+                        ✅ Есть только доллары = <span class="result-true">МОЖЕШЬ КУПИТЬ</span><br>
+                        ❌ Ничего нет = <span class="result-false">НЕ МОЖЕШЬ КУПИТЬ</span>
+                    </div>
+
+                    <h3>Код:</h3>
+                    <div class="code-example">
+if (hasRubles || hasDollars) {<br>
+&nbsp;&nbsp;console.log('Ты можешь что-то купить!');<br>
+}<br><br>
+// Примеры:<br>
+true || true = <span class="result-true">true</span><br>
+true || false = <span class="result-true">true</span><br>
+false || true = <span class="result-true">true</span><br>
+false || false = <span class="result-false">false</span>
+                    </div>
+                    <p><strong>✨ Запомни:</strong> || значит "ХОТЯ БЫ ЧТО-ТО одно должно быть правдой!"</p>
+                </div>
+
+                <!-- Слайд 4: ! (НЕ) -->
+                <div class="slide" :class="{ active: currentSlide === 3 }">
+                    <h2>⚡ Оператор НЕ (!)</h2>
+                    <p><strong>Что это?</strong> Переворачивает правду на ложь и наоборот!</p>
+                    
+                    <h3>Простой пример:</h3>
+                    <div class="example-box">
+                        <strong>Проверяем:</strong> Это НЕ дождь?<br><br>
+                        ✅ Дождик идёт (true) → НЕ дождик = <span class="result-false">false</span><br>
+                        ✅ Дождика нет (false) → НЕ дождика нет = <span class="result-true">true</span>
+                    </div>
+
+                    <h3>Код:</h3>
+                    <div class="code-example">
+if (!isRaining) {<br>
+&nbsp;&nbsp;console.log('Идём гулять!');<br>
+}<br><br>
+// Примеры:<br>
+!true = <span class="result-false">false</span><br>
+!false = <span class="result-true">true</span>
+                    </div>
+                    <p><strong>✨ Запомни:</strong> ! меняет правду на противоположную!</p>
+                </div>
+
+                <!-- Слайд 5: Комбинирование операторов -->
+                <div class="slide" :class="{ active: currentSlide === 4 }">
+                    <h2>🎯 Комбинирование операторов</h2>
+                    <p><strong>Можно использовать несколько операторов вместе!</strong></p>
+                    
+                    <h3>Сложный пример:</h3>
+                    <div class="example-box">
+                        <strong>Проверяем:</strong> Можно ли идти в кино?<br>
+                        Условия: Тебе есть 12+ лет И (есть деньги ИЛИ родитель заплатит) И фильм НЕ запрещен<br><br>
+                    </div>
+
+                    <h3>Код:</h3>
+                    <div class="code-example">
+if (age >= 12 && (hasMoney || parentWillPay) && !isFilmBanned) {<br>
+&nbsp;&nbsp;console.log('Идём в кино! 🍿');<br>
+}
+                    </div>
+                    
+                    <p><strong>✨ Порядок:</strong></p>
+                    <ul>
+                        <li>Сначала выполняются скобки ( )</li>
+                        <li>Потом ! (НЕ)</li>
+                        <li>Потом && (И)</li>
+                        <li>Потом || (ИЛИ)</li>
+                    </ul>
+                </div>
+
+                <!-- Слайд 6: Таблица истинности -->
+                <div class="slide" :class="{ active: currentSlide === 5 }">
+                    <h2>📊 Таблица истинности</h2>
+                    <p><strong>Все возможные комбинации:</strong></p>
+                    
+                    <table class="table-comparison">
+                        <tr>
+                            <th>A</th>
+                            <th>B</th>
+                            <th>A && B<br>(И)</th>
+                            <th>A || B<br>(ИЛИ)</th>
+                            <th>!A<br>(НЕ A)</th>
+                        </tr>
+                        <tr>
+                            <td>✅ true</td>
+                            <td>✅ true</td>
+                            <td><span class="result-true">true</span></td>
+                            <td><span class="result-true">true</span></td>
+                            <td><span class="result-false">false</span></td>
+                        </tr>
+                        <tr>
+                            <td>✅ true</td>
+                            <td>❌ false</td>
+                            <td><span class="result-false">false</span></td>
+                            <td><span class="result-true">true</span></td>
+                            <td><span class="result-false">false</span></td>
+                        </tr>
+                        <tr>
+                            <td>❌ false</td>
+                            <td>✅ true</td>
+                            <td><span class="result-false">false</span></td>
+                            <td><span class="result-true">true</span></td>
+                            <td><span class="result-true">true</span></td>
+                        </tr>
+                        <tr>
+                            <td>❌ false</td>
+                            <td>❌ false</td>
+                            <td><span class="result-false">false</span></td>
+                            <td><span class="result-false">false</span></td>
+                            <td><span class="result-true">true</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Слайд 7: Задачи для тренировки -->
+                <div class="slide" :class="{ active: currentSlide === 6 }">
+                    <h2>🎮 Тренировка</h2>
+                    <p><strong>Проверь себя! Какой результат?</strong></p>
+                    
+                    <div class="example-box">
+                        <strong>Задача 1:</strong> true && false = ?<br>
+                        Ответ: <span class="result-false">false</span> (оба должны быть правдой)<br><br>
+                        <strong>Задача 2:</strong> false || true = ?<br>
+                        Ответ: <span class="result-true">true</span> (хотя бы один правда)<br><br>
+                        <strong>Задача 3:</strong> !false = ?<br>
+                        Ответ: <span class="result-true">true</span> (противоположное false)<br><br>
+                        <strong>Задача 4:</strong> (true && false) || true = ?<br>
+                        Ответ: <span class="result-true">true</span> (false || true = true)
+                    </div>
+                </div>
+
+                <!-- Слайд 8: Завершение -->
+                <div class="slide" :class="{ active: currentSlide === 7 }">
+                    <div class="slide-content" style="text-align: center;">
+                        <div class="emoji-large">🎉</div>
+                        <h2>Ты теперь знаешь логические операторы!</h2>
+                        <p style="font-size: 1.15em; margin-top: 30px;">
+                            <strong>&&</strong> - И (оба условия)<br><br>
+                            <strong>||</strong> - ИЛИ (хотя бы одно)<br><br>
+                            <strong>!</strong> - НЕ (противоположное)
+                        </p>
+                        <p style="font-size: 1.1em; margin-top: 40px; color: #764ba2;">
+                            Практикуйся и используй их в своих проектах! 💻
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <button @click="previousSlide" :disabled="currentSlide === 0">← Назад</button>
+                <span class="slide-counter">Слайд {{ currentSlide + 1 }} из {{ totalSlides }}</span>
+                <button @click="nextSlide" :disabled="currentSlide === totalSlides - 1">Вперед →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    currentSlide: 0,
+                    totalSlides: 8
+                }
+            },
+            methods: {
+                nextSlide() {
+                    if (this.currentSlide < this.totalSlides - 1) {
+                        this.currentSlide++;
+                    }
+                },
+                previousSlide() {
+                    if (this.currentSlide > 0) {
+                        this.currentSlide--;
+                    }
+                }
+            },
+            mounted() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowRight') this.nextSlide();
+                    if (e.key === 'ArrowLeft') this.previousSlide();
+                });
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

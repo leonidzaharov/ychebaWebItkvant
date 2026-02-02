@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Сравнение в JavaScript</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.slide {
+    display: none;
+    padding: 50px;
+    background: rgba(255, 255, 255, 0.95);
+    margin: 40px auto;
+    max-width: 900px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+    backdrop-filter: blur(10px);
+}
+
+.slide.active {
+    display: block;
+    animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h1 {
+    font-size: 3em;
+    color: #667eea;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+h2 {
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    line-height: 1.4;
+}
+
+p {
+    font-size: 1.3em;
+    color: #555;
+    line-height: 1.8;
+    margin: 15px 0;
+}
+
+code {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 1.1em;
+    font-family: 'Courier New', monospace;
+    color: #2d3748;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.example-box {
+    background: #f8f9fa;
+    border-left: 5px solid #667eea;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.example-box.success {
+    border-left-color: #48bb78;
+    background: #f0fff4;
+}
+
+.example-box.warning {
+    border-left-color: #ed8936;
+    background: #fffaf0;
+}
+
+.example-box.info {
+    border-left-color: #4299e1;
+    background: #ebf8ff;
+}
+
+.comparison-table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+}
+
+.comparison-table th {
+    background: #667eea;
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-size: 1.1em;
+}
+
+.comparison-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 1.1em;
+}
+
+.comparison-table tr:hover {
+    background: #f7fafc;
+}
+
+.highlight {
+    background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.tip {
+    background: #fef5e7;
+    border: 2px dashed #f39c12;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+    font-size: 1.1em;
+}
+
+.tip::before {
+    content: '💡 ';
+    font-size: 1.3em;
+}
+
+.nav {
+    position: fixed;
+    bottom: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 50px;
+    z-index: 10;
+}
+
+button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 15px 35px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    font-weight: bold;
+}
+
+button:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+button:disabled {
+    background: #cbd5e0;
+    color: #a0aec0;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.slide-number {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    background: rgba(102, 126, 234, 0.2);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    color: #667eea;
+    font-weight: bold;
+}
+
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+li {
+    padding: 10px 0;
+    font-size: 1.2em;
+    position: relative;
+    padding-left: 30px;
+}
+
+li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #48bb78;
+    font-weight: bold;
+    font-size: 1.3em;
+}
+</style>
+</head>
+<body>
+
+<div class="slide">
+    <h1>🚀 Сравнение в JavaScript</h1>
+    <p style="text-align: center; font-size: 1.4em; color: #667eea; margin-top: 20px;">
+        Изучаем операторы сравнения и их особенности
+    </p>
+</div>
+
+<div class="slide">
+    <div class="slide-number">2/35</div>
+    <h2>✅ Результат сравнения</h2>
+    <div class="example-box info">
+        <p><strong>Любое сравнение возвращает булево значение:</strong></p>
+        <ul>
+            <li><code>true</code> — если условие истинно</li>
+            <li><code>false</code> — если условие ложно</li>
+        </ul>
+    </div>
+    <div class="tip">
+        Результат сравнения можно сохранить в переменную!
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">3/35</div>
+    <h2>Операторы сравнения чисел</h2>
+    <table class="comparison-table">
+        <tr>
+            <th>Оператор</th>
+            <th>Название</th>
+            <th>Пример</th>
+        </tr>
+        <tr>
+            <td><code>&gt;</code></td>
+            <td>Больше</td>
+            <td><code>5 &gt; 3</code></td>
+        </tr>
+        <tr>
+            <td><code>&lt;</code></td>
+            <td>Меньше</td>
+            <td><code>3 &lt; 7</code></td>
+        </tr>
+        <tr>
+            <td><code>&gt;=</code></td>
+            <td>Больше или равно</td>
+            <td><code>5 &gt;= 5</code></td>
+        </tr>
+        <tr>
+            <td><code>&lt;=</code></td>
+            <td>Меньше или равно</td>
+            <td><code>4 &lt;= 9</code></td>
+        </tr>
+    </table>
+</div>
+
+<div class="slide">
+    <div class="slide-number">4/35</div>
+    <h2>Примеры сравнения чисел</h2>
+    <div class="example-box success">
+        <p><code>5 &gt; 3</code> ➡️ <span class="highlight">true</span></p>
+        <p style="font-size: 1em; color: #666;">5 действительно больше 3</p>
+    </div>
+    <div class="example-box success">
+        <p><code>3 &lt; 7</code> ➡️ <span class="highlight">true</span></p>
+        <p style="font-size: 1em; color: #666;">3 действительно меньше 7</p>
+    </div>
+    <div class="example-box success">
+        <p><code>10 &gt;= 10</code> ➡️ <span class="highlight">true</span></p>
+        <p style="font-size: 1em; color: #666;">10 равно 10, условие выполнено</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">5/35</div>
+    <h2>🔤 Сравнение строк</h2>
+    <div class="example-box info">
+        <p><strong>Строки сравниваются посимвольно (лексикографически):</strong></p>
+        <p>JavaScript сравнивает символы по их Unicode-значению</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">6/35</div>
+    <h2>Примеры сравнения строк</h2>
+    <div class="example-box success">
+        <p><code>'a' &lt; 'b'</code> ➡️ <span class="highlight">true</span></p>
+        <p style="font-size: 1em; color: #666;">'a' идёт раньше 'b' в алфавите</p>
+    </div>
+    <div class="example-box success">
+        <p><code>'apple' &lt; 'banana'</code> ➡️ <span class="highlight">true</span></p>
+        <p style="font-size: 1em; color: #666;">Первая буква 'a' меньше 'b'</p>
+    </div>
+    <div class="example-box warning">
+        <p><code>'2' &gt; '10'</code> ➡️ <span class="highlight">true</span></p>
+        <p style="font-size: 1em; color: #666;">⚠️ Символ '2' больше '1' (сравнение как строк!)</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">7/35</div>
+    <h2>⚠️ Сравнение разных типов</h2>
+    <div class="example-box warning">
+        <p><strong>При сравнении разных типов JavaScript преобразует значения в числа!</strong></p>
+    </div>
+    <div class="tip">
+        Это может привести к неожиданным результатам
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">8/35</div>
+    <h2>Примеры преобразования типов</h2>
+    <div class="example-box success">
+        <p><code>'2' &gt; 1</code> ➡️ <span class="highlight">true</span></p>
+        <p style="font-size: 1em; color: #666;">Строка '2' → число 2, затем 2 &gt; 1</p>
+    </div>
+    <div class="example-box success">
+        <p><code>'10' &gt; 5</code> ➡️ <span class="highlight">true</span></p>
+        <p style="font-size: 1em; color: #666;">Строка '10' → число 10, затем 10 &gt; 5</p>
+    </div>
+    <div class="example-box success">
+        <p><code>true &gt; 0</code> ➡️ <span class="highlight">true</span></p>
+        <p style="font-size: 1em; color: #666;">true → 1, затем 1 &gt; 0</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">9/35</div>
+    <h2>Оператор == (нестрогое равенство)</h2>
+    <table class="comparison-table">
+        <tr>
+            <th>Оператор</th>
+            <th>Описание</th>
+        </tr>
+        <tr>
+            <td><code>==</code></td>
+            <td>Равенство с преобразованием типов</td>
+        </tr>
+        <tr>
+            <td><code>!=</code></td>
+            <td>Неравенство с преобразованием типов</td>
+        </tr>
+    </table>
+    <div class="tip">
+        Оператор == сравнивает значения, приводя их к одному типу
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">10/35</div>
+    <h2>Примеры нестрогого равенства</h2>
+    <div class="example-box success">
+        <p><code>5 == '5'</code> ➡️ <span class="highlight">true</span></p>
+        <p style="font-size: 1em; color: #666;">Строка '5' → число 5, затем 5 == 5</p>
+    </div>
+    <div class="example-box success">
+        <p><code>1 == true</code> ➡️ <span class="highlight">true</span></p>
+        <p style="font-size: 1em; color: #666;">true → 1, затем 1 == 1</p>
+    </div>
+    <div class="example-box success">
+        <p><code>0 == false</code> ➡️ <span class="highlight">true</span></p>
+        <p style="font-size: 1em; color: #666;">false → 0, затем 0 == 0</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">11/35</div>
+    <h2>Оператор === (строгое равенство)</h2>
+    <table class="comparison-table">
+        <tr>
+            <th>Оператор</th>
+            <th>Описание</th>
+        </tr>
+        <tr>
+            <td><code>===</code></td>
+            <td>Строгое равенство БЕЗ преобразования типов</td>
+        </tr>
+        <tr>
+            <td><code>!==</code></td>
+            <td>Строгое неравенство БЕЗ преобразования типов</td>
+        </tr>
+    </table>
+    <div class="tip">
+        Оператор === сравнивает и значение, и тип данных
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">12/35</div>
+    <h2>Примеры строгого равенства</h2>
+    <div class="example-box warning">
+        <p><code>5 === '5'</code> ➡️ <span class="highlight">false</span></p>
+        <p style="font-size: 1em; color: #666;">Число ≠ Строка (разные типы!)</p>
+    </div>
+    <div class="example-box warning">
+        <p><code>1 === true</code> ➡️ <span class="highlight">false</span></p>
+        <p style="font-size: 1em; color: #666;">Число ≠ Булево значение</p>
+    </div>
+    <div class="example-box warning">
+        <p><code>0 === false</code> ➡️ <span class="highlight">false</span></p>
+        <p style="font-size: 1em; color: #666;">Число ≠ Булево значение</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">13/35</div>
+    <h2>== vs === (Сравнение)</h2>
+    <table class="comparison-table">
+        <tr>
+            <th>Выражение</th>
+            <th>== (нестрогое)</th>
+            <th>=== (строгое)</th>
+        </tr>
+        <tr>
+            <td><code>5 и '5'</code></td>
+            <td style="color: #48bb78;">✓ true</td>
+            <td style="color: #e53e3e;">✗ false</td>
+        </tr>
+        <tr>
+            <td><code>1 и true</code></td>
+            <td style="color: #48bb78;">✓ true</td>
+            <td style="color: #e53e3e;">✗ false</td>
+        </tr>
+        <tr>
+            <td><code>0 и false</code></td>
+            <td style="color: #48bb78;">✓ true</td>
+            <td style="color: #e53e3e;">✗ false</td>
+        </tr>
+        <tr>
+            <td><code>'' и 0</code></td>
+            <td style="color: #48bb78;">✓ true</td>
+            <td style="color: #e53e3e;">✗ false</td>
+        </tr>
+    </table>
+</div>
+
+<div class="slide">
+    <div class="slide-number">14/35</div>
+    <h2>🔍 Особый случай: null и undefined</h2>
+    <div class="example-box info">
+        <p><code>null == undefined</code> ➡️ <span class="highlight">true</span></p>
+        <p style="font-size: 1em; color: #666;">Они равны только друг другу при ==</p>
+    </div>
+    <div class="example-box warning">
+        <p><code>null === undefined</code> ➡️ <span class="highlight">false</span></p>
+        <p style="font-size: 1em; color: #666;">Разные типы при строгом сравнении</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">15/35</div>
+    <h2>👀 Странности с null</h2>
+    <div class="example-box warning">
+        <p><code>null &gt;= 0</code> ➡️ <span class="highlight">true</span></p>
+        <p style="font-size: 1em; color: #666;">null → 0, затем 0 &gt;= 0</p>
+    </div>
+    <div class="example-box warning">
+        <p><code>null &gt; 0</code> ➡️ <span class="highlight">false</span></p>
+        <p style="font-size: 1em; color: #666;">null → 0, затем 0 &gt; 0 (ложь)</p>
+    </div>
+    <div class="example-box warning">
+        <p><code>null == 0</code> ➡️ <span class="highlight">false</span></p>
+        <p style="font-size: 1em; color: #666;">null равен только undefined при ==</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">16/35</div>
+    <h2>👀 Странности с undefined</h2>
+    <div class="example-box warning">
+        <p><code>undefined &gt; 0</code> ➡️ <span class="highlight">false</span></p>
+        <p style="font-size: 1em; color: #666;">undefined → NaN (NaN всегда false)</p>
+    </div>
+    <div class="example-box warning">
+        <p><code>undefined &lt; 0</code> ➡️ <span class="highlight">false</span></p>
+        <p style="font-size: 1em; color: #666;">undefined → NaN (NaN всегда false)</p>
+    </div>
+    <div class="example-box warning">
+        <p><code>undefined == 0</code> ➡️ <span class="highlight">false</span></p>
+        <p style="font-size: 1em; color: #666;">undefined равен только null при ==</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">17/35</div>
+    <h2>⚠️ NaN — особое значение</h2>
+    <div class="example-box warning">
+        <p><strong>NaN (Not a Number) не равен ничему, даже самому себе!</strong></p>
+    </div>
+    <div class="example-box warning">
+        <p><code>NaN == NaN</code> ➡️ <span class="highlight">false</span></p>
+    </div>
+    <div class="example-box warning">
+        <p><code>NaN === NaN</code> ➡️ <span class="highlight">false</span></p>
+    </div>
+    <div class="tip">
+        Для проверки NaN используйте функцию isNaN(value)
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">18/35</div>
+    <h2>💡 Лучшая практика</h2>
+    <div class="example-box success">
+        <h3 style="color: #48bb78; margin-bottom: 15px;">✓ Рекомендуется:</h3>
+        <ul>
+            <li>Используйте <code>===</code> и <code>!==</code></li>
+            <li>Избегайте сравнения null и undefined с числами</li>
+            <li>Явно преобразуйте типы перед сравнением</li>
+        </ul>
+    </div>
+    <div class="example-box warning">
+        <h3 style="color: #ed8936; margin-bottom: 15px;">✗ Не рекомендуется:</h3>
+        <ul style="list-style-type: none;">
+            <li style="padding-left: 30px;">❌ Использовать == без понимания последствий</li>
+            <li style="padding-left: 30px;">❌ Сравнивать строки с числами без явного преобразования</li>
+        </ul>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">19/35</div>
+    <h1>🧪 Проверим себя!</h1>
+    <p style="text-align: center; font-size: 1.4em; color: #667eea; margin-top: 20px;">
+        Попробуйте угадать результат каждого выражения
+    </p>
+</div>
+
+<div class="slide">
+    <div class="slide-number">20/35</div>
+    <h2>Пример 1</h2>
+    <div class="example-box">
+        <p style="font-size: 2em; text-align: center;"><code>5 &gt; 3</code> = ?</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">21/35</div>
+    <h2>Ответ на пример 1</h2>
+    <div class="example-box success">
+        <p style="font-size: 2em; text-align: center;"><code>5 &gt; 3</code> = <span class="highlight">true</span></p>
+        <p style="text-align: center; margin-top: 15px;">5 больше 3 ✓</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">22/35</div>
+    <h2>Пример 2</h2>
+    <div class="example-box">
+        <p style="font-size: 2em; text-align: center;"><code>5 == '5'</code> = ?</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">23/35</div>
+    <h2>Ответ на пример 2</h2>
+    <div class="example-box success">
+        <p style="font-size: 2em; text-align: center;"><code>5 == '5'</code> = <span class="highlight">true</span></p>
+        <p style="text-align: center; margin-top: 15px;">Нестрогое равенство: '5' преобразуется в 5 ✓</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">24/35</div>
+    <h2>Пример 3</h2>
+    <div class="example-box">
+        <p style="font-size: 2em; text-align: center;"><code>5 === '5'</code> = ?</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">25/35</div>
+    <h2>Ответ на пример 3</h2>
+    <div class="example-box warning">
+        <p style="font-size: 2em; text-align: center;"><code>5 === '5'</code> = <span class="highlight">false</span></p>
+        <p style="text-align: center; margin-top: 15px;">Строгое сравнение: число ≠ строка ✗</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">26/35</div>
+    <h2>Пример 4</h2>
+    <div class="example-box">
+        <p style="font-size: 2em; text-align: center;"><code>'2' &gt; '10'</code> = ?</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">27/35</div>
+    <h2>Ответ на пример 4</h2>
+    <div class="example-box warning">
+        <p style="font-size: 2em; text-align: center;"><code>'2' &gt; '10'</code> = <span class="highlight">true</span></p>
+        <p style="text-align: center; margin-top: 15px;">Лексикографическое сравнение: '2' &gt; '1' ✓</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">28/35</div>
+    <h2>Пример 5</h2>
+    <div class="example-box">
+        <p style="font-size: 2em; text-align: center;"><code>true == 1</code> = ?</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">29/35</div>
+    <h2>Ответ на пример 5</h2>
+    <div class="example-box success">
+        <p style="font-size: 2em; text-align: center;"><code>true == 1</code> = <span class="highlight">true</span></p>
+        <p style="text-align: center; margin-top: 15px;">true преобразуется в 1 ✓</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">30/35</div>
+    <h2>Пример 6</h2>
+    <div class="example-box">
+        <p style="font-size: 2em; text-align: center;"><code>false === 0</code> = ?</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">31/35</div>
+    <h2>Ответ на пример 6</h2>
+    <div class="example-box warning">
+        <p style="font-size: 2em; text-align: center;"><code>false === 0</code> = <span class="highlight">false</span></p>
+        <p style="text-align: center; margin-top: 15px;">Строгое сравнение: булево ≠ число ✗</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">32/35</div>
+    <h2>Пример 7</h2>
+    <div class="example-box">
+        <p style="font-size: 2em; text-align: center;"><code>null == undefined</code> = ?</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">33/35</div>
+    <h2>Ответ на пример 7</h2>
+    <div class="example-box success">
+        <p style="font-size: 2em; text-align: center;"><code>null == undefined</code> = <span class="highlight">true</span></p>
+        <p style="text-align: center; margin-top: 15px;">Они равны друг другу при == ✓</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">34/35</div>
+    <h2>Пример 8</h2>
+    <div class="example-box">
+        <p style="font-size: 2em; text-align: center;"><code>NaN == NaN</code> = ?</p>
+    </div>
+</div>
+
+<div class="slide">
+    <div class="slide-number">35/35</div>
+    <h2>Ответ на пример 8</h2>
+    <div class="example-box warning">
+        <p style="font-size: 2em; text-align: center;"><code>NaN == NaN</code> = <span class="highlight">false</span></p>
+        <p style="text-align: center; margin-top: 15px;">NaN не равен даже самому себе! ✗</p>
+    </div>
+</div>
+
+<div class="nav">
+    <button id="prev" onclick="prevSlide()">← Назад</button>
+    <span style="background: rgba(255,255,255,0.9); padding: 10px 20px; border-radius: 30px; font-weight: bold; color: #667eea;">
+        <span id="current-slide">1</span> / <span id="total-slides">35</span>
+    </span>
+    <button id="next" onclick="nextSlide()">Вперёд →</button>
+</div>
+
+<script>
+let slides = document.querySelectorAll('.slide');
+let current = 0;
+let totalSlides = slides.length;
+
+document.getElementById('total-slides').textContent = totalSlides;
+
+function showSlide(n) {
+    if (n < 0 || n >= slides.length) return;
+    slides[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    document.getElementById('prev').disabled = (current === 0);
+    document.getElementById('next').disabled = (current === slides.length - 1);
+    document.getElementById('current-slide').textContent = current + 1;
+}
+
+function prevSlide() {
+    showSlide(current - 1);
+}
+
+function nextSlide() {
+    showSlide(current + 1);
+}
+
+document.onkeydown = function(e) {
+    if (e.key === 'ArrowLeft') prevSlide();
+    if (e.key === 'ArrowRight') nextSlide();
+};
+
+window.onload = function() {
+    slides[current].classList.add('active');
+    document.getElementById('prev').disabled = true;
+};
+</script>
+
+</body>
+</html>
