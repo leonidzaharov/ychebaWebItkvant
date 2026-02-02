@@ -53,7 +53,7 @@
 
         .header p {
             font-size: 1.15em;
-            color: #000000;
+            color: #ffffff;
         }
 
         .intro-section {
@@ -450,10 +450,33 @@
                 grid-template-columns: 1fr;
             }
         }
+        .bgToggle{
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 9999;
+
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  background: rgba(10, 14, 39, 0.65);
+  color: #e2e8f0;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.bgToggle:hover{
+  border-color: rgba(0, 212, 255, 0.65);
+  background: rgba(10, 14, 39, 0.8);
+}
     </style>
 </head>
 <body>
     <div id="vanta-bg"></div>
+    <button id="bgToggle" class="bgToggle" type="button" title="Включить/выключить анимированный фон">
+  Фон: ВКЛ
+</button>
 
     <div class="container">
         <div class="header">
@@ -1086,22 +1109,75 @@ if ( условие1 || условие2 || условие3 ) {<br>
 
     <script>
         // Инициализируем Vanta WAVES фон
-        window.addEventListener('load', function() {
-            VANTA.WAVES({
-                el: '#vanta-bg',
-                mouseControls: true,
-                touchControls: true,
-                gyroControls: false,
-                minHeight: 200.00,
-                minWidth: 200.00,
-                scale: 1.00,
-                scaleMobile: 1.00,
-                color: 0x0099ff,
-                waveHeight: 25.00,
-                waveSpeed: 0.8,
-                zoom: 0.65
-            });
-        });
+       let vantaEffect = null;
+
+function startVanta(){
+  const el = document.getElementById("vanta-bg");
+  if (!el) return;
+
+  el.style.display = "block";
+
+  // если VANTA ещё не загрузился — просто выходим (на всякий)
+  if (!window.VANTA || !VANTA.WAVES) return;
+
+  // на случай повторного запуска
+  if (vantaEffect) vantaEffect.destroy();
+
+  vantaEffect = VANTA.WAVES({
+    el: '#vanta-bg',
+    mouseControls: true,
+    touchControls: true,
+    gyroControls: false,
+    minHeight: 200.00,
+    minWidth: 200.00,
+    scale: 1.00,
+    scaleMobile: 1.00,
+    color: 0x0099ff,
+    waveHeight: 25.00,
+    waveSpeed: 0.8,
+    zoom: 0.65
+  });
+}
+
+function stopVanta(){
+  const el = document.getElementById("vanta-bg");
+  if (vantaEffect) {
+    vantaEffect.destroy();
+    vantaEffect = null;
+  }
+  if (el) el.style.display = "none";
+}
+
+function setBtnText(on){
+  const btn = document.getElementById("bgToggle");
+  if (!btn) return;
+  btn.textContent = on ? "Фон: ВКЛ" : "Фон: ВЫКЛ";
+}
+
+window.addEventListener("load", () => {
+  const saved = localStorage.getItem("logic_vanta_bg"); // "1" | "0" | null
+  const isOn = saved !== "0";
+
+  if (isOn) startVanta();
+  else stopVanta();
+
+  setBtnText(isOn);
+
+  const btn = document.getElementById("bgToggle");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      const nowOn = localStorage.getItem("logic_vanta_bg") !== "0";
+      const nextOn = !nowOn;
+
+      localStorage.setItem("logic_vanta_bg", nextOn ? "1" : "0");
+      if (nextOn) startVanta();
+      else stopVanta();
+
+      setBtnText(nextOn);
+    });
+  }
+});
+
 
         // ===== ПРОСТЫЕ ПРИМЕРЫ 1-6: Угадай результат =====
         function checkTask1() {
@@ -1167,21 +1243,7 @@ if ( условие1 || условие2 || условие3 ) {<br>
             document.getElementById('result3').classList.remove('show', 'correct', 'incorrect');
         }
 
-        function checkTask4() {
-            const answer = document.getElementById('task4-answer').value.toLowerCase().trim();
-            const resultDiv = document.getElementById('result4');
-
-            if (answer === 'false') {
-                resultDiv.innerHTML = '<span class="result-icon">✅</span><strong>Верно!</strong> true && false = <span class="false-cell">false</span>';
-                resultDiv.classList.add('show', 'correct');
-            } else if (answer === 'true') {
-                resultDiv.innerHTML = '<span class="result-icon">❌</span>Неправильно. true && false = <span class="false-cell">false</span>';
-                resultDiv.classList.add('show', 'incorrect');
-            } else {
-                resultDiv.innerHTML = '<span class="result-icon">⚠️</span>Напиши "true" или "false"';
-                resultDiv.classList.add('show', 'incorrect');
-            }
-        }
+       
 
         function resetTask4() {
             document.getElementById('task4-answer').value = '';

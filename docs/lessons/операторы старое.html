@@ -243,7 +243,7 @@
     .hero{ position:relative; }
 .heroBg{
   position:absolute;
-  inset:-120px;
+  inset:-80px;
   pointer-events:none;
   z-index:0;
   opacity:.95;
@@ -295,8 +295,8 @@
 
         <h2 style="margin-top:18px;">Место для картинки</h2>
         <div class="img-slot">
-          <div class="hint"><span class="kbd">Простой пример:</span></div>
-          <img src="/docs/img/operators.png" alt="Тут будет ваша картинка">
+          <div class="hint"></span></div>
+          <img src="img/your-image.png" alt="пока не готово">
         </div>
       </section>
 
@@ -305,32 +305,12 @@
         <h2>2) Практика</h2>
         <p class="sub">Задания карточками. В каждой — код, кнопка запуска и подсказки.</p>
 
-        <!-- Адская цепочка (практика: отдельная от примера №15; ответ не показываем) -->
+        <!-- Адская цепочка -->
         <div class="taskCard" id="hellCard">
-          <h3>7) Адская цепочка</h3>
-          <div class="code" style="margin:8px 0;">console.log(10 + 7 + "3" + 8 * 2 - 6 + "4" * 2 - 3 + 18 / 3 + "1" + 0 - 5);</div>
+          <h3>7) Адская цепочка (15 элементов)</h3>
+          <div class="code" style="margin:8px 0;">console.log(10 + 5 + "10" + 20 + 2 * 5 - 15 + "5" * 2 - 10 + 20 / 2 + 5 + "7");</div>
 
           <div class="row" style="margin-top:10px;">
-            <input id="hellGuess" type="text" placeholder="Твой ответ" />
-            <button id="hellCheck">Проверить</button>
-            <button class="btn2" id="hellHintBtn">Подсказка</button>
-          </div>
-
-          <div class="out" id="hellOut">Результат: —</div>
-
-          <details id="hellHint" style="display:none;">
-            <summary>Подсказка</summary>
-            <p class="hint">
-              1) Сначала посчитай <span class="kbd">*</span> и <span class="kbd">/</span>.<br/>
-              2) Потом иди слева направо.<br/>
-              3) Как только появляется строка (кавычки) — <span class="kbd">+</span> начинает <b>склеивать</b>.<br/>
-              4) <span class="kbd">-</span> снова превращает в <b>число</b>.
-            </p>
-          </details>
-
-          <div class="hint" style="margin-top:8px; opacity:.9;">Попытки: <b id="hellRuns">0</b></div>
-        </div>
-<div class="row" style="margin-top:10px;">
             <button id="hellCheck">Проверить</button>
             <button class="btn2" id="hellHintBtn">Подсказка</button>
           </div>
@@ -581,6 +561,7 @@ document.addEventListener("visibilitychange", () => {
         <div class="row">
           <input type="text" id="guess_${idx}" placeholder="Твой ответ (например: 22)" />
           <button class="btn2" id="hintBtn_${idx}">Подсказка</button>
+          
           <button id="checkBtn_${idx}">Проверить</button>
         </div>
 
@@ -721,86 +702,38 @@ document.addEventListener("visibilitychange", () => {
       d.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
 
-    // --- Адская цепочка (практика: ввод ответа, без показа правильного) ---
+    // --- Адская цепочка ---
     const hellCheck = document.getElementById("hellCheck");
     const hellOut = document.getElementById("hellOut");
     const hellHintBtn = document.getElementById("hellHintBtn");
     const hellHint = document.getElementById("hellHint");
     const hellRunsEl = document.getElementById("hellRuns");
-    const hellGuess = document.getElementById("hellGuess");
-
-    state.practice.hellRuns ??= 0;
-    state.practice.hellLast ??= "";
 
     if (hellRunsEl) hellRunsEl.textContent = String(state.practice.hellRuns);
 
-    function normalizeAnswer(x){
-      let s = String(x ?? "").trim();
-      // разрешим кавычки вокруг ответа
-      if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
-        s = s.slice(1, -1).trim();
-      }
-      // убираем пробелы внутри (на всякий случай)
-      s = s.replace(/\s+/g, "");
-      return s;
-    }
-
-    if (hellGuess){
-      hellGuess.value = state.practice.hellLast;
-      hellGuess.addEventListener("input", () => {
-        state.practice.hellLast = hellGuess.value;
-        saveState();
-      });
-      hellGuess.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") hellCheck?.click();
-      });
-    }
-
     if (hellHintBtn) hellHintBtn.addEventListener("click", () => toggleDetails(hellHint));
 
-    function hellIsCorrect(userRaw){
-      const user = normalizeAnswer(userRaw);
+    if (hellCheck) hellCheck.addEventListener("click", () => {
+      state.practice.hellRuns += 1;
+      if (hellRunsEl) hellRunsEl.textContent = String(state.practice.hellRuns);
+      saveState();
 
-      const val = 10 + 7 + "3" + 8 * 2 - 6 + "4" * 2 - 3 + 18 / 3 + "1" + 0 - 5;
-
-      // NaN отдельно
-      if (typeof val === "number" && Number.isNaN(val)) {
-        return user.toLowerCase() === "nan";
-      }
-
-      // строка: сравним как строку (без пробелов)
-      if (typeof val === "string") {
-        return user === normalizeAnswer(val);
-      }
-
-      // число/boolean и т.п.
-      return user === String(val);
-    }
-
-    if (hellCheck && hellOut){
       hellCheck.addEventListener("click", () => {
-        state.practice.hellRuns += 1;
-        if (hellRunsEl) hellRunsEl.textContent = String(state.practice.hellRuns);
-        saveState();
+  // 1) считаем значение (ТУТ ТВОЁ ВЫРАЖЕНИЕ)
+  const val = 10 + 5 + "10" + 20 + 2 * 5 - 15 + "5" * 2 - 10 + 20 / 2 + 5 + "7";
 
-        const user = hellGuess ? hellGuess.value : "";
-        if (!user.trim()) {
-          hellOut.innerHTML = warn("Сначала введи ответ 🙂");
-          return;
-        }
+  // 2) берём ответ ребёнка
+  const user = document.getElementById("hellGuess").value.trim();
 
-        if (hellIsCorrect(user)) {
-          hellOut.innerHTML = ok("Верно ✅");
-        } else {
-          hellOut.innerHTML = warn("Не совпало ❌ Попробуй ещё раз.");
-          // после 5 попыток — показать подсказку автоматически
-          if (state.practice.hellRuns >= 5 && hellHint) {
-            hellHint.style.display = "block";
-            hellHint.open = true;
-          }
-        }
-      });
-    }
+  // 3) сравниваем (НЕ показываем val)
+  if (user === String(val)) {
+    hellOut.innerHTML = ok("Верно ✅");
+  } else {
+    hellOut.innerHTML = warn("Пока нет. Попробуй ещё.");
+  }
+});
+
+    });
 
     // Общая функция запуска (prompt/alert настоящие)
     function bindRunner(textareaId, outId, runBtnId, runsKey, runsLabelId, codeKey){

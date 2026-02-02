@@ -5,8 +5,10 @@
       "desc": "Строим страницу: теги, ссылки, картинки, блоки.",
       "globe": { "color": "0xff7a00", "color2": "0xff3d6e" },
       "topics": [
-        { "title": "Скелеты сайтов (4 примера)", "meta": "копируй и меняй", "href": "./lessons/html-skeletons.html" },
-        { "title": "Ссылки и картинки: a, img", "meta": "фишки + практика", "href": "./lessons/html-links-img.html" }
+        {"title": "Скелеты сайтов (4 примера)","meta": "копируй и меняй","href": "./lessons/html-skeletons.html"}, 
+       {"title": "Ссылки и картинки: a, img", "meta": "фишки + практика","href": "./lessons/html-links-img.html"
+}
+
       ],
       "cheats": [
         { "title": "Шпаргалка: базовые теги", "meta": "Основная информация", "href": "./cheats/html-cheatsheet.html" }
@@ -18,25 +20,42 @@
       "desc": "Делаем красиво: цвета, отступы, анимации, эффекты.",
       "globe": { "color": "0x7c5cff", "color2": "0x00e0ff" },
       "topics": [
-        { "title": "Цвета и фон", "meta": "color / background + Vanta Dots", "href": "./lessons/css-colors-bg.html" },
-        { "title": "Отступы: margin / padding", "meta": "главная боль 😄", "href": "./lessons/css-spacing.html" }
+        {"title": "Цвета и фон","meta": "color / background + Vanta Dots","href": "./lessons/css-colors-bg.html"},
+        {"title": "Отступы: margin / padding","meta": "главная боль 😄","href": "./lessons/css-spacing.html"}
       ],
       "cheats": [
-        { "title": "Шпаргалка по CSS", "meta": "страница", "href": "./cheats/css-cheatsheet.html" }
+       {"title": "Шпаргалка по CSS","meta": "страница","href": "./cheats/css-cheatsheet.html"}
       ]
     },
 
     "js": {
-      "title": "JavaScript",
-      "desc": "Добавляем магию: условия, циклы, игры, интерактив.",
-      "globe": { "color": "0xffcc00", "color2": "0x00e0ff" },
-      "topics": [
-        { "title": "Переменные: let/const", "meta": "база", "href": "./lessons/js-vars.html" },
-        { "title": "Практика: операторы", "meta": "теория → практика", "href": "./lessons/js-operators-module.html" }
-      ],
-      "cheats": [
-        { "title": "Шпаргалка: операторы", "meta": "HTML", "href": "./lessons/js-uroksravneni.html" }
-      ]
-    }
+  "title": "JavaScript",
+  "desc": "Добавляем магию: условия, циклы, игры, интерактив.",
+  "globe": { "color": "0xffcc00", "color2": "0x00e0ff" },
+
+  "lessons": [
+    {
+      "date": "22.01",
+      "title": "Операторы",
+      "meta": "лекция + практика",
+      "href": "./lessons/js-operators-module.html"
+      
+    },
+     {
+    "date": "29.01",
+    "title": "Логические операторы",
+    "meta": "лекция + практика",
+    "href": "./lessons/js-logic-operators-module.html"
+  }
+  ],
+
+  "topics": [
+    { "title": "Переменные: let/const", "meta": "база", "href": "." },
+    { "title": "Практика", "meta": "теория → практика", "href": "./lessons/js-operators-module.html" }
+  ],
+  "cheats": [
+    { "title": "Шпаргалка: операторы", "meta": "PDF", "href": "./lessons/js-uroksravneni.html" }
+  ]
+   }
   }
 }
