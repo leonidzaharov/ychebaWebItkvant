@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Циклы JS — слайды + интерактив (10–14)</title>
+
+  <!-- Three.js + Vanta (фиксируем версии) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.rings.min.js"></script>
+
+  <style>
+    :root{
+      --bg: #070814;
+      --card: rgba(10,10,22,.72);
+      --stroke: rgba(0,229,255,.28);
+      --stroke2: rgba(255,0,255,.24);
+      --text: #EAF1FF;
+      --muted: rgba(234,241,255,.72);
+      --codeBg: rgba(0,0,0,.62);
+      --ok: rgba(0,255,140,.20);
+      --bad: rgba(255,60,60,.22);
+      --shadow: 0 20px 70px rgba(0,0,0,.45);
+      --radius: 26px;
+      --maxw: 980px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; overflow: hidden; }
+    body{
+      background: radial-gradient(1200px 800px at 30% 10%, #10123a 0%, var(--bg) 55%, #050510 100%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    /* Vanta background */
+    #vanta{
+      position: fixed; inset: 0; z-index: 0;
+      background: radial-gradient(1200px 800px at 30% 10%, #10123a 0%, var(--bg) 55%, #050510 100%);
+    }
+
+    /* Deck */
+    .deck{ position: relative; z-index: 1; height: 100%; }
+    .slides{
+      height: 100%;
+      display: flex;
+      will-change: transform;
+      transition: transform 420ms cubic-bezier(.2,.9,.2,1);
+    }
+    .slide{
+      width: 100vw;
+      height: 100vh;
+      padding: 70px 28px 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .card{
+      width: min(var(--maxw), calc(100vw - 56px));
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 2px solid var(--stroke);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      padding: 44px 46px;
+      text-align: center;
+    }
+
+    .kicker{
+      font-size: 22px;
+      letter-spacing: .04em;
+      color: var(--muted);
+      margin: 0 0 12px;
+    }
+    h1{
+      font-size: clamp(54px, 6vw, 74px);
+      margin: 0 0 14px;
+      line-height: 1.05;
+    }
+    h2{
+      font-size: clamp(44px, 5vw, 60px);
+      margin: 0 0 16px;
+      line-height: 1.08;
+    }
+    p{
+      font-size: clamp(24px, 2.6vw, 34px);
+      margin: 0 0 14px;
+      line-height: 1.25;
+      color: var(--text);
+    }
+
+    .bullets{
+      margin: 18px auto 0;
+      padding: 0;
+      list-style: none;
+      text-align: left;
+      max-width: 880px;
+    }
+    .bullets li{
+      font-size: clamp(22px, 2.2vw, 30px);
+      line-height: 1.25;
+      margin: 10px 0;
+      padding-left: 18px;
+      position: relative;
+      color: var(--text);
+    }
+    .bullets li::before{
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: #00e5ff;
+      font-weight: 900;
+    }
+
+    /* Code */
+    pre{
+      margin: 22px auto 10px;
+      background: var(--codeBg);
+      border: 2px solid var(--stroke2);
+      border-radius: 18px;
+      padding: 22px 22px;
+      text-align: left;
+      max-width: 920px;
+      overflow: auto;
+      box-shadow: 0 12px 40px rgba(0,0,0,.35);
+    }
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      font-size: clamp(20px, 2.05vw, 28px);
+      line-height: 1.35;
+      color: #ffe08a;
+      white-space: pre;
+    }
+
+    /* Teacher notes (under code) */
+    .notes{
+      margin: 14px auto 0;
+      max-width: 920px;
+      text-align: left;
+      padding: 16px 18px;
+      border-radius: 16px;
+      border: 2px solid rgba(0,229,255,.18);
+      background: rgba(0,229,255,.08);
+    }
+    .notesTitle{
+      font-weight: 900;
+      font-size: 20px;
+      letter-spacing: .02em;
+      margin: 0 0 8px;
+      color: rgba(234,241,255,.92);
+    }
+    .notes ul{ margin: 0; padding-left: 18px; }
+    .notes li{
+      margin: 6px 0;
+      font-size: 20px;
+      line-height: 1.25;
+      color: rgba(234,241,255,.9);
+    }
+
+    /* Interactive blocks */
+    .mini{
+      margin: 22px auto 0;
+      max-width: 920px;
+      text-align: left;
+      background: rgba(0,0,0,.38);
+      border: 2px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      padding: 18px;
+    }
+    .row{
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      margin: 10px 0;
+    }
+    .row3{
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 12px;
+      align-items: center;
+      margin: 10px 0;
+    }
+    label{
+      font-size: 20px;
+      color: rgba(234,241,255,.86);
+    }
+    input, select{
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 2px solid rgba(0,229,255,.18);
+      background: rgba(10,10,22,.72);
+      color: var(--text);
+      font-size: 20px;
+      outline: none;
+    }
+    .btn{
+      border: none;
+      border-radius: 14px;
+      padding: 12px 18px;
+      font-weight: 900;
+      font-size: 18px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff00ff 0%, #00e5ff 100%);
+      color: #071018;
+      box-shadow: 0 10px 24px rgba(0,229,255,.18);
+      transition: transform .12s ease;
+      white-space: nowrap;
+    }
+    .btn:active{ transform: scale(.98); }
+    .out{
+      margin-top: 10px;
+      border-radius: 14px;
+      padding: 12px 14px;
+      border: 2px solid rgba(0,255,140,.20);
+      background: rgba(0,255,140,.08);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      font-size: 20px;
+      white-space: pre-wrap;
+      color: rgba(234,241,255,.92);
+      min-height: 44px;
+    }
+
+    /* Quiz */
+    .quiz{
+      margin: 18px auto 0;
+      max-width: 920px;
+      text-align: left;
+      display: grid;
+      gap: 10px;
+    }
+    .opt{
+      padding: 14px 14px;
+      border-radius: 16px;
+      border: 2px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.35);
+      cursor: pointer;
+      font-size: 22px;
+      transition: transform .10s ease, border-color .12s ease;
+      user-select: none;
+    }
+    .opt:hover{ transform: translateY(-1px); border-color: rgba(255,0,255,.35); }
+    .opt.good{ border-color: rgba(0,255,140,.55); background: var(--ok); }
+    .opt.bad{ border-color: rgba(255,60,60,.55); background: var(--bad); }
+
+    /* Reveal answer button */
+    .revealBox{
+      margin: 16px auto 0;
+      max-width: 920px;
+      text-align: center;
+    }
+    .revealBtn{
+      border: 2px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.32);
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .answer{
+      display: none;
+      margin: 12px auto 0;
+      max-width: 920px;
+      text-align: left;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 2px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.38);
+      font-size: 22px;
+      line-height: 1.25;
+      color: rgba(234,241,255,.92);
+      white-space: pre-wrap;
+    }
+    .answer.show{ display: block; }
+
+    /* Bottom navigation */
+    .hud{
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 18px;
+      z-index: 3;
+      background: rgba(0,0,0,.62);
+      border: 2px solid rgba(0,229,255,.22);
+      backdrop-filter: blur(14px);
+      border-radius: 999px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 34px rgba(0,0,0,.45);
+    }
+    .hudBtn{
+      border: none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 900;
+      font-size: 16px;
+      cursor: pointer;
+      background: rgba(255,255,255,.10);
+      color: var(--text);
+    }
+    .hudBtn:hover{ background: rgba(255,255,255,.14); }
+    .count{
+      font-weight: 900;
+      opacity: .85;
+      font-size: 16px;
+      padding: 0 8px;
+      min-width: 74px;
+      text-align: center;
+    }
+    .dots{
+      display: flex;
+      gap: 6px;
+      padding: 0 6px;
+      max-width: 42vw;
+      overflow: hidden;
+    }
+    .dot{
+      width: 7px; height: 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.22);
+    }
+    .dot.on{ background: rgba(0,229,255,.95); }
+    .dot.hot{ background: rgba(255,0,255,.85); }
+
+    /* Small screens */
+    @media (max-width: 720px){
+      .card{ padding: 28px 20px; }
+      .slide{ padding: 52px 16px 110px; }
+      .row3{ grid-template-columns: 1fr 1fr; }
+      .row3 .btn{ grid-column: 1 / -1; }
+      .notes li{ font-size: 18px; }
+      .opt{ font-size: 20px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="vanta" aria-hidden="true"></div>
+
+  <div class="deck" id="deck">
+    <div class="slides" id="slides">
+
+      <!-- 1 -->
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">JavaScript · 10–14 лет</div>
+          <h1>Циклы 🔁</h1>
+          <p>Как не писать одно и то же 100 раз</p>
+        </div>
+      </section>
+
+      <!-- 2 -->
+      <section class="slide">
+        <div class="card">
+          <h2>Идея цикла</h2>
+          <p>Цикл = повторение действия</p>
+          <ul class="bullets">
+            <li>Сказать «Привет» 5 раз</li>
+            <li>Посчитать от 1 до 10</li>
+            <li>Нарисовать узор звёздочками</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section class="slide">
+        <div class="card">
+          <h2>Цикл <span style="color:#00e5ff;">for</span></h2>
+          <p>Когда заранее знаем, сколько раз повторять</p>
+
+          <pre><code>for (старт; условие; шаг) {
+  // действие
+}</code></pre>
+
+          <div class="notes">
+            <div class="notesTitle">Шпаргалка (что сказать)</div>
+            <ul>
+              <li>«for — это цикл со счётчиком.»</li>
+              <li>«Сначала старт: создаём счётчик.»</li>
+              <li>«Пока условие true — крутимся.»</li>
+              <li>«После каждого круга делаем шаг.»</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 -->
+      <section class="slide">
+        <div class="card">
+          <h2>Пример: считаем 1…5</h2>
+
+          <pre><code>for (let i = 1; i &lt;= 5; i++) {
+  console.log(i);
+}</code></pre>
+
+          <div class="notes">
+            <div class="notesTitle">Шпаргалка (что сказать)</div>
+            <ul>
+              <li>«i — счётчик. Начали с 1.»</li>
+              <li>«Пока i ≤ 5 — печатаем i.»</li>
+              <li>«i++ — увеличили на 1 и идём дальше.»</li>
+              <li>«В итоге увидим: 1 2 3 4 5.»</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 Interactive: counter -->
+      <section class="slide">
+        <div class="card">
+          <h2>Интерактив: считалка</h2>
+          <p>Выведем числа от 1 до N</p>
+
+          <pre><code>for (let i = 1; i &lt;= N; i++) {
+  console.log(i);
+}</code></pre>
+
+          <div class="mini">
+            <div class="row">
+              <label for="nCounter">N (1…50)</label>
+              <input id="nCounter" type="number" min="1" max="50" value="10">
+            </div>
+            <button class="btn" id="runCounter">Запустить</button>
+            <div class="out" id="outCounter"></div>
+          </div>
+
+          <div class="notes">
+            <div class="notesTitle">Шпаргалка (что сказать)</div>
+            <ul>
+              <li>«Смотрите: меняем N — и цикл делает больше/меньше кругов.»</li>
+              <li>«Цикл — это как робот, который повторяет шаги.»</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 -->
+      <section class="slide">
+        <div class="card">
+          <h2>Цикл <span style="color:#ff70d8;">while</span></h2>
+          <p>Когда не знаем, сколько раз повторять</p>
+
+          <pre><code>while (условие) {
+  // действие
+}</code></pre>
+
+          <div class="notes">
+            <div class="notesTitle">Шпаргалка (что сказать)</div>
+            <ul>
+              <li>«while значит “пока”.»</li>
+              <li>«Пока условие true — выполняем тело.»</li>
+              <li>«Важно: внутри нужно менять переменные, иначе будет бесконечно.»</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 -->
+      <section class="slide">
+        <div class="card">
+          <h2>Пример: таймер 5…1</h2>
+
+          <pre><code>let t = 5;
+
+while (t &gt; 0) {
+  console.log(t);
+  t--;
+}
+
+console.log("Старт!");</code></pre>
+
+          <div class="notes">
+            <div class="notesTitle">Шпаргалка (что сказать)</div>
+            <ul>
+              <li>«t уменьшаем, чтобы цикл когда-то остановился.»</li>
+              <li>«t-- — это минус 1.»</li>
+              <li>«Когда t стало 0 — условие false, цикл закончился.»</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8 Interactive: countdown -->
+      <section class="slide">
+        <div class="card">
+          <h2>Интерактив: таймер</h2>
+          <p>Запустим обратный отсчёт</p>
+
+          <div class="mini">
+            <div class="row">
+              <label for="tStart">Стартовое число (1…20)</label>
+              <input id="tStart" type="number" min="1" max="20" value="7">
+            </div>
+            <button class="btn" id="runTimer">Запустить</button>
+            <div class="out" id="outTimer"></div>
+          </div>
+
+          <pre><code>let t = START;
+
+while (t &gt; 0) {
+  console.log(t);
+  t--;
+}</code></pre>
+
+          <div class="notes">
+            <div class="notesTitle">Шпаргалка (что сказать)</div>
+            <ul>
+              <li>«while хорош, когда у нас есть условие остановки.»</li>
+              <li>«Здесь условие: t > 0.»</li>
+              <li>«Каждый круг t уменьшаем — поэтому остановится.»</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9 -->
+      <section class="slide">
+        <div class="card">
+          <h2>break и continue</h2>
+          <p>Управляем циклом</p>
+          <ul class="bullets">
+            <li><b>break</b> — выйти из цикла сразу</li>
+            <li><b>continue</b> — пропустить один круг</li>
+          </ul>
+
+          <pre><code>// пропускаем 3
+for (let i = 1; i &lt;= 5; i++) {
+  if (i === 3) continue;
+  console.log(i);
+}</code></pre>
+
+          <div class="notes">
+            <div class="notesTitle">Шпаргалка (что сказать)</div>
+            <ul>
+              <li>«continue — как “пропусти этот шаг”.»</li>
+              <li>«break — как “стоп, выходим”.»</li>
+              <li>«Смотрите: 3 не напечатается.»</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10 Quiz -->
+      <section class="slide">
+        <div class="card">
+          <h2>Мини‑вопрос</h2>
+          <p>Сколько раз выведется “Hi”?</p>
+
+          <pre><code>for (let i = 0; i &lt; 4; i++) {
+  console.log("Hi");
+}</code></pre>
+
+          <div class="quiz" id="quiz1">
+            <div class="opt" data-correct="false">3 раза</div>
+            <div class="opt" data-correct="true">4 раза</div>
+            <div class="opt" data-correct="false">5 раз</div>
+          </div>
+
+          <div class="notes">
+            <div class="notesTitle">Шпаргалка (что сказать)</div>
+            <ul>
+              <li>«i идёт: 0,1,2,3 — это 4 значения.»</li>
+              <li>«Условие i < 4 означает: до 3 включительно.»</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11 -->
+      <section class="slide">
+        <div class="card">
+          <h2>Вложенные циклы ⭐</h2>
+          <p>Рисуем таблицы, узоры, уровни</p>
+
+          <pre><code>for (let row = 1; row &lt;= 3; row++) {
+  for (let col = 1; col &lt;= 3; col++) {
+    console.log(row, col);
+  }
+}</code></pre>
+
+          <div class="notes">
+            <div class="notesTitle">Шпаргалка (что сказать)</div>
+            <ul>
+              <li>«Внешний цикл — строки, внутренний — столбцы.»</li>
+              <li>«Для каждой строки мы пробегаем все столбцы.»</li>
+              <li>«Так строятся таблицы и сетки.»</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 12 -->
+      <section class="slide">
+        <div class="card">
+          <h2>Пример: таблица умножения (1–5)</h2>
+
+          <pre><code>for (let a = 1; a &lt;= 5; a++) {
+  for (let b = 1; b &lt;= 5; b++) {
+    console.log(a * b);
+  }
+}</code></pre>
+
+          <div class="notes">
+            <div class="notesTitle">Шпаргалка (что сказать)</div>
+            <ul>
+              <li>«a — это строка таблицы, b — столбец.»</li>
+              <li>«Внутри считаем a*b.»</li>
+              <li>«На практике вывод лучше делать красиво, но идея — в двух циклах.»</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 13 Interactive: emoji grid -->
+      <section class="slide">
+        <div class="card">
+          <h2>Интерактив: рисуем сетку</h2>
+          <p>Сделаем прямоугольник из эмодзи</p>
+
+          <div class="mini">
+            <div class="row3">
+              <div>
+                <label for="rows">Строки</label>
+                <input id="rows" type="number" min="1" max="10" value="4">
+              </div>
+              <div>
+                <label for="cols">Столбцы</label>
+                <input id="cols" type="number" min="1" max="16" value="6">
+              </div>
+              <button class="btn" id="runGrid">Нарисовать</button>
+            </div>
+            <div class="row">
+              <label for="emoji">Эмодзи</label>
+              <select id="emoji">
+                <option value="🟦">🟦</option>
+                <option value="⭐">⭐</option>
+                <option value="🧱">🧱</option>
+                <option value="🍪">🍪</option>
+                <option value="🔥">🔥</option>
+              </select>
+            </div>
+            <div class="out" id="outGrid"></div>
+          </div>
+
+          <pre><code>// внутри: собираем одну строку
+// снаружи: печатаем строку много раз</code></pre>
+
+          <div class="notes">
+            <div class="notesTitle">Шпаргалка (что сказать)</div>
+            <ul>
+              <li>«Внутренний цикл строит одну строку.»</li>
+              <li>«Внешний цикл повторяет строку нужное число раз.»</li>
+              <li>«Это и есть вложенные циклы в жизни.»</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 14 Task 1 -->
+      <section class="slide">
+        <div class="card">
+          <h2>Задача 1</h2>
+          <p>Вывести все чётные числа от 2 до 20</p>
+
+          <div class="revealBox">
+            <button class="revealBtn" data-reveal="#ans1">Показать вариант решения</button>
+          </div>
+          <div class="answer" id="ans1"><pre style="margin:0;"><code>for (let i = 2; i &lt;= 20; i += 2) {
+  console.log(i);
+}</code></pre></div>
+
+          <div class="notes">
+            <div class="notesTitle">Шпаргалка (что сказать)</div>
+            <ul>
+              <li>«Чётные — это 2,4,6… Значит можно шагать на 2.»</li>
+              <li>«i += 2 — прибавили 2.»</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 15 Task 2 -->
+      <section class="slide">
+        <div class="card">
+          <h2>Задача 2 ⭐</h2>
+          <p>Нарисовать лесенку:</p>
+
+          <pre><code>*
+* *
+* * *
+* * * *</code></pre>
+
+          <div class="revealBox">
+            <button class="revealBtn" data-reveal="#ans2">Показать вариант решения</button>
+          </div>
+          <div class="answer" id="ans2"><pre style="margin:0;"><code>for (let row = 1; row &lt;= 4; row++) {
+  let line = "";
+  for (let col = 1; col &lt;= row; col++) {
+    line += "* ";
+  }
+  console.log(line);
+}</code></pre></div>
+
+          <div class="notes">
+            <div class="notesTitle">Шпаргалка (что сказать)</div>
+            <ul>
+              <li>«Каждая новая строка на 1 звёздочку больше.»</li>
+              <li>«Внутренний цикл добавляет звёздочки в строку.»</li>
+              <li>«Потом печатаем строку и идём к следующей.»</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 16 -->
+      <section class="slide">
+        <div class="card">
+          <h1>Готово 🚀</h1>
+          <p>Циклы = ускорение</p>
+          <p style="color:var(--muted); font-size: 22px; margin-top: 10px;">
+            for — когда знаем количество<br>
+            while — когда знаем условие<br>
+            вложенные — когда есть строки и столбцы
+          </p>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="hud" role="navigation" aria-label="Навигация по слайдам">
+      <button class="hudBtn" id="prev">← Назад</button>
+      <div class="count" id="count">1 / 1</div>
+      <div class="dots" id="dots" aria-hidden="true"></div>
+      <button class="hudBtn" id="next">Вперёд →</button>
+    </div>
+  </div>
+
+  <script>
+    // --- Vanta background ---
+    try{
+      VANTA.RINGS({
+        el: "#vanta",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        backgroundColor: 0x070814,
+        color: 0xff00ff,
+        color2: 0x00e5ff,
+        size: 1.15,
+        spacing: 9.0
+      });
+    }catch(e){
+      // fallback is already set via CSS background
+    }
+
+    // --- Slide engine ---
+    const slidesEl = document.getElementById("slides");
+    const total = slidesEl.children.length;
+    let idx = 0;
+
+    const countEl = document.getElementById("count");
+    const dotsEl = document.getElementById("dots");
+    const dots = [];
+
+    function buildDots(){
+      dotsEl.innerHTML = "";
+      for(let i=0;i<total;i++){
+        const d = document.createElement("div");
+        d.className = "dot" + (i===0 ? " on hot" : "");
+        d.title = (i+1).toString();
+        d.addEventListener("click", ()=>go(i));
+        dotsEl.appendChild(d);
+        dots.push(d);
+      }
+    }
+
+    function update(){
+      const w = window.innerWidth;
+      slidesEl.style.transform = `translate3d(${-idx * w}px,0,0)`;
+      countEl.textContent = `${idx+1} / ${total}`;
+      dots.forEach((d,i)=>{
+        d.classList.toggle("on", i === idx);
+        d.classList.toggle("hot", i === idx);
+      });
+    }
+
+    function go(n){
+      idx = Math.max(0, Math.min(total-1, n));
+      update();
+    }
+    const next = ()=>go(idx+1);
+    const prev = ()=>go(idx-1);
+
+    buildDots();
+    update();
+
+    window.addEventListener("resize", update);
+    document.getElementById("next").addEventListener("click", next);
+    document.getElementById("prev").addEventListener("click", prev);
+
+    document.addEventListener("keydown", (e)=>{
+      if(e.key === "ArrowRight" || e.key === "PageDown" || e.key === " "){
+        e.preventDefault(); next();
+      }
+      if(e.key === "ArrowLeft" || e.key === "PageUp"){
+        e.preventDefault(); prev();
+      }
+      if(e.key === "Home"){ e.preventDefault(); go(0); }
+      if(e.key === "End"){ e.preventDefault(); go(total-1); }
+    });
+
+    // Touch swipe
+    let touchX = null;
+    document.addEventListener("touchstart", (e)=>{
+      if(!e.touches || !e.touches[0]) return;
+      touchX = e.touches[0].clientX;
+    }, {passive:true});
+    document.addEventListener("touchend", (e)=>{
+      if(touchX === null) return;
+      const endX = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : touchX;
+      const dx = endX - touchX;
+      touchX = null;
+      if(Math.abs(dx) < 50) return;
+      if(dx < 0) next(); else prev();
+    }, {passive:true});
+
+    // --- Interactives ---
+    function safeClampInt(v, min, max, fallback){
+      const n = Number(v);
+      if(!Number.isFinite(n)) return fallback;
+      return Math.max(min, Math.min(max, Math.trunc(n)));
+    }
+
+    // Counter
+    const nCounter = document.getElementById("nCounter");
+    const outCounter = document.getElementById("outCounter");
+    document.getElementById("runCounter").addEventListener("click", ()=>{
+      const N = safeClampInt(nCounter.value, 1, 50, 10);
+      const arr = [];
+      for(let i=1;i<=N;i++){
+        arr.push(String(i));
+      }
+      outCounter.textContent = arr.join(" ");
+    });
+
+    // Timer
+    const tStart = document.getElementById("tStart");
+    const outTimer = document.getElementById("outTimer");
+    document.getElementById("runTimer").addEventListener("click", ()=>{
+      let t = safeClampInt(tStart.value, 1, 20, 7);
+      const lines = [];
+      while(t > 0){
+        lines.push(String(t));
+        t--;
+      }
+      lines.push("Старт!");
+      outTimer.textContent = lines.join("\n");
+    });
+
+    // Emoji grid
+    const rowsEl = document.getElementById("rows");
+    const colsEl = document.getElementById("cols");
+    const emojiEl = document.getElementById("emoji");
+    const outGrid = document.getElementById("outGrid");
+    document.getElementById("runGrid").addEventListener("click", ()=>{
+      const rows = safeClampInt(rowsEl.value, 1, 10, 4);
+      const cols = safeClampInt(colsEl.value, 1, 16, 6);
+      const em = emojiEl.value || "🟦";
+      let result = "";
+      for(let r=1; r<=rows; r++){
+        let line = "";
+        for(let c=1; c<=cols; c++){
+          line += em;
+        }
+        result += line + (r<rows ? "\n" : "");
+      }
+      outGrid.textContent = result;
+    });
+
+    // Quiz (single)
+    const quiz1 = document.getElementById("quiz1");
+    if(quiz1){
+      let locked = false;
+      quiz1.querySelectorAll(".opt").forEach(opt=>{
+        opt.addEventListener("click", ()=>{
+          if(locked) return;
+          locked = true;
+          quiz1.querySelectorAll(".opt").forEach(o=>{
+            const c = o.dataset.correct === "true";
+            o.classList.add(c ? "good" : "bad");
+          });
+        });
+      });
+    }
+
+    // Reveal answers
+    document.querySelectorAll(".revealBtn").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const sel = btn.getAttribute("data-reveal");
+        if(!sel) return;
+        const box = document.querySelector(sel);
+        if(!box) return;
+        box.classList.toggle("show");
+        btn.textContent = box.classList.contains("show") ? "Скрыть решение" : "Показать вариант решения";
+      });
+    });
+
+    // Pre-fill outputs
+    document.getElementById("runCounter").click();
+    document.getElementById("runTimer").click();
+    document.getElementById("runGrid").click();
+  </script>
+</body>
+</html>
