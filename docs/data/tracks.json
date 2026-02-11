@@ -46,6 +46,12 @@
     "title": "Логические операторы",
     "meta": "лекция + практика",
     "href": "./lessons/js-logic-operators-module.html"
+  },
+    {
+    "date": "05.02",
+    "title": "Циклы",
+    "meta": "лекция + практика",
+    "href": "./lessons/js-cycles-module.html"
   }
   ],
 
