@@ -52,6 +52,12 @@
     "title": "Циклы",
     "meta": "лекция + практика",
     "href": "./lessons/js-cycles-module.html"
+  },
+    {
+    "date": "12.02",
+    "title": "Функции",
+    "meta": "лекция + практика + MakeCode Arcade",
+    "href": "./lessons/js-functions-module.html"
   }
   ],
 
