@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Функции в JavaScript</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0e27;
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #vanta-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #00d4ff, #0099ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.15em;
+            color: #ffffff;
+        }
+
+        .section {
+            background: rgba(10, 14, 39, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.15s; }
+        .section:nth-child(4) { animation-delay: 0.2s; }
+        .section:nth-child(5) { animation-delay: 0.25s; }
+        .section:nth-child(6) { animation-delay: 0.3s; }
+        .section:nth-child(7) { animation-delay: 0.35s; }
+        .section:nth-child(8) { animation-delay: 0.4s; }
+        .section:nth-child(9) { animation-delay: 0.45s; }
+        .section:nth-child(10) { animation-delay: 0.5s; }
+
+        .section h2 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0099ff, #00d4ff);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .section p {
+            color: #cbd5e1;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .code-block {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            padding: 18px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            margin: 15px 0;
+            overflow-x: auto;
+            color: #a1f3eb;
+            line-height: 1.7;
+        }
+
+        .code-block .comment {
+            color: #64748b;
+        }
+
+        .code-block .keyword {
+            color: #c084fc;
+        }
+
+        .code-block .func-name {
+            color: #60a5fa;
+        }
+
+        .code-block .string {
+            color: #fbbf24;
+        }
+
+        .code-block .result {
+            color: #34d399;
+        }
+
+        .highlight {
+            background: rgba(0, 212, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .analogy {
+            background: rgba(30, 58, 138, 0.3);
+            border-left: 3px solid #fbbf24;
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin: 15px 0;
+            color: #fed7aa;
+            line-height: 1.6;
+        }
+
+        .key-point {
+            background: rgba(30, 58, 138, 0.2);
+            border-left: 3px solid #00d4ff;
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        .key-point strong {
+            color: #00d4ff;
+        }
+
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .concept-card {
+            background: rgba(30, 58, 138, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .concept-card:hover {
+            background: rgba(30, 58, 138, 0.5);
+            border-color: rgba(0, 212, 255, 0.6);
+            transform: translateY(-3px);
+        }
+
+        .concept-icon {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .concept-title {
+            font-weight: 700;
+            color: #e2e8f0;
+            margin-bottom: 6px;
+            font-size: 1.05em;
+        }
+
+        .concept-desc {
+            color: #94a3b8;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .vs-block {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .vs-block .code-block {
+            margin: 0;
+        }
+
+        .vs-label {
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .vs-label.good { color: #34d399; }
+        .vs-label.alt { color: #60a5fa; }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), transparent);
+            margin: 10px 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #64748b;
+            font-size: 0.95em;
+            padding: 30px 0;
+        }
+
+        .footer p:first-child {
+            color: #94a3b8;
+            font-size: 1.1em;
+        }
+
+        .bgToggle {
+            position: fixed;
+            top: 14px;
+            right: 14px;
+            z-index: 9999;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 212, 255, 0.35);
+            background: rgba(10, 14, 39, 0.65);
+            color: #e2e8f0;
+            font-weight: 700;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+        }
+
+        .bgToggle:hover {
+            border-color: rgba(0, 212, 255, 0.65);
+            background: rgba(10, 14, 39, 0.8);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            z-index: 9999;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 212, 255, 0.35);
+            background: rgba(10, 14, 39, 0.65);
+            color: #e2e8f0;
+            font-weight: 700;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .back-btn:hover {
+            border-color: rgba(0, 212, 255, 0.65);
+            background: rgba(10, 14, 39, 0.8);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2em; }
+            .section { padding: 20px; }
+            .concept-grid { grid-template-columns: 1fr; }
+            .vs-block { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div id="vanta-bg"></div>
+
+    <a class="back-btn" href="../track.html?t=js">&larr; К JavaScript</a>
+
+    <button id="bgToggle" class="bgToggle" type="button" title="Включить/выключить анимированный фон">
+        Фон: ВКЛ
+    </button>
+
+    <div class="container">
+        <div class="header">
+            <h1>Функции в JavaScript</h1>
+            <p>Учимся писать переиспользуемый код: объявляем, вызываем, передаём параметры</p>
+        </div>
+
+        <!-- 1. ВВЕДЕНИЕ -->
+        <div class="section">
+            <h2><span class="section-number">1</span> Что такое функция?</h2>
+            <p>
+                <span class="highlight">Функция</span> — это блок кода, который можно вызвать по имени
+                столько раз, сколько нужно. Вместо того, чтобы копировать одни и те же строки,
+                мы оборачиваем их в функцию и вызываем одним словом.
+            </p>
+            <div class="analogy">
+                Представь рецепт блинов. Ты не придумываешь рецепт заново каждый раз —
+                открываешь книгу и следуешь шагам. Функция = рецепт, который можно использовать снова и снова.
+            </div>
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <div class="concept-icon">&#128230;</div>
+                    <div class="concept-title">Упаковка кода</div>
+                    <div class="concept-desc">Собираем действия в одном месте</div>
+                </div>
+                <div class="concept-card">
+                    <div class="concept-icon">&#128257;</div>
+                    <div class="concept-title">Повторное использование</div>
+                    <div class="concept-desc">Вызываем сколько угодно раз</div>
+                </div>
+                <div class="concept-card">
+                    <div class="concept-icon">&#128210;</div>
+                    <div class="concept-title">Читаемость</div>
+                    <div class="concept-desc">Код становится понятнее</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. ОБЪЯВЛЕНИЕ ФУНКЦИИ -->
+        <div class="section">
+            <h2><span class="section-number">2</span> Объявляем функцию</h2>
+            <p>
+                Чтобы создать функцию, используем слово <span class="highlight">function</span>,
+                даём ей имя и пишем код внутри фигурных скобок <span class="highlight">{ }</span>.
+            </p>
+            <div class="code-block">
+                <span class="keyword">function</span> <span class="func-name">sayHello</span>() {<br>
+                &nbsp;&nbsp;console.log(<span class="string">"Привет, мир!"</span>);<br>
+                }
+            </div>
+            <div class="key-point">
+                <strong>function</strong> — ключевое слово<br>
+                <strong>sayHello</strong> — имя функции (придумываем сами)<br>
+                <strong>( )</strong> — скобки для параметров (пока пустые)<br>
+                <strong>{ }</strong> — тело функции (код внутри)
+            </div>
+        </div>
+
+        <!-- 3. ВЫЗОВ ФУНКЦИИ -->
+        <div class="section">
+            <h2><span class="section-number">3</span> Вызываем функцию</h2>
+            <p>
+                Объявить функцию — это написать рецепт. Но чтобы блины появились,
+                нужно начать готовить! <span class="highlight">Вызов</span> — это запуск функции.
+            </p>
+            <div class="code-block">
+                <span class="keyword">function</span> <span class="func-name">sayHello</span>() {<br>
+                &nbsp;&nbsp;console.log(<span class="string">"Привет, мир!"</span>);<br>
+                }<br><br>
+                <span class="comment">// Вызываем функцию — пишем имя и скобки:</span><br>
+                <span class="func-name">sayHello</span>();&nbsp;&nbsp;<span class="comment">// Привет, мир!</span><br>
+                <span class="func-name">sayHello</span>();&nbsp;&nbsp;<span class="comment">// Привет, мир!</span><br>
+                <span class="func-name">sayHello</span>();&nbsp;&nbsp;<span class="comment">// Привет, мир!</span>
+            </div>
+            <div class="key-point">
+                Вызвали 3 раза — получили 3 сообщения. Код внутри функции написан один раз!
+            </div>
+        </div>
+
+        <!-- 4. ПАРАМЕТРЫ -->
+        <div class="section">
+            <h2><span class="section-number">4</span> Параметры — входные данные</h2>
+            <p>
+                Функции могут принимать <span class="highlight">параметры</span> —
+                данные, которые мы передаём при вызове. Это как ингредиенты для рецепта.
+            </p>
+            <div class="code-block">
+                <span class="keyword">function</span> <span class="func-name">sayHello</span>(name) {<br>
+                &nbsp;&nbsp;console.log(<span class="string">"Привет, "</span> + name + <span class="string">"!"</span>);<br>
+                }<br><br>
+                <span class="func-name">sayHello</span>(<span class="string">"Аня"</span>);&nbsp;&nbsp;&nbsp;<span class="comment">// Привет, Аня!</span><br>
+                <span class="func-name">sayHello</span>(<span class="string">"Максим"</span>);&nbsp;<span class="comment">// Привет, Максим!</span><br>
+                <span class="func-name">sayHello</span>(<span class="string">"Кот"</span>);&nbsp;&nbsp;&nbsp;<span class="comment">// Привет, Кот!</span>
+            </div>
+            <div class="key-point">
+                <strong>name</strong> — это параметр. При каждом вызове мы подставляем своё значение.
+                Одна функция — разные результаты!
+            </div>
+        </div>
+
+        <!-- 5. RETURN -->
+        <div class="section">
+            <h2><span class="section-number">5</span> return — возвращаем результат</h2>
+            <p>
+                Функция может не только делать что-то, но и
+                <span class="highlight">возвращать результат</span> с помощью слова <span class="highlight">return</span>.
+                Результат можно сохранить в переменную.
+            </p>
+            <div class="code-block">
+                <span class="keyword">function</span> <span class="func-name">sum</span>(a, b) {<br>
+                &nbsp;&nbsp;<span class="keyword">return</span> a + b;<br>
+                }<br><br>
+                <span class="keyword">let</span> result = <span class="func-name">sum</span>(3, 5);<br>
+                console.log(result);&nbsp;&nbsp;<span class="comment">// 8</span><br><br>
+                console.log(<span class="func-name">sum</span>(10, 20));&nbsp;&nbsp;<span class="comment">// 30</span>
+            </div>
+            <div class="key-point">
+                <strong>return</strong> останавливает функцию и отдаёт значение наружу.
+                Это значение можно сохранить в переменную или использовать сразу.
+            </div>
+        </div>
+
+        <!-- 6. НЕСКОЛЬКО ПАРАМЕТРОВ -->
+        <div class="section">
+            <h2><span class="section-number">6</span> Несколько параметров</h2>
+            <p>
+                Параметров может быть сколько угодно — просто перечисляем через запятую.
+            </p>
+            <div class="code-block">
+                <span class="keyword">function</span> <span class="func-name">introduce</span>(name, age, city) {<br>
+                &nbsp;&nbsp;<span class="keyword">return</span> name + <span class="string">", "</span> + age + <span class="string">" лет, из "</span> + city;<br>
+                }<br><br>
+                <span class="keyword">let</span> info = <span class="func-name">introduce</span>(<span class="string">"Аня"</span>, 14, <span class="string">"Москва"</span>);<br>
+                console.log(info);&nbsp;&nbsp;<span class="comment">// Аня, 14 лет, из Москва</span>
+            </div>
+            <div class="code-block">
+                <span class="comment">// Ещё пример: площадь прямоугольника</span><br>
+                <span class="keyword">function</span> <span class="func-name">area</span>(width, height) {<br>
+                &nbsp;&nbsp;<span class="keyword">return</span> width * height;<br>
+                }<br><br>
+                console.log(<span class="func-name">area</span>(5, 3));&nbsp;&nbsp;<span class="comment">// 15</span><br>
+                console.log(<span class="func-name">area</span>(10, 7));&nbsp;<span class="comment">// 70</span>
+            </div>
+        </div>
+
+        <!-- 7. ФУНКЦИЯ БЕЗ RETURN -->
+        <div class="section">
+            <h2><span class="section-number">7</span> Функция без return</h2>
+            <p>
+                Если в функции нет <span class="highlight">return</span>, она возвращает
+                <span class="highlight">undefined</span>. Такие функции просто выполняют действие
+                (выводят текст, меняют что-то на странице).
+            </p>
+            <div class="code-block">
+                <span class="keyword">function</span> <span class="func-name">greet</span>(name) {<br>
+                &nbsp;&nbsp;console.log(<span class="string">"Добро пожаловать, "</span> + name);<br>
+                &nbsp;&nbsp;<span class="comment">// нет return</span><br>
+                }<br><br>
+                <span class="keyword">let</span> result = <span class="func-name">greet</span>(<span class="string">"Максим"</span>);<br>
+                console.log(result);&nbsp;&nbsp;<span class="comment">// undefined</span>
+            </div>
+            <div class="key-point">
+                Это нормально! Не каждая функция должна что-то возвращать.
+                <strong>console.log</strong> — тоже функция без return.
+            </div>
+        </div>
+
+        <!-- 8. СТРЕЛОЧНЫЕ ФУНКЦИИ -->
+        <div class="section">
+            <h2><span class="section-number">8</span> Стрелочные функции (=&gt;)</h2>
+            <p>
+                В современном JavaScript есть короткая запись — <span class="highlight">стрелочная функция</span>.
+                Вместо слова <code style="background:rgba(0,212,255,.15);padding:2px 6px;border-radius:4px;color:#a1f3eb;">function</code>
+                пишем стрелку <span class="highlight">=&gt;</span>.
+            </p>
+            <div class="vs-block">
+                <div>
+                    <div class="vs-label good">Обычная функция</div>
+                    <div class="code-block">
+                        <span class="keyword">function</span> <span class="func-name">sum</span>(a, b) {<br>
+                        &nbsp;&nbsp;<span class="keyword">return</span> a + b;<br>
+                        }
+                    </div>
+                </div>
+                <div>
+                    <div class="vs-label alt">Стрелочная функция</div>
+                    <div class="code-block">
+                        <span class="keyword">const</span> <span class="func-name">sum</span> = (a, b) <span class="keyword">=&gt;</span> a + b;
+                    </div>
+                </div>
+            </div>
+            <div class="code-block">
+                <span class="comment">// Ещё примеры:</span><br>
+                <span class="keyword">const</span> <span class="func-name">double</span> = (x) <span class="keyword">=&gt;</span> x * 2;<br>
+                console.log(<span class="func-name">double</span>(7));&nbsp;&nbsp;<span class="comment">// 14</span><br><br>
+                <span class="keyword">const</span> <span class="func-name">hello</span> = (name) <span class="keyword">=&gt;</span> <span class="string">"Привет, "</span> + name;<br>
+                console.log(<span class="func-name">hello</span>(<span class="string">"Аня"</span>));&nbsp;&nbsp;<span class="comment">// Привет, Аня</span>
+            </div>
+            <div class="key-point">
+                Стрелочные функции — это просто короткая запись. Результат тот же.
+                Если тело функции — одно выражение, <strong>return</strong> писать не нужно.
+            </div>
+        </div>
+
+        <!-- 9. ПРАКТИЧЕСКИЙ ПРИМЕР -->
+        <div class="section">
+            <h2><span class="section-number">9</span> Собираем вместе</h2>
+            <p>
+                Вот пример, где функции делают код чистым и понятным:
+            </p>
+            <div class="code-block">
+                <span class="comment">// Функция проверяет, совершеннолетний ли человек</span><br>
+                <span class="keyword">function</span> <span class="func-name">isAdult</span>(age) {<br>
+                &nbsp;&nbsp;<span class="keyword">return</span> age >= 18;<br>
+                }<br><br>
+                <span class="comment">// Функция создаёт приветствие</span><br>
+                <span class="keyword">function</span> <span class="func-name">greet</span>(name, age) {<br>
+                &nbsp;&nbsp;<span class="keyword">if</span> (<span class="func-name">isAdult</span>(age)) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="string">"Добро пожаловать, "</span> + name + <span class="string">"!"</span>;<br>
+                &nbsp;&nbsp;} <span class="keyword">else</span> {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> name + <span class="string">", тебе ещё "</span> + (18 - age) + <span class="string">" лет до 18."</span>;<br>
+                &nbsp;&nbsp;}<br>
+                }<br><br>
+                console.log(<span class="func-name">greet</span>(<span class="string">"Аня"</span>, 20));<br>
+                <span class="comment">// Добро пожаловать, Аня!</span><br><br>
+                console.log(<span class="func-name">greet</span>(<span class="string">"Максим"</span>, 14));<br>
+                <span class="comment">// Максим, тебе ещё 4 лет до 18.</span>
+            </div>
+            <div class="key-point">
+                Функция <strong>greet</strong> вызывает внутри другую функцию <strong>isAdult</strong>.
+                Функции можно комбинировать — как детали конструктора!
+            </div>
+        </div>
+
+        <!-- 10. ИТОГ -->
+        <div class="section">
+            <h2><span class="section-number">&#127942;</span> Что запомнить</h2>
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <div class="concept-title">function имя() { }</div>
+                    <div class="concept-desc">Так объявляем функцию</div>
+                </div>
+                <div class="concept-card">
+                    <div class="concept-title">имя()</div>
+                    <div class="concept-desc">Так вызываем функцию</div>
+                </div>
+                <div class="concept-card">
+                    <div class="concept-title">Параметры</div>
+                    <div class="concept-desc">Данные, которые передаём в скобках</div>
+                </div>
+                <div class="concept-card">
+                    <div class="concept-title">return</div>
+                    <div class="concept-desc">Возвращает результат наружу</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Теперь ты умеешь создавать функции!</p>
+            <p style="margin-top: 10px;">Дальше — практика: пишем свои функции и решаем задачи</p>
+        </div>
+    </div>
+
+    <!-- Three.js + Vanta Waves -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+
+    <script>
+        let vantaEffect = null;
+
+        function startVanta() {
+            const el = document.getElementById("vanta-bg");
+            if (!el || !window.VANTA || !VANTA.WAVES) return;
+            el.style.display = "block";
+            if (vantaEffect) vantaEffect.destroy();
+            vantaEffect = VANTA.WAVES({
+                el: "#vanta-bg",
+                mouseControls: true,
+                touchControls: true,
+                gyroControls: false,
+                minHeight: 200.00,
+                minWidth: 200.00,
+                scale: 1.00,
+                scaleMobile: 1.00,
+                color: 0x0a1a5c,
+                waveHeight: 20.00,
+                waveSpeed: 0.7,
+                zoom: 0.65
+            });
+        }
+
+        function stopVanta() {
+            const el = document.getElementById("vanta-bg");
+            if (vantaEffect) { vantaEffect.destroy(); vantaEffect = null; }
+            if (el) el.style.display = "none";
+        }
+
+        function setBtnText(on) {
+            const btn = document.getElementById("bgToggle");
+            if (btn) btn.textContent = on ? "Фон: ВКЛ" : "Фон: ВЫКЛ";
+        }
+
+        window.addEventListener("load", function () {
+            var saved = localStorage.getItem("func_vanta_bg");
+            var isOn = saved !== "0";
+            if (isOn) startVanta(); else stopVanta();
+            setBtnText(isOn);
+
+            var btn = document.getElementById("bgToggle");
+            if (btn) {
+                btn.addEventListener("click", function () {
+                    var nowOn = localStorage.getItem("func_vanta_bg") !== "0";
+                    var nextOn = !nowOn;
+                    localStorage.setItem("func_vanta_bg", nextOn ? "1" : "0");
+                    if (nextOn) startVanta(); else stopVanta();
+                    setBtnText(nextOn);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

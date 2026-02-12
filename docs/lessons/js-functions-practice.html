@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Практика: Функции в JavaScript</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0e27;
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #vanta-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px 60px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 2.6em;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #00d4ff, #0099ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p { font-size: 1.1em; color: #94a3b8; }
+
+        /* ── cards & sections ── */
+        .task {
+            background: rgba(10, 14, 39, 0.82);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.7s ease-out backwards;
+        }
+
+        .task:nth-child(odd)  { animation-delay: .1s; }
+        .task:nth-child(even) { animation-delay: .18s; }
+
+        .task h2 {
+            color: #00d4ff;
+            margin-bottom: 14px;
+            font-size: 1.35em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .task-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0099ff, #00d4ff);
+            color: #fff;
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .task-desc {
+            background: rgba(30, 58, 138, 0.2);
+            border-left: 3px solid #00d4ff;
+            padding: 14px 18px;
+            margin-bottom: 18px;
+            border-radius: 6px;
+            line-height: 1.7;
+            color: #cbd5e1;
+        }
+
+        .code-block {
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.94em;
+            margin: 12px 0;
+            overflow-x: auto;
+            color: #a1f3eb;
+            line-height: 1.65;
+        }
+        .code-block .kw  { color: #c084fc; }
+        .code-block .fn  { color: #60a5fa; }
+        .code-block .str { color: #fbbf24; }
+        .code-block .cm  { color: #64748b; }
+        .code-block .num { color: #34d399; }
+
+        /* ── form controls ── */
+        .inputs { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+        .input-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 180px; }
+
+        label { font-weight: 500; color: #cbd5e1; font-size: 0.92em; }
+
+        input[type="text"], textarea {
+            padding: 10px 14px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 6px;
+            background: rgba(30, 58, 138, 0.3);
+            color: #e2e8f0;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+            transition: .25s ease;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 14px rgba(0, 212, 255, 0.25);
+            background: rgba(30, 58, 138, 0.5);
+        }
+        textarea { resize: vertical; min-height: 100px; line-height: 1.55; }
+
+        .buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        button {
+            padding: 11px 22px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .25s ease;
+            border: 1px solid transparent;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, #0099ff, #00d4ff);
+            color: #fff;
+        }
+        .btn-check:hover {
+            background: linear-gradient(135deg, #0088ff, #00bbff);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 212, 255, 0.35);
+        }
+
+        .btn-hint {
+            background: transparent;
+            color: #34d399;
+            border: 1px solid #34d399;
+        }
+        .btn-hint:hover { background: rgba(52, 211, 153, 0.1); transform: translateY(-2px); }
+
+        .btn-reset {
+            background: transparent;
+            color: #f87171;
+            border: 1px solid #f87171;
+        }
+        .btn-reset:hover { background: rgba(248, 113, 113, 0.1); transform: translateY(-2px); }
+
+        .btn-arcade {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: #fff;
+            font-size: 1.05em;
+            padding: 14px 28px;
+        }
+        .btn-arcade:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+        }
+
+        /* result / hint / test */
+        .result {
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 14px;
+            display: none;
+            animation: slideIn 0.35s ease-out;
+            line-height: 1.6;
+        }
+        .result.show { display: block; }
+        .result.correct { background: rgba(52, 211, 153, 0.12); border: 1px solid #10b981; color: #a7f3d0; }
+        .result.incorrect { background: rgba(248, 113, 113, 0.12); border: 1px solid #ef4444; color: #fca5a5; }
+
+        .hint {
+            background: rgba(249, 115, 22, 0.08);
+            border: 1px solid rgba(249, 115, 22, 0.35);
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 14px;
+            display: none;
+            color: #fed7aa;
+            line-height: 1.65;
+        }
+        .hint.show { display: block; }
+
+        .test-line { margin: 3px 0; font-family: 'Courier New', monospace; font-size: 0.92em; }
+        .test-pass { color: #34d399; }
+        .test-fail { color: #f87171; }
+
+        .highlight {
+            background: rgba(0, 212, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), transparent);
+            margin: 15px 0;
+        }
+
+        /* ── arcade section ── */
+        .arcade-section {
+            background: rgba(10, 14, 39, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(124, 58, 237, 0.35);
+            border-radius: 14px;
+            padding: 30px;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease-out backwards;
+            animation-delay: .3s;
+        }
+
+        .arcade-section h2 {
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.5em;
+            margin-bottom: 14px;
+        }
+
+        .step {
+            background: rgba(124, 58, 237, 0.08);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: #fff;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        .step h3 {
+            color: #c4b5fd;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .step p {
+            color: #cbd5e1;
+            line-height: 1.65;
+            margin-bottom: 8px;
+        }
+
+        .arcade-link {
+            display: inline-block;
+            margin-top: 12px;
+            color: #a855f7;
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+        .arcade-link:hover { color: #c084fc; }
+
+        .key-point {
+            background: rgba(30, 58, 138, 0.2);
+            border-left: 3px solid #00d4ff;
+            padding: 14px 18px;
+            border-radius: 6px;
+            margin: 14px 0;
+            line-height: 1.6;
+        }
+        .key-point strong { color: #00d4ff; }
+
+        /* footer & toggles */
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #64748b;
+            font-size: 0.95em;
+            padding: 20px 0;
+        }
+
+        .bgToggle {
+            position: fixed;
+            top: 14px; right: 14px;
+            z-index: 9999;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 212, 255, 0.35);
+            background: rgba(10, 14, 39, 0.65);
+            color: #e2e8f0;
+            font-weight: 700;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+        }
+        .bgToggle:hover {
+            border-color: rgba(0, 212, 255, 0.65);
+            background: rgba(10, 14, 39, 0.8);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.9em; }
+            .task, .arcade-section { padding: 18px; }
+            .inputs { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div id="vanta-bg"></div>
+
+    <button id="bgToggle" class="bgToggle" type="button">Фон: ВКЛ</button>
+
+    <div class="container">
+        <div class="header">
+            <h1>Практика: Функции</h1>
+            <p>Решаем задачи, пишем свои функции и собираем мини-игру в MakeCode Arcade</p>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             ЧАСТЬ 1: УГАДАЙ РЕЗУЛЬТАТ (4 задачи)
+             ═══════════════════════════════════════════ -->
+
+        <!-- Задание 1 -->
+        <div class="task">
+            <h2><span class="task-number">1</span> Что выведет функция?</h2>
+            <div class="task-desc">
+                Посмотри на код и напиши, что появится в консоли:
+            </div>
+            <div class="code-block">
+<span class="kw">function</span> <span class="fn">double</span>(x) {<br>
+&nbsp;&nbsp;<span class="kw">return</span> x * <span class="num">2</span>;<br>
+}<br><br>
+console.log(<span class="fn">double</span>(<span class="num">7</span>));
+            </div>
+            <div class="inputs">
+                <div class="input-group">
+                    <label>Ответ:</label>
+                    <input type="text" id="q1" placeholder="число...">
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="btn-check" onclick="check(1, '14')">Проверить</button>
+                <button class="btn-reset" onclick="reset(1)">Сброс</button>
+            </div>
+            <div class="result" id="res1"></div>
+        </div>
+
+        <!-- Задание 2 -->
+        <div class="task">
+            <h2><span class="task-number">2</span> Что выведет?</h2>
+            <div class="task-desc">
+                Функция вызывается два раза. Что выведется последним?
+            </div>
+            <div class="code-block">
+<span class="kw">function</span> <span class="fn">greet</span>(name) {<br>
+&nbsp;&nbsp;<span class="kw">return</span> <span class="str">"Hi, "</span> + name + <span class="str">"!"</span>;<br>
+}<br><br>
+<span class="kw">let</span> msg = <span class="fn">greet</span>(<span class="str">"Аня"</span>);<br>
+console.log(msg);
+            </div>
+            <div class="inputs">
+                <div class="input-group">
+                    <label>Ответ:</label>
+                    <input type="text" id="q2" placeholder="строка...">
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="btn-check" onclick="check(2, 'Hi, Аня!')">Проверить</button>
+                <button class="btn-reset" onclick="reset(2)">Сброс</button>
+            </div>
+            <div class="result" id="res2"></div>
+        </div>
+
+        <!-- Задание 3 -->
+        <div class="task">
+            <h2><span class="task-number">3</span> Что вернёт функция без return?</h2>
+            <div class="task-desc">
+                Внимание: в этой функции нет <span class="highlight">return</span>. Что окажется в переменной?
+            </div>
+            <div class="code-block">
+<span class="kw">function</span> <span class="fn">sayBye</span>(name) {<br>
+&nbsp;&nbsp;console.log(<span class="str">"Пока, "</span> + name);<br>
+}<br><br>
+<span class="kw">let</span> result = <span class="fn">sayBye</span>(<span class="str">"Макс"</span>);<br>
+console.log(result);
+            </div>
+            <div class="inputs">
+                <div class="input-group">
+                    <label>Что выведет последний console.log?</label>
+                    <input type="text" id="q3" placeholder="...">
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="btn-check" onclick="check(3, 'undefined')">Проверить</button>
+                <button class="btn-hint" onclick="toggleHint('hint3')">Подсказка</button>
+                <button class="btn-reset" onclick="reset(3)">Сброс</button>
+            </div>
+            <div class="hint" id="hint3">
+                Если в функции нет <b>return</b>, она возвращает <b>undefined</b>.
+            </div>
+            <div class="result" id="res3"></div>
+        </div>
+
+        <!-- Задание 4 -->
+        <div class="task">
+            <h2><span class="task-number">4</span> Стрелочная функция</h2>
+            <div class="task-desc">
+                Стрелочная функция. Что будет в консоли?
+            </div>
+            <div class="code-block">
+<span class="kw">const</span> <span class="fn">square</span> = (n) <span class="kw">=&gt;</span> n * n;<br><br>
+console.log(<span class="fn">square</span>(<span class="num">5</span>) + <span class="fn">square</span>(<span class="num">3</span>));
+            </div>
+            <div class="inputs">
+                <div class="input-group">
+                    <label>Ответ:</label>
+                    <input type="text" id="q4" placeholder="число...">
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="btn-check" onclick="check(4, '34')">Проверить</button>
+                <button class="btn-hint" onclick="toggleHint('hint4')">Подсказка</button>
+                <button class="btn-reset" onclick="reset(4)">Сброс</button>
+            </div>
+            <div class="hint" id="hint4">
+                square(5) = 25, square(3) = 9. Складываем: 25 + 9 = ?
+            </div>
+            <div class="result" id="res4"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ═══════════════════════════════════════════
+             ЧАСТЬ 2: НАПИШИ ФУНКЦИЮ (автотесты)
+             ═══════════════════════════════════════════ -->
+
+        <!-- Задание 5: triple -->
+        <div class="task">
+            <h2><span class="task-number">5</span> Напиши функцию triple(x)</h2>
+            <div class="task-desc">
+                Напиши функцию <span class="highlight">triple</span>, которая принимает число и возвращает его,
+                умноженное на 3.
+            </div>
+            <div class="code-block">
+<span class="cm">// Пример:</span><br>
+<span class="fn">triple</span>(<span class="num">4</span>)&nbsp;&nbsp;<span class="cm">// 12</span><br>
+<span class="fn">triple</span>(<span class="num">10</span>) <span class="cm">// 30</span><br>
+<span class="fn">triple</span>(<span class="num">0</span>)&nbsp;&nbsp;<span class="cm">// 0</span>
+            </div>
+            <div class="input-group" style="margin-bottom:14px">
+                <label>Твой код:</label>
+                <textarea id="code5" rows="4" placeholder="function triple(x) {&#10;  // твой код&#10;}"></textarea>
+            </div>
+            <div class="buttons">
+                <button class="btn-check" onclick="runTests(5)">Запустить тесты</button>
+                <button class="btn-hint" onclick="toggleHint('hint5')">Подсказка</button>
+                <button class="btn-reset" onclick="resetCode(5)">Сброс</button>
+            </div>
+            <div class="hint" id="hint5">
+                <code style="color:#a1f3eb">function triple(x) { return x * 3; }</code>
+            </div>
+            <div class="result" id="res5"></div>
+        </div>
+
+        <!-- Задание 6: isEven -->
+        <div class="task">
+            <h2><span class="task-number">6</span> Напиши функцию isEven(n)</h2>
+            <div class="task-desc">
+                Напиши функцию <span class="highlight">isEven</span>, которая возвращает
+                <span class="highlight">true</span>, если число чётное, и <span class="highlight">false</span>, если нечётное.
+            </div>
+            <div class="code-block">
+<span class="cm">// Пример:</span><br>
+<span class="fn">isEven</span>(<span class="num">4</span>)&nbsp;&nbsp;<span class="cm">// true</span><br>
+<span class="fn">isEven</span>(<span class="num">7</span>)&nbsp;&nbsp;<span class="cm">// false</span><br>
+<span class="fn">isEven</span>(<span class="num">0</span>)&nbsp;&nbsp;<span class="cm">// true</span>
+            </div>
+            <div class="input-group" style="margin-bottom:14px">
+                <label>Твой код:</label>
+                <textarea id="code6" rows="4" placeholder="function isEven(n) {&#10;  // твой код&#10;}"></textarea>
+            </div>
+            <div class="buttons">
+                <button class="btn-check" onclick="runTests(6)">Запустить тесты</button>
+                <button class="btn-hint" onclick="toggleHint('hint6')">Подсказка</button>
+                <button class="btn-reset" onclick="resetCode(6)">Сброс</button>
+            </div>
+            <div class="hint" id="hint6">
+                Оператор <b>%</b> (остаток от деления). Если <code style="color:#a1f3eb">n % 2 === 0</code>, число чётное.
+            </div>
+            <div class="result" id="res6"></div>
+        </div>
+
+        <!-- Задание 7: max3 -->
+        <div class="task">
+            <h2><span class="task-number">7</span> Напиши функцию max3(a, b, c)</h2>
+            <div class="task-desc">
+                Напиши функцию <span class="highlight">max3</span>, которая принимает три числа
+                и возвращает наибольшее из них.
+            </div>
+            <div class="code-block">
+<span class="cm">// Пример:</span><br>
+<span class="fn">max3</span>(<span class="num">1</span>, <span class="num">5</span>, <span class="num">3</span>)&nbsp;&nbsp;&nbsp;<span class="cm">// 5</span><br>
+<span class="fn">max3</span>(<span class="num">10</span>, <span class="num">2</span>, <span class="num">8</span>)&nbsp;&nbsp;<span class="cm">// 10</span><br>
+<span class="fn">max3</span>(<span class="num">-1</span>, <span class="num">-5</span>, <span class="num">-2</span>) <span class="cm">// -1</span>
+            </div>
+            <div class="input-group" style="margin-bottom:14px">
+                <label>Твой код:</label>
+                <textarea id="code7" rows="5" placeholder="function max3(a, b, c) {&#10;  // твой код&#10;}"></textarea>
+            </div>
+            <div class="buttons">
+                <button class="btn-check" onclick="runTests(7)">Запустить тесты</button>
+                <button class="btn-hint" onclick="toggleHint('hint7')">Подсказка</button>
+                <button class="btn-reset" onclick="resetCode(7)">Сброс</button>
+            </div>
+            <div class="hint" id="hint7">
+                Можно использовать <code style="color:#a1f3eb">Math.max(a, b, c)</code> или сравнить через <b>if</b>.
+            </div>
+            <div class="result" id="res7"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ═══════════════════════════════════════════
+             ЧАСТЬ 3: МИНИ-ИГРА В MAKECODE ARCADE
+             ═══════════════════════════════════════════ -->
+
+        <div class="arcade-section">
+            <h2>&#127918; Бонус: Собираем мини-игру в MakeCode Arcade</h2>
+            <p style="color:#cbd5e1; margin-bottom:18px; line-height:1.6;">
+                <b>MakeCode Arcade</b> от Microsoft — бесплатная платформа, где можно создавать
+                ретро-игры прямо в браузере. Пишем на JavaScript и видим результат мгновенно!
+                <br>Сейчас мы пошагово соберём мини-игру <b>"Лови монетки"</b>, используя функции.
+            </p>
+
+            <!-- Шаг 0 -->
+            <div class="step">
+                <h3><span class="step-num">0</span> Открой MakeCode Arcade</h3>
+                <p>
+                    Перейди на сайт, нажми <b>"New Project"</b> и дай проекту имя (например, "Coin Catcher").
+                    Переключись в режим <b>JavaScript</b> (кнопка вверху).
+                </p>
+                <a class="arcade-link" href="https://arcade.makecode.com/" target="_blank" rel="noopener">
+                    arcade.makecode.com &rarr;
+                </a>
+            </div>
+
+            <!-- Шаг 1 -->
+            <div class="step">
+                <h3><span class="step-num">1</span> Функция создания игрока</h3>
+                <p>
+                    Первая функция — <span class="highlight">createPlayer()</span>.
+                    Она создаёт спрайт игрока и ставит его внизу экрана.
+                </p>
+                <div class="code-block">
+<span class="cm">// Создаём игрока</span><br>
+<span class="kw">function</span> <span class="fn">createPlayer</span> () {<br>
+&nbsp;&nbsp;<span class="kw">let</span> playerImg = img<span class="str">`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. . . 5 5 . . .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. . 5 5 5 5 . .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. 5 1 5 5 1 5 .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. 5 5 5 5 5 5 .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. . 5 5 5 5 . .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. . . 5 5 . . .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. . 7 7 7 7 . .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. . 7 7 7 7 . .<br>
+&nbsp;&nbsp;`</span><br>
+&nbsp;&nbsp;player = sprites.create(playerImg, SpriteKind.Player)<br>
+&nbsp;&nbsp;player.setPosition(<span class="num">80</span>, <span class="num">110</span>)<br>
+&nbsp;&nbsp;controller.moveSprite(player, <span class="num">100</span>, <span class="num">0</span>)<br>
+&nbsp;&nbsp;player.setStayInScreen(<span class="kw">true</span>)<br>
+}<br>
+            </div>
+                <div class="key-point">
+                    Всю логику создания спрайта мы упаковали в одну функцию.
+                    Вызовём <strong>createPlayer()</strong> — и герой готов!
+                </div>
+            </div>
+
+            <!-- Шаг 2 -->
+            <div class="step">
+                <h3><span class="step-num">2</span> Функция появления монетки</h3>
+                <p>
+                    <span class="highlight">spawnCoin()</span> — создаёт монетку в случайном месте наверху экрана.
+                </p>
+                <div class="code-block">
+<span class="cm">// Монетка падает сверху</span><br>
+<span class="kw">function</span> <span class="fn">spawnCoin</span> () {<br>
+&nbsp;&nbsp;<span class="kw">let</span> coinImg = img<span class="str">`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. 5 5 .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;5 5 5 5<br>
+&nbsp;&nbsp;&nbsp;&nbsp;5 5 5 5<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. 5 5 .<br>
+&nbsp;&nbsp;`</span><br>
+&nbsp;&nbsp;<span class="kw">let</span> coin = sprites.create(coinImg, SpriteKind.Food)<br>
+&nbsp;&nbsp;coin.setPosition(randint(<span class="num">10</span>, <span class="num">150</span>), <span class="num">0</span>)<br>
+&nbsp;&nbsp;coin.setVelocity(<span class="num">0</span>, <span class="num">40</span>)<br>
+&nbsp;&nbsp;coin.setFlag(SpriteFlag.AutoDestroy, <span class="kw">true</span>)<br>
+}
+                </div>
+            </div>
+
+            <!-- Шаг 3 -->
+            <div class="step">
+                <h3><span class="step-num">3</span> Функция обновления счёта</h3>
+                <p>
+                    Когда игрок ловит монетку, вызываем <span class="highlight">addScore()</span>.
+                </p>
+                <div class="code-block">
+<span class="cm">// Добавляем очко</span><br>
+<span class="kw">function</span> <span class="fn">addScore</span> (points: <span class="kw">number</span>) {<br>
+&nbsp;&nbsp;info.changeScoreBy(points)<br>
+}
+                </div>
+            </div>
+
+            <!-- Шаг 4 -->
+            <div class="step">
+                <h3><span class="step-num">4</span> Собираем всё вместе</h3>
+                <p>
+                    Теперь вызываем функции и добавляем события:
+                </p>
+                <div class="code-block">
+<span class="cm">// --- Главный код игры ---</span><br><br>
+<span class="kw">let</span> player: Sprite = <span class="kw">null</span><br><br>
+<span class="cm">// 1. Создаём игрока</span><br>
+<span class="fn">createPlayer</span>()<br><br>
+<span class="cm">// 2. Запускаем счёт</span><br>
+info.setScore(<span class="num">0</span>)<br><br>
+<span class="cm">// 3. Каждые 1.5 сек — новая монетка</span><br>
+game.onUpdateInterval(<span class="num">1500</span>, <span class="kw">function</span> () {<br>
+&nbsp;&nbsp;<span class="fn">spawnCoin</span>()<br>
+})<br><br>
+<span class="cm">// 4. Когда игрок касается монетки — +1 очко</span><br>
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Food,<br>
+&nbsp;&nbsp;<span class="kw">function</span> (sprite, otherSprite) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;otherSprite.destroy()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">addScore</span>(<span class="num">1</span>)<br>
+})<br><br>
+<span class="cm">// 5. Таймер на 30 секунд</span><br>
+info.startCountdown(<span class="num">30</span>)
+                </div>
+            </div>
+
+            <!-- Шаг 5 -->
+            <div class="step">
+                <h3><span class="step-num">5</span> Запусти и улучши!</h3>
+                <p>Нажми кнопку Play в MakeCode — игра работает! Попробуй улучшить её:</p>
+                <div class="key-point">
+                    <strong>Идеи для улучшения (всё через функции!):</strong><br>
+                    &bull; <b>spawnBomb()</b> — добавь бомбы, которых нужно избегать<br>
+                    &bull; <b>speedUp()</b> — увеличивай скорость монеток каждые 10 секунд<br>
+                    &bull; <b>createEnemy()</b> — добавь врага, который ходит по экрану<br>
+                    &bull; <b>showGameOver()</b> — покажи финальный экран с результатом
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top:22px;">
+                <a href="https://arcade.makecode.com/" target="_blank" rel="noopener">
+                    <button class="btn-arcade" type="button">
+                        Открыть MakeCode Arcade &#127918;
+                    </button>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Функции — основа программирования. Ты теперь умеешь их писать и применять!</p>
+        </div>
+    </div>
+
+    <!-- Three.js + Vanta -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+
+    <script>
+    /* ── Vanta background ── */
+    let vantaEffect = null;
+
+    function startVanta() {
+        const el = document.getElementById("vanta-bg");
+        if (!el || !window.VANTA || !VANTA.WAVES) return;
+        el.style.display = "block";
+        if (vantaEffect) vantaEffect.destroy();
+        vantaEffect = VANTA.WAVES({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200, minWidth: 200,
+            scale: 1, scaleMobile: 1,
+            color: 0x0a1a5c,
+            waveHeight: 20, waveSpeed: 0.7, zoom: 0.65
+        });
+    }
+
+    function stopVanta() {
+        if (vantaEffect) { vantaEffect.destroy(); vantaEffect = null; }
+        const el = document.getElementById("vanta-bg");
+        if (el) el.style.display = "none";
+    }
+
+    function setBtnText(on) {
+        const b = document.getElementById("bgToggle");
+        if (b) b.textContent = on ? "Фон: ВКЛ" : "Фон: ВЫКЛ";
+    }
+
+    window.addEventListener("load", function () {
+        var saved = localStorage.getItem("funcprac_vanta");
+        var isOn = saved !== "0";
+        if (isOn) startVanta(); else stopVanta();
+        setBtnText(isOn);
+        var btn = document.getElementById("bgToggle");
+        if (btn) btn.addEventListener("click", function () {
+            var now = localStorage.getItem("funcprac_vanta") !== "0";
+            var next = !now;
+            localStorage.setItem("funcprac_vanta", next ? "1" : "0");
+            next ? startVanta() : stopVanta();
+            setBtnText(next);
+        });
+    });
+
+    /* ── Part 1: Guess the result ── */
+    function check(n, correct) {
+        var inp = document.getElementById("q" + n);
+        var res = document.getElementById("res" + n);
+        var val = inp.value.trim();
+
+        res.classList.remove("show", "correct", "incorrect");
+        void res.offsetWidth;
+
+        if (!val) {
+            res.innerHTML = "Напиши ответ!";
+            res.classList.add("show", "incorrect");
+            return;
+        }
+
+        if (val === correct) {
+            res.innerHTML = "&#9989; <b>Верно!</b> Ответ: <b>" + correct + "</b>";
+            res.classList.add("show", "correct");
+        } else {
+            res.innerHTML = "&#10060; Неправильно. Попробуй ещё!";
+            res.classList.add("show", "incorrect");
+        }
+    }
+
+    function reset(n) {
+        document.getElementById("q" + n).value = "";
+        var r = document.getElementById("res" + n);
+        r.classList.remove("show", "correct", "incorrect");
+    }
+
+    function toggleHint(id) {
+        var h = document.getElementById(id);
+        if (h) h.classList.toggle("show");
+    }
+
+    /* ── Part 2: Auto-tested coding tasks ── */
+    var testSuites = {
+        5: {
+            fname: "triple",
+            tests: [
+                { args: [4],  expected: 12 },
+                { args: [10], expected: 30 },
+                { args: [0],  expected: 0 },
+                { args: [-3], expected: -9 },
+                { args: [100],expected: 300 }
+            ]
+        },
+        6: {
+            fname: "isEven",
+            tests: [
+                { args: [4],  expected: true },
+                { args: [7],  expected: false },
+                { args: [0],  expected: true },
+                { args: [-2], expected: true },
+                { args: [13], expected: false }
+            ]
+        },
+        7: {
+            fname: "max3",
+            tests: [
+                { args: [1, 5, 3],    expected: 5 },
+                { args: [10, 2, 8],   expected: 10 },
+                { args: [-1, -5, -2], expected: -1 },
+                { args: [7, 7, 7],    expected: 7 },
+                { args: [0, 99, 50],  expected: 99 }
+            ]
+        }
+    };
+
+    function runTests(n) {
+        var suite = testSuites[n];
+        var code = document.getElementById("code" + n).value;
+        var res = document.getElementById("res" + n);
+
+        res.classList.remove("show", "correct", "incorrect");
+        void res.offsetWidth;
+
+        if (!code.trim()) {
+            res.innerHTML = "Напиши код функции!";
+            res.classList.add("show", "incorrect");
+            return;
+        }
+
+        var fn;
+        try {
+            fn = new Function(code + "\nreturn " + suite.fname + ";")();
+        } catch (e) {
+            res.innerHTML = "&#9888;&#65039; Ошибка синтаксиса:<br><code>" + e.message + "</code>";
+            res.classList.add("show", "incorrect");
+            return;
+        }
+
+        if (typeof fn !== "function") {
+            res.innerHTML = "&#9888;&#65039; Функция <b>" + suite.fname + "</b> не найдена. Проверь имя!";
+            res.classList.add("show", "incorrect");
+            return;
+        }
+
+        var passed = 0;
+        var total = suite.tests.length;
+        var lines = [];
+
+        for (var i = 0; i < total; i++) {
+            var t = suite.tests[i];
+            var got;
+            try { got = fn.apply(null, t.args); } catch (e) { got = "ERROR: " + e.message; }
+            var ok = got === t.expected;
+            if (ok) passed++;
+            var argsStr = t.args.join(", ");
+            var cls = ok ? "test-pass" : "test-fail";
+            var icon = ok ? "&#9989;" : "&#10060;";
+            lines.push(
+                '<div class="test-line ' + cls + '">' +
+                icon + " " + suite.fname + "(" + argsStr + ") &rarr; " +
+                String(got) + (ok ? "" : "  (ожидалось: " + t.expected + ")") +
+                "</div>"
+            );
+        }
+
+        var allOk = passed === total;
+        res.innerHTML =
+            "<b>" + passed + " / " + total + " тестов пройдено</b>" +
+            (allOk ? " &#127881;" : "") + "<br>" + lines.join("");
+        res.classList.add("show", allOk ? "correct" : "incorrect");
+    }
+
+    function resetCode(n) {
+        document.getElementById("code" + n).value = "";
+        var r = document.getElementById("res" + n);
+        r.classList.remove("show", "correct", "incorrect");
+    }
+
+    /* Enter to submit for guess tasks */
+    document.addEventListener("DOMContentLoaded", function () {
+        for (var i = 1; i <= 4; i++) {
+            (function (idx) {
+                var inp = document.getElementById("q" + idx);
+                if (inp) inp.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter") {
+                        inp.closest(".task").querySelector(".btn-check").click();
+                    }
+                });
+            })(i);
+        }
+    });
+    </script>
+</body>
+</html>
