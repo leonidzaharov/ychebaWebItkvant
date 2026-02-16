@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Звёздный Защитник — Туториал MakeCode Arcade</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0e27;
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #vanta-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px 60px;
+        }
+
+        /* ── header ── */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #a855f7, #7c3aed, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p { font-size: 1.1em; color: #94a3b8; }
+
+        .header .badge {
+            display: inline-block;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: .85em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: #fff;
+            margin-bottom: 14px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 18px;
+            color: #a855f7;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        .back-link:hover { color: #c084fc; }
+
+        /* ── progress bar ── */
+        .progress-bar {
+            background: rgba(30, 58, 138, 0.3);
+            border-radius: 20px;
+            height: 10px;
+            margin: 0 auto 40px;
+            max-width: 600px;
+            overflow: hidden;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #7c3aed, #a855f7, #00d4ff);
+            border-radius: 20px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .progress-text {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.88em;
+            margin-bottom: 8px;
+        }
+
+        /* ── steps ── */
+        .step-card {
+            background: rgba(10, 14, 39, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(124, 58, 237, 0.25);
+            border-radius: 14px;
+            padding: 30px;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.7s ease-out backwards;
+        }
+
+        .step-card.active {
+            border-color: rgba(124, 58, 237, 0.6);
+            box-shadow: 0 0 30px rgba(124, 58, 237, 0.15);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: #fff;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.1em;
+            flex-shrink: 0;
+        }
+
+        .step-num.done {
+            background: linear-gradient(135deg, #059669, #34d399);
+        }
+
+        .step-title {
+            color: #c4b5fd;
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+
+        .step-time {
+            margin-left: auto;
+            color: #64748b;
+            font-size: 0.85em;
+            white-space: nowrap;
+        }
+
+        .step-body { line-height: 1.7; color: #cbd5e1; }
+        .step-body p { margin-bottom: 12px; }
+
+        /* ── code blocks — NO COPY ── */
+        .code-block {
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            padding: 18px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.92em;
+            margin: 14px 0;
+            overflow-x: auto;
+            color: #a1f3eb;
+            line-height: 1.7;
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .code-block::after {
+            content: 'набирай вручную';
+            position: absolute;
+            top: 6px; right: 10px;
+            font-size: 0.72em;
+            color: #475569;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            pointer-events: none;
+        }
+
+        .code-block .kw  { color: #c084fc; }
+        .code-block .fn  { color: #60a5fa; }
+        .code-block .str { color: #fbbf24; }
+        .code-block .cm  { color: #64748b; }
+        .code-block .num { color: #34d399; }
+        .code-block .ev  { color: #fb923c; }
+
+        /* ── SPRITE BLOCKS — COPYABLE ── */
+        .sprite-block {
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(124, 58, 237, 0.35);
+            padding: 14px 18px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.88em;
+            margin: 14px 0;
+            overflow-x: auto;
+            color: #c4b5fd;
+            line-height: 1.5;
+            position: relative;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+
+        .sprite-block::after {
+            content: 'можно копировать';
+            position: absolute;
+            top: 6px; right: 10px;
+            font-size: 0.72em;
+            color: #7c3aed;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            pointer-events: none;
+        }
+
+        .sprite-label {
+            display: block;
+            font-size: 0.8em;
+            color: #7c3aed;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .highlight {
+            background: rgba(124, 58, 237, 0.2);
+            padding: 2px 7px;
+            border-radius: 4px;
+            color: #c4b5fd;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            font-size: 0.92em;
+        }
+
+        /* ── info boxes ── */
+        .key-point {
+            background: rgba(30, 58, 138, 0.2);
+            border-left: 3px solid #a855f7;
+            padding: 14px 18px;
+            border-radius: 6px;
+            margin: 14px 0;
+            line-height: 1.6;
+        }
+        .key-point strong { color: #c4b5fd; }
+
+        .warning-box {
+            background: rgba(234, 88, 12, 0.08);
+            border-left: 3px solid #f97316;
+            padding: 14px 18px;
+            border-radius: 6px;
+            margin: 14px 0;
+            line-height: 1.6;
+            color: #fed7aa;
+        }
+
+        .tip-box {
+            background: rgba(16, 185, 129, 0.08);
+            border-left: 3px solid #34d399;
+            padding: 14px 18px;
+            border-radius: 6px;
+            margin: 14px 0;
+            line-height: 1.6;
+            color: #a7f3d0;
+        }
+
+        /* ── theory mini-sections ── */
+        .theory {
+            background: rgba(124, 58, 237, 0.06);
+            border: 1px dashed rgba(124, 58, 237, 0.3);
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin: 14px 0;
+        }
+        .theory-label {
+            color: #a855f7;
+            font-weight: 700;
+            font-size: 0.88em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        /* ── checklist ── */
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0;
+        }
+        .checklist li {
+            position: relative;
+            padding: 6px 0 6px 30px;
+            line-height: 1.5;
+        }
+        .checklist li::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 10px;
+            width: 18px; height: 18px;
+            border: 2px solid #7c3aed;
+            border-radius: 4px;
+        }
+
+        /* ── buttons ── */
+        .btn-arcade {
+            display: inline-block;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: #fff;
+            font-size: 1.05em;
+            font-weight: 700;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: .25s ease;
+            text-decoration: none;
+        }
+        .btn-arcade:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+        }
+
+        .btn-step {
+            display: inline-block;
+            background: transparent;
+            color: #a855f7;
+            border: 1px solid #7c3aed;
+            font-size: 0.92em;
+            font-weight: 600;
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: .25s ease;
+            margin-top: 10px;
+        }
+        .btn-step:hover {
+            background: rgba(124, 58, 237, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* ── dividers ── */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.3), transparent);
+            margin: 15px 0;
+        }
+
+        /* ── footer ── */
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #64748b;
+            font-size: 0.95em;
+            padding: 20px 0;
+        }
+
+        /* ── toggle background ── */
+        .bgToggle {
+            position: fixed;
+            bottom: 14px; right: 14px;
+            z-index: 9999;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: rgba(10, 14, 39, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: #c4b5fd;
+            cursor: pointer;
+            font-size: 0.82em;
+            font-weight: 600;
+        }
+        .bgToggle:hover {
+            background: rgba(124, 58, 237, 0.15);
+        }
+
+        /* ── animations ── */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── responsive ── */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .step-card { padding: 20px; }
+            .step-header { flex-wrap: wrap; }
+            .step-time { margin-left: 54px; }
+            .code-block { font-size: 0.82em; padding: 14px; }
+            .sprite-block { font-size: 0.8em; padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="vanta-bg"></div>
+    <button class="bgToggle" onclick="toggleBg()">Фон вкл/выкл</button>
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="header">
+            <a class="back-link" href="./js-arcade-game-module.html">&larr; Назад к модулю</a>
+            <div class="badge">MakeCode Arcade &bull; JavaScript</div>
+            <h1>Звёздный Защитник</h1>
+            <p>Создаём космический шутер за 10 шагов</p>
+        </div>
+
+        <!-- PROGRESS -->
+        <div class="progress-text">Прогресс: <span id="progressCount">0</span> / 10 шагов</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             ШАГ 0: ОТКРОЙ MAKECODE
+             ═══════════════════════════════════════════ -->
+        <div class="step-card" data-step="0">
+            <div class="step-header" onclick="toggleStep(this)">
+                <span class="step-num">0</span>
+                <span class="step-title">Открой MakeCode Arcade</span>
+                <span class="step-time">~2 мин</span>
+            </div>
+            <div class="step-body">
+                <p>
+                    Переходи на сайт <b>MakeCode Arcade</b>, нажми <b>&laquo;New Project&raquo;</b>
+                    и назови проект <b>&laquo;Star Defender&raquo;</b>.
+                </p>
+                <p>
+                    Переключись в режим <b>JavaScript</b> &mdash; кнопка вверху редактора.
+                    Удали весь код, который там написан &mdash; мы начнём с чистого листа.
+                </p>
+
+                <div class="warning-box">
+                    <strong>Важно!</strong> Работаем <b>только в режиме JavaScript</b>, а не в блоках.
+                    Если случайно переключишься в блоки, некоторый код может потеряться.
+                </div>
+
+                <div style="text-align:center; margin-top:16px;">
+                    <a class="btn-arcade" href="https://arcade.makecode.com/" target="_blank" rel="noopener">
+                        Открыть MakeCode Arcade &rarr;
+                    </a>
+                </div>
+
+                <button class="btn-step" onclick="markDone(0)">Готово, перехожу дальше</button>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             ШАГ 1: ФОНОВАЯ СЦЕНА
+             ═══════════════════════════════════════════ -->
+        <div class="step-card" data-step="1">
+            <div class="step-header" onclick="toggleStep(this)">
+                <span class="step-num">1</span>
+                <span class="step-title">Космический фон</span>
+                <span class="step-time">~3 мин</span>
+            </div>
+            <div class="step-body">
+                <p>
+                    Первым делом зададим цвет фона и настроим начальные значения &mdash;
+                    жизни и счёт.
+                </p>
+
+                <div class="theory">
+                    <div class="theory-label">Теория: scene и info</div>
+                    <p>
+                        <span class="highlight">scene.setBackgroundColor()</span> &mdash; задаёт цвет фона сцены.
+                        Цвета в MakeCode задаются числами от 0 до 15 (палитра).<br>
+                        <span class="highlight">info.setLife()</span> &mdash; устанавливает количество жизней.<br>
+                        <span class="highlight">info.setScore()</span> &mdash; устанавливает начальный счёт.
+                    </p>
+                </div>
+
+                <div class="code-block">
+<span class="cm">// ===== ЗВЁЗДНЫЙ ЗАЩИТНИК =====</span><br>
+<br>
+<span class="cm">// Настраиваем сцену</span><br>
+scene.setBackgroundColor(<span class="num">15</span>)<br>
+<br>
+<span class="cm">// Начальные жизни и счёт</span><br>
+info.setLife(<span class="num">3</span>)<br>
+info.setScore(<span class="num">0</span>)
+                </div>
+
+                <div class="tip-box">
+                    <strong>Совет:</strong> Цвет 15 &mdash; чёрный. Попробуй 9 (тёмно-синий)
+                    для более космического вида.
+                </div>
+
+                <p>Нажми <b>Play</b> (треугольник) &mdash; увидишь чёрный экран с сердечками и нулём очков.</p>
+                <button class="btn-step" onclick="markDone(1)">Готово, перехожу дальше</button>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             ШАГ 2: СОЗДАЁМ КОРАБЛЬ
+             ═══════════════════════════════════════════ -->
+        <div class="step-card" data-step="2">
+            <div class="step-header" onclick="toggleStep(this)">
+                <span class="step-num">2</span>
+                <span class="step-title">Создаём космический корабль</span>
+                <span class="step-time">~5 мин</span>
+            </div>
+            <div class="step-body">
+                <p>
+                    Создадим спрайт игрока &mdash; космический корабль. Спрайт &mdash; это
+                    картинка, которая может двигаться по экрану.
+                </p>
+
+                <div class="theory">
+                    <div class="theory-label">Теория: sprites.create</div>
+                    <p>
+                        <span class="highlight">sprites.create(image, kind)</span> &mdash; создаёт
+                        новый спрайт на экране.<br>
+                        <b>image</b> &mdash; картинка (пиксель-арт), рисуется через <code>img`...`</code>.<br>
+                        <b>kind</b> &mdash; тип спрайта: <code>SpriteKind.Player</code>, <code>SpriteKind.Enemy</code>,
+                        <code>SpriteKind.Food</code>, <code>SpriteKind.Projectile</code>.
+                    </p>
+                </div>
+
+                <p>Набери этот код <b>после предыдущего</b>. Спрайт корабля можно скопировать из блока ниже:</p>
+
+                <div class="sprite-block">
+                    <span class="sprite-label">Спрайт корабля (копируй):</span>
+. . . . b . . . . .
+. . . b b b . . . .
+. . . b 1 b . . . .
+. . b b b b b . . .
+. b b 9 b 9 b b . .
+b b 9 9 b 9 9 b b .
+b 9 9 9 b 9 9 9 b .
+b b b b b b b b b .
+. . b . . . b . . .
+. . 4 . . . 4 . . .
+                </div>
+
+                <p>А вот код, который нужно <b>набрать вручную</b>:</p>
+
+                <div class="code-block">
+<span class="cm">// Создаём корабль игрока</span><br>
+<span class="kw">let</span> ship = sprites.create(img<span class="str">`</span><br>
+&nbsp;&nbsp;<span class="cm">... вставь спрайт из блока выше ...</span><br>
+<span class="str">`</span>, SpriteKind.Player)<br>
+<br>
+ship.setPosition(<span class="num">80</span>, <span class="num">100</span>)<br>
+ship.setStayInScreen(<span class="kw">true</span>)
+                </div>
+
+                <div class="key-point">
+                    <strong>Как вставить спрайт:</strong><br>
+                    1. Набери <code>let ship = sprites.create(img`</code><br>
+                    2. Скопируй спрайт из фиолетового блока выше и вставь<br>
+                    3. Закрой обратной кавычкой <code>`</code> и допиши <code>, SpriteKind.Player)</code><br><br>
+                    <strong>Что значат буквы:</strong> <b>b</b> = синий, <b>9</b> = оранжевый, <b>4</b> = жёлтый, <b>1</b> = белый, <b>.</b> = пусто
+                </div>
+
+                <div class="tip-box">
+                    <strong>Хочешь свой корабль?</strong> В MakeCode кликни на серый квадрат рядом
+                    с <code>img</code> в коде &mdash; откроется <b>графический редактор спрайтов</b>.
+                    Там можно рисовать мышкой как в Paint! Нарисуй что хочешь и редактор сам
+                    подставит нужные буквы в код.
+                </div>
+
+                <p>Запусти &mdash; увидишь корабль на экране!</p>
+                <button class="btn-step" onclick="markDone(2)">Готово, перехожу дальше</button>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             ШАГ 3: УПРАВЛЕНИЕ
+             ═══════════════════════════════════════════ -->
+        <div class="step-card" data-step="3">
+            <div class="step-header" onclick="toggleStep(this)">
+                <span class="step-num">3</span>
+                <span class="step-title">Добавляем управление</span>
+                <span class="step-time">~3 мин</span>
+            </div>
+            <div class="step-body">
+                <p>
+                    Дадим игроку возможность управлять кораблём стрелками клавиатуры.
+                </p>
+
+                <div class="theory">
+                    <div class="theory-label">Теория: controller</div>
+                    <p>
+                        <span class="highlight">controller.moveSprite(sprite, vx, vy)</span> &mdash;
+                        привязывает стрелки к спрайту.<br>
+                        <b>vx</b> &mdash; скорость по горизонтали, <b>vy</b> &mdash; по вертикали.<br>
+                        Если поставить <b>vy = 0</b>, корабль двигается только влево-вправо.
+                    </p>
+                </div>
+
+                <p>Добавь <b>после</b> создания корабля:</p>
+
+                <div class="code-block">
+<span class="cm">// Управление стрелками</span><br>
+controller.moveSprite(ship, <span class="num">120</span>, <span class="num">60</span>)
+                </div>
+
+                <div class="tip-box">
+                    <strong>Попробуй:</strong> Поменяй числа <b>120</b> и <b>60</b>.
+                    Больше &mdash; быстрее. Поставь второе число в <b>0</b>,
+                    чтобы корабль летел только влево-вправо.
+                </div>
+
+                <p>Запусти и подвигай корабль стрелками!</p>
+                <button class="btn-step" onclick="markDone(3)">Готово, перехожу дальше</button>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             ШАГ 4: СТРЕЛЬБА
+             ═══════════════════════════════════════════ -->
+        <div class="step-card" data-step="4">
+            <div class="step-header" onclick="toggleStep(this)">
+                <span class="step-num">4</span>
+                <span class="step-title">Стрельба лазером</span>
+                <span class="step-time">~5 мин</span>
+            </div>
+            <div class="step-body">
+                <p>
+                    При нажатии кнопки <b>A</b> (клавиша <b>Z</b> или <b>пробел</b> на клавиатуре)
+                    корабль стреляет лазером вверх.
+                </p>
+
+                <div class="theory">
+                    <div class="theory-label">Теория: events (события)</div>
+                    <p>
+                        <span class="highlight">controller.A.onEvent()</span> &mdash; выполняет код,
+                        когда игрок нажимает кнопку A.<br>
+                        <span class="highlight">sprites.createProjectileFromSprite()</span> &mdash;
+                        создаёт снаряд, вылетающий из спрайта. Снаряды удаляются автоматически за экраном.
+                    </p>
+                </div>
+
+                <div class="sprite-block">
+                    <span class="sprite-label">Спрайт лазера (копируй):</span>
+. a .
+. a .
+. a .
+                </div>
+
+                <div class="code-block">
+<span class="cm">// Стрельба кнопкой A</span><br>
+<span class="ev">controller.A.onEvent</span>(ControllerButtonEvent.Pressed,<br>
+&nbsp;&nbsp;<span class="kw">function</span> () {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">let</span> laser = sprites.createProjectileFromSprite(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;img<span class="str">`</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">... вставь спрайт лазера ...</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">`</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ship,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="num">0</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="num">-130</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;)<br>
+})
+                </div>
+
+                <div class="key-point">
+                    <strong>Разбираем:</strong><br>
+                    &bull; <b>a</b> = светло-зелёный &mdash; 3 пикселя вертикально<br>
+                    &bull; <b>ship</b> &mdash; лазер вылетает из нашего корабля<br>
+                    &bull; <b>0</b> &mdash; скорость по горизонтали (не летит вбок)<br>
+                    &bull; <b>-130</b> &mdash; скорость вверх (минус = вверх)
+                </div>
+
+                <p>Запусти и постреляй! Нажимай <b>Z</b> или <b>пробел</b>.</p>
+                <button class="btn-step" onclick="markDone(4)">Готово, перехожу дальше</button>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             ШАГ 5: СПАВН ВРАГОВ
+             ═══════════════════════════════════════════ -->
+        <div class="step-card" data-step="5">
+            <div class="step-header" onclick="toggleStep(this)">
+                <span class="step-num">5</span>
+                <span class="step-title">Враги-астероиды</span>
+                <span class="step-time">~6 мин</span>
+            </div>
+            <div class="step-body">
+                <p>
+                    Каждые 1,5 секунды будем создавать врага-астероид, который падает
+                    сверху в случайном месте.
+                </p>
+
+                <div class="theory">
+                    <div class="theory-label">Теория: game.onUpdateInterval</div>
+                    <p>
+                        <span class="highlight">game.onUpdateInterval(ms, function)</span> &mdash;
+                        вызывает функцию каждые <b>ms</b> миллисекунд.<br>
+                        1000 мс = 1 секунда. 1500 = каждые 1.5 сек.<br>
+                        <span class="highlight">randint(min, max)</span> &mdash; случайное целое число.
+                    </p>
+                </div>
+
+                <div class="sprite-block">
+                    <span class="sprite-label">Спрайт астероида (копируй):</span>
+. . 2 2 2 . .
+. 2 2 2 2 2 .
+2 2 e 2 e 2 2
+2 2 2 2 2 2 2
+. 2 2 2 2 2 .
+. . 2 2 2 . .
+                </div>
+
+                <div class="code-block">
+<span class="cm">// Враги появляются каждые 1.5 сек</span><br>
+<span class="ev">game.onUpdateInterval</span>(<span class="num">1500</span>, <span class="kw">function</span> () {<br>
+&nbsp;&nbsp;<span class="kw">let</span> enemy = sprites.create(img<span class="str">`</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">... вставь спрайт астероида ...</span><br>
+&nbsp;&nbsp;<span class="str">`</span>, SpriteKind.Enemy)<br>
+<br>
+&nbsp;&nbsp;enemy.setPosition(randint(<span class="num">10</span>, <span class="num">150</span>), <span class="num">0</span>)<br>
+&nbsp;&nbsp;enemy.setVelocity(<span class="num">0</span>, randint(<span class="num">25</span>, <span class="num">50</span>))<br>
+&nbsp;&nbsp;enemy.setFlag(SpriteFlag.AutoDestroy, <span class="kw">true</span>)<br>
+})
+                </div>
+
+                <div class="key-point">
+                    <strong>Разбираем:</strong><br>
+                    &bull; <b>2</b> = красный, <b>e</b> = розовый &mdash; круглый астероид<br>
+                    &bull; <b>setPosition(randint(10, 150), 0)</b> &mdash; случайная позиция сверху<br>
+                    &bull; <b>setVelocity(0, randint(25, 50))</b> &mdash; падает вниз со случайной скоростью<br>
+                    &bull; <b>AutoDestroy</b> &mdash; удаляется за экраном (экономия памяти!)
+                </div>
+
+                <p>Запусти &mdash; астероиды посыплются сверху!</p>
+                <button class="btn-step" onclick="markDone(5)">Готово, перехожу дальше</button>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             ШАГ 6: УНИЧТОЖЕНИЕ ВРАГОВ
+             ═══════════════════════════════════════════ -->
+        <div class="step-card" data-step="6">
+            <div class="step-header" onclick="toggleStep(this)">
+                <span class="step-num">6</span>
+                <span class="step-title">Лазер уничтожает врагов</span>
+                <span class="step-time">~5 мин</span>
+            </div>
+            <div class="step-body">
+                <p>
+                    Когда лазер попадает в астероид &mdash; оба уничтожаются, а счёт растёт.
+                    Это <b>обработка столкновений</b> (collisions).
+                </p>
+
+                <div class="theory">
+                    <div class="theory-label">Теория: sprites.onOverlap</div>
+                    <p>
+                        <span class="highlight">sprites.onOverlap(kindA, kindB, function)</span> &mdash;
+                        вызывает функцию, когда два спрайта разных типов наложились.<br>
+                        <b>sprite</b> &mdash; первый, <b>otherSprite</b> &mdash; второй.<br>
+                        <span class="highlight">.destroy(effect, duration)</span> &mdash; удаляет спрайт с эффектом.
+                    </p>
+                </div>
+
+                <div class="code-block">
+<span class="cm">// Лазер попадает в астероид</span><br>
+<span class="ev">sprites.onOverlap</span>(<br>
+&nbsp;&nbsp;SpriteKind.Projectile,<br>
+&nbsp;&nbsp;SpriteKind.Enemy,<br>
+&nbsp;&nbsp;<span class="kw">function</span> (sprite, otherSprite) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sprite.destroy()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;otherSprite.destroy(effects.fire, <span class="num">200</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;info.changeScoreBy(<span class="num">1</span>)<br>
+})
+                </div>
+
+                <div class="key-point">
+                    <strong>Разбираем:</strong><br>
+                    &bull; <b>sprite.destroy()</b> &mdash; убираем лазер<br>
+                    &bull; <b>otherSprite.destroy(effects.fire, 200)</b> &mdash; взрыв с огнём!<br>
+                    &bull; <b>info.changeScoreBy(1)</b> &mdash; +1 к счёту
+                </div>
+
+                <p>Запусти, стреляй по астероидам &mdash; смотри на счёт!</p>
+                <button class="btn-step" onclick="markDone(6)">Готово, перехожу дальше</button>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             ШАГ 7: СТОЛКНОВЕНИЕ С ИГРОКОМ
+             ═══════════════════════════════════════════ -->
+        <div class="step-card" data-step="7">
+            <div class="step-header" onclick="toggleStep(this)">
+                <span class="step-num">7</span>
+                <span class="step-title">Астероид попадает в корабль</span>
+                <span class="step-time">~5 мин</span>
+            </div>
+            <div class="step-body">
+                <p>
+                    Если астероид врезается в корабль &mdash; теряем жизнь.
+                    Когда жизней нет &mdash; Game Over!
+                </p>
+
+                <div class="code-block">
+<span class="cm">// Астероид попал в корабль</span><br>
+<span class="ev">sprites.onOverlap</span>(<br>
+&nbsp;&nbsp;SpriteKind.Player,<br>
+&nbsp;&nbsp;SpriteKind.Enemy,<br>
+&nbsp;&nbsp;<span class="kw">function</span> (sprite, otherSprite) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;otherSprite.destroy(effects.disintegrate, <span class="num">200</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;info.changeLifeBy(<span class="num">-1</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;scene.cameraShake(<span class="num">4</span>, <span class="num">300</span>)<br>
+})
+                </div>
+
+                <div class="key-point">
+                    <strong>Новое:</strong><br>
+                    &bull; <b>effects.disintegrate</b> &mdash; эффект распада<br>
+                    &bull; <b>info.changeLifeBy(-1)</b> &mdash; минус одна жизнь<br>
+                    &bull; <b>scene.cameraShake(4, 300)</b> &mdash; экран трясётся!
+                    Число 4 &mdash; сила тряски, 300 &mdash; длительность в мс.
+                </div>
+
+                <div class="tip-box">
+                    <strong>Круто!</strong> Игра уже работает: стреляй и уворачивайся.
+                    Попробуй потерять все жизни &mdash; увидишь Game Over.
+                </div>
+
+                <button class="btn-step" onclick="markDone(7)">Готово, перехожу дальше</button>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             ШАГ 8: БОНУС-ЗВЁЗДЫ
+             ═══════════════════════════════════════════ -->
+        <div class="step-card" data-step="8">
+            <div class="step-header" onclick="toggleStep(this)">
+                <span class="step-num">8</span>
+                <span class="step-title">Бонусы: звёзды-лечилки</span>
+                <span class="step-time">~6 мин</span>
+            </div>
+            <div class="step-body">
+                <p>
+                    Раз в 5 секунд появляется бонус-звезда. Поймаешь &mdash;
+                    <b>+1 жизнь</b> и <b>+3 очка</b>.
+                </p>
+
+                <div class="sprite-block">
+                    <span class="sprite-label">Спрайт звезды (копируй):</span>
+. . . 5 . . .
+. . 5 5 5 . .
+5 5 5 5 5 5 5
+. . 5 5 5 . .
+. 5 5 . 5 5 .
+. 5 . . . 5 .
+                </div>
+
+                <div class="code-block">
+<span class="cm">// Бонус-звезда каждые 5 сек</span><br>
+<span class="ev">game.onUpdateInterval</span>(<span class="num">5000</span>, <span class="kw">function</span> () {<br>
+&nbsp;&nbsp;<span class="kw">let</span> star = sprites.create(img<span class="str">`</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">... вставь спрайт звезды ...</span><br>
+&nbsp;&nbsp;<span class="str">`</span>, SpriteKind.Food)<br>
+<br>
+&nbsp;&nbsp;star.setPosition(randint(<span class="num">10</span>, <span class="num">150</span>), <span class="num">0</span>)<br>
+&nbsp;&nbsp;star.setVelocity(<span class="num">0</span>, <span class="num">30</span>)<br>
+&nbsp;&nbsp;star.setFlag(SpriteFlag.AutoDestroy, <span class="kw">true</span>)<br>
+})
+                </div>
+
+                <p>Теперь обработаем подбор звезды:</p>
+
+                <div class="code-block">
+<span class="cm">// Подбираем бонус-звезду</span><br>
+<span class="ev">sprites.onOverlap</span>(<br>
+&nbsp;&nbsp;SpriteKind.Player,<br>
+&nbsp;&nbsp;SpriteKind.Food,<br>
+&nbsp;&nbsp;<span class="kw">function</span> (sprite, otherSprite) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;otherSprite.destroy(effects.hearts, <span class="num">300</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;info.changeLifeBy(<span class="num">1</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;info.changeScoreBy(<span class="num">3</span>)<br>
+})
+                </div>
+
+                <div class="key-point">
+                    <strong>Разбираем:</strong><br>
+                    &bull; <b>SpriteKind.Food</b> &mdash; тип для подбираемых предметов<br>
+                    &bull; <b>5</b> = жёлтый &mdash; яркая звезда<br>
+                    &bull; <b>effects.hearts</b> &mdash; эффект сердечек при подборе
+                </div>
+
+                <button class="btn-step" onclick="markDone(8)">Готово, перехожу дальше</button>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             ШАГ 9: ТАЙМЕР И ПОБЕДА
+             ═══════════════════════════════════════════ -->
+        <div class="step-card" data-step="9">
+            <div class="step-header" onclick="toggleStep(this)">
+                <span class="step-num">9</span>
+                <span class="step-title">Таймер и экран победы</span>
+                <span class="step-time">~5 мин</span>
+            </div>
+            <div class="step-body">
+                <p>
+                    Добавим обратный отсчёт на 60 секунд. Продержишься &mdash; победа!
+                </p>
+
+                <div class="code-block">
+<span class="cm">// Обратный отсчёт 60 секунд</span><br>
+info.startCountdown(<span class="num">60</span>)<br>
+<br>
+<span class="cm">// Когда время вышло &mdash; победа!</span><br>
+<span class="ev">info.onCountdownEnd</span>(<span class="kw">function</span> () {<br>
+&nbsp;&nbsp;game.over(<span class="kw">true</span>, effects.confetti)<br>
+})
+                </div>
+
+                <div class="key-point">
+                    <strong>Разбираем:</strong><br>
+                    &bull; <b>info.startCountdown(60)</b> &mdash; таймер на 60 сек<br>
+                    &bull; <b>info.onCountdownEnd</b> &mdash; срабатывает когда таймер дошёл до 0<br>
+                    &bull; <b>game.over(true)</b> &mdash; <b>true</b> = победа с конфетти!
+                    Если <b>false</b> &mdash; проигрыш.
+                </div>
+
+                <div class="tip-box">
+                    <strong>Попробуй:</strong> Измени <b>60</b> на <b>30</b> для быстрой игры,
+                    или на <b>90</b> для хардкора.
+                </div>
+
+                <button class="btn-step" onclick="markDone(9)">Готово, перехожу дальше</button>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             ШАГ 10: УСЛОЖНЕНИЕ
+             ═══════════════════════════════════════════ -->
+        <div class="step-card" data-step="10">
+            <div class="step-header" onclick="toggleStep(this)">
+                <span class="step-num">10</span>
+                <span class="step-title">Усложнение: быстрые враги</span>
+                <span class="step-time">~5 мин</span>
+            </div>
+            <div class="step-body">
+                <p>
+                    Через 20 секунд начнут появляться
+                    <b>быстрые</b> красные враги!
+                </p>
+
+                <div class="sprite-block">
+                    <span class="sprite-label">Спрайт быстрого врага (копируй):</span>
+. . 4 4 . .
+. 4 2 2 4 .
+4 2 2 2 2 4
+4 2 2 2 2 4
+. 4 2 2 4 .
+. . 4 4 . .
+                </div>
+
+                <div class="code-block">
+<span class="cm">// Через 20 сек — быстрые враги!</span><br>
+<span class="kw">let</span> hardMode = <span class="kw">false</span><br>
+<br>
+<span class="ev">game.onUpdateInterval</span>(<span class="num">20000</span>, <span class="kw">function</span> () {<br>
+&nbsp;&nbsp;hardMode = <span class="kw">true</span><br>
+})<br>
+<br>
+<span class="cm">// Быстрые враги (каждые 2 сек, если hardMode)</span><br>
+<span class="ev">game.onUpdateInterval</span>(<span class="num">2000</span>, <span class="kw">function</span> () {<br>
+&nbsp;&nbsp;<span class="kw">if</span> (hardMode) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">let</span> fastEnemy = sprites.create(img<span class="str">`</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">... вставь спрайт быстрого врага ...</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">`</span>, SpriteKind.Enemy)<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fastEnemy.setPosition(randint(<span class="num">10</span>, <span class="num">150</span>), <span class="num">0</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fastEnemy.setVelocity(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;randint(<span class="num">-20</span>, <span class="num">20</span>),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;randint(<span class="num">55</span>, <span class="num">80</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fastEnemy.setFlag(SpriteFlag.AutoDestroy, <span class="kw">true</span>)<br>
+&nbsp;&nbsp;}<br>
+})
+                </div>
+
+                <div class="key-point">
+                    <strong>Что нового:</strong><br>
+                    &bull; <b>hardMode</b> &mdash; переменная-флаг. Через 20 сек становится <b>true</b><br>
+                    &bull; <b>if (hardMode)</b> &mdash; быстрые враги только после включения<br>
+                    &bull; <b>randint(-20, 20)</b> &mdash; враги летят немного вбок (хаотично!)<br>
+                    &bull; <b>randint(55, 80)</b> &mdash; быстрее обычных (было 25-50)
+                </div>
+
+                <button class="btn-step" onclick="markDone(10)">Игра готова!</button>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ═══════════════════════════════════════════
+             КАК МЕНЯТЬ СПРАЙТЫ
+             ═══════════════════════════════════════════ -->
+        <div class="step-card" style="border-color: rgba(251, 191, 36, 0.3);">
+            <div class="step-header" onclick="toggleStep(this)">
+                <span class="step-num" style="background: linear-gradient(135deg, #d97706, #fbbf24);">?</span>
+                <span class="step-title" style="color: #fde68a;">Как менять спрайты на свои</span>
+            </div>
+            <div class="step-body">
+                <p>Хочешь нарисовать своего персонажа вместо нашего? Есть <b>два способа</b>:</p>
+
+                <div class="key-point">
+                    <strong>Способ 1: Графический редактор (самый простой)</strong><br>
+                    1. В режиме JavaScript найди строку с <code>img`...`</code><br>
+                    2. Кликни на <b>серую иконку картинки</b> слева от <code>img</code><br>
+                    3. Откроется <b>редактор спрайтов</b> &mdash; рисуй мышкой как в Paint!<br>
+                    4. Используй палитру цветов справа<br>
+                    5. Закрой &mdash; код обновится автоматически
+                </div>
+
+                <div class="key-point">
+                    <strong>Способ 2: Вручную буквами</strong><br>
+                    Каждая буква/цифра &mdash; это цвет одного пикселя. Точка &mdash; пусто.<br><br>
+                    <b>Палитра MakeCode:</b><br>
+                    <code>.</code> = прозрачный &nbsp;
+                    <code>1</code> = белый &nbsp;
+                    <code>2</code> = красный &nbsp;
+                    <code>3</code> = розовый<br>
+                    <code>4</code> = жёлтый &nbsp;
+                    <code>5</code> = золотой &nbsp;
+                    <code>6</code> = бирюзовый &nbsp;
+                    <code>7</code> = зелёный<br>
+                    <code>8</code> = синеватый &nbsp;
+                    <code>9</code> = оранжевый &nbsp;
+                    <code>a</code> = салатовый &nbsp;
+                    <code>b</code> = синий<br>
+                    <code>c</code> = голубой &nbsp;
+                    <code>d</code> = фиолетовый &nbsp;
+                    <code>e</code> = сиреневый &nbsp;
+                    <code>f</code> = серый
+                </div>
+
+                <div class="tip-box">
+                    <strong>Совет:</strong> Начни с графического редактора &mdash; так быстрее и нагляднее.
+                    Буквы можно подправить потом, когда привыкнешь к палитре.
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             БОНУС: ИДЕИ
+             ═══════════════════════════════════════════ -->
+        <div class="step-card" style="border-color: rgba(52, 211, 153, 0.3);">
+            <div class="step-header">
+                <span class="step-num" style="background: linear-gradient(135deg, #059669, #34d399);">+</span>
+                <span class="step-title" style="color: #6ee7b7;">Бонус: идеи для улучшения</span>
+            </div>
+            <div class="step-body">
+                <p>Игра готова! Но ты можешь сделать её ещё круче:</p>
+
+                <ul class="checklist">
+                    <li><b>Двойной выстрел</b> &mdash; создай два лазера с vx = -15 и vx = 15</li>
+                    <li><b>Большой босс</b> &mdash; на 45-й секунде создай огромного врага</li>
+                    <li><b>Звуки</b> &mdash; добавь <code>music.playTone()</code> при выстреле</li>
+                    <li><b>Разные враги</b> &mdash; используй <code>Math.percentChance(30)</code> для шанса спавна особого врага</li>
+                    <li><b>Щит</b> &mdash; по кнопке B включай неуязвимость на 2 секунды</li>
+                    <li><b>Свои спрайты</b> &mdash; нарисуй уникальных персонажей в редакторе!</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ИТОГОВЫЙ КОД -->
+        <div class="step-card" style="border-color: rgba(0, 212, 255, 0.3);">
+            <div class="step-header" onclick="toggleFinalCode()" style="cursor:pointer;">
+                <span class="step-num" style="background: linear-gradient(135deg, #0099ff, #00d4ff);">!</span>
+                <span class="step-title" style="color: #7dd3fc;">Итоговый код (если запутался)</span>
+            </div>
+            <div class="step-body" id="finalCodeBlock" style="display:none;">
+                <div class="warning-box">
+                    <strong>Стоп!</strong> Попробуй разобраться сам. Открывай только если застрял.
+                </div>
+                <div class="code-block" style="font-size: 0.82em;">
+<span class="cm">// ===== ЗВЁЗДНЫЙ ЗАЩИТНИК =====</span><br>
+<br>
+<span class="cm">// Сцена</span><br>
+scene.setBackgroundColor(<span class="num">15</span>)<br>
+info.setLife(<span class="num">3</span>)<br>
+info.setScore(<span class="num">0</span>)<br>
+<br>
+<span class="cm">// Корабль</span><br>
+<span class="kw">let</span> ship = sprites.create(img<span class="str">`<br>
+&nbsp;&nbsp;. . . . b . . . . .<br>
+&nbsp;&nbsp;. . . b b b . . . .<br>
+&nbsp;&nbsp;. . . b 1 b . . . .<br>
+&nbsp;&nbsp;. . b b b b b . . .<br>
+&nbsp;&nbsp;. b b 9 b 9 b b . .<br>
+&nbsp;&nbsp;b b 9 9 b 9 9 b b .<br>
+&nbsp;&nbsp;b 9 9 9 b 9 9 9 b .<br>
+&nbsp;&nbsp;b b b b b b b b b .<br>
+&nbsp;&nbsp;. . b . . . b . . .<br>
+&nbsp;&nbsp;. . 4 . . . 4 . . .<br>
+`</span>, SpriteKind.Player)<br>
+ship.setPosition(<span class="num">80</span>, <span class="num">100</span>)<br>
+ship.setStayInScreen(<span class="kw">true</span>)<br>
+controller.moveSprite(ship, <span class="num">120</span>, <span class="num">60</span>)<br>
+<br>
+<span class="cm">// Стрельба</span><br>
+<span class="ev">controller.A.onEvent</span>(ControllerButtonEvent.Pressed,<br>
+&nbsp;&nbsp;<span class="kw">function</span> () {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">let</span> laser = sprites.createProjectileFromSprite(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;img<span class="str">`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;. a .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;. a .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;. a .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`</span>, ship, <span class="num">0</span>, <span class="num">-130</span>)<br>
+})<br>
+<br>
+<span class="cm">// Враги</span><br>
+<span class="ev">game.onUpdateInterval</span>(<span class="num">1500</span>, <span class="kw">function</span> () {<br>
+&nbsp;&nbsp;<span class="kw">let</span> enemy = sprites.create(img<span class="str">`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. . 2 2 2 . .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. 2 2 2 2 2 .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2 2 e 2 e 2 2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2 2 2 2 2 2 2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. 2 2 2 2 2 .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. . 2 2 2 . .<br>
+&nbsp;&nbsp;`</span>, SpriteKind.Enemy)<br>
+&nbsp;&nbsp;enemy.setPosition(randint(<span class="num">10</span>, <span class="num">150</span>), <span class="num">0</span>)<br>
+&nbsp;&nbsp;enemy.setVelocity(<span class="num">0</span>, randint(<span class="num">25</span>, <span class="num">50</span>))<br>
+&nbsp;&nbsp;enemy.setFlag(SpriteFlag.AutoDestroy, <span class="kw">true</span>)<br>
+})<br>
+<br>
+<span class="cm">// Лазер попал в врага</span><br>
+<span class="ev">sprites.onOverlap</span>(SpriteKind.Projectile, SpriteKind.Enemy,<br>
+&nbsp;&nbsp;<span class="kw">function</span> (sprite, otherSprite) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sprite.destroy()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;otherSprite.destroy(effects.fire, <span class="num">200</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;info.changeScoreBy(<span class="num">1</span>)<br>
+})<br>
+<br>
+<span class="cm">// Враг попал в корабль</span><br>
+<span class="ev">sprites.onOverlap</span>(SpriteKind.Player, SpriteKind.Enemy,<br>
+&nbsp;&nbsp;<span class="kw">function</span> (sprite, otherSprite) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;otherSprite.destroy(effects.disintegrate, <span class="num">200</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;info.changeLifeBy(<span class="num">-1</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;scene.cameraShake(<span class="num">4</span>, <span class="num">300</span>)<br>
+})<br>
+<br>
+<span class="cm">// Бонус-звезда</span><br>
+<span class="ev">game.onUpdateInterval</span>(<span class="num">5000</span>, <span class="kw">function</span> () {<br>
+&nbsp;&nbsp;<span class="kw">let</span> star = sprites.create(img<span class="str">`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. . . 5 . . .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. . 5 5 5 . .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;5 5 5 5 5 5 5<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. . 5 5 5 . .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. 5 5 . 5 5 .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;. 5 . . . 5 .<br>
+&nbsp;&nbsp;`</span>, SpriteKind.Food)<br>
+&nbsp;&nbsp;star.setPosition(randint(<span class="num">10</span>, <span class="num">150</span>), <span class="num">0</span>)<br>
+&nbsp;&nbsp;star.setVelocity(<span class="num">0</span>, <span class="num">30</span>)<br>
+&nbsp;&nbsp;star.setFlag(SpriteFlag.AutoDestroy, <span class="kw">true</span>)<br>
+})<br>
+<br>
+<span class="cm">// Подбор звезды</span><br>
+<span class="ev">sprites.onOverlap</span>(SpriteKind.Player, SpriteKind.Food,<br>
+&nbsp;&nbsp;<span class="kw">function</span> (sprite, otherSprite) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;otherSprite.destroy(effects.hearts, <span class="num">300</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;info.changeLifeBy(<span class="num">1</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;info.changeScoreBy(<span class="num">3</span>)<br>
+})<br>
+<br>
+<span class="cm">// Таймер</span><br>
+info.startCountdown(<span class="num">60</span>)<br>
+<span class="ev">info.onCountdownEnd</span>(<span class="kw">function</span> () {<br>
+&nbsp;&nbsp;game.over(<span class="kw">true</span>, effects.confetti)<br>
+})<br>
+<br>
+<span class="cm">// Усложнение</span><br>
+<span class="kw">let</span> hardMode = <span class="kw">false</span><br>
+<span class="ev">game.onUpdateInterval</span>(<span class="num">20000</span>, <span class="kw">function</span> () {<br>
+&nbsp;&nbsp;hardMode = <span class="kw">true</span><br>
+})<br>
+<span class="ev">game.onUpdateInterval</span>(<span class="num">2000</span>, <span class="kw">function</span> () {<br>
+&nbsp;&nbsp;<span class="kw">if</span> (hardMode) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">let</span> fastEnemy = sprites.create(img<span class="str">`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;. . 4 4 . .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;. 4 2 2 4 .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4 2 2 2 2 4<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4 2 2 2 2 4<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;. 4 2 2 4 .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;. . 4 4 . .<br>
+&nbsp;&nbsp;&nbsp;&nbsp;`</span>, SpriteKind.Enemy)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fastEnemy.setPosition(randint(<span class="num">10</span>, <span class="num">150</span>), <span class="num">0</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fastEnemy.setVelocity(randint(<span class="num">-20</span>, <span class="num">20</span>), randint(<span class="num">55</span>, <span class="num">80</span>))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fastEnemy.setFlag(SpriteFlag.AutoDestroy, <span class="kw">true</span>)<br>
+&nbsp;&nbsp;}<br>
+})
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center; margin-top:22px;">
+            <a class="btn-arcade" href="https://arcade.makecode.com/" target="_blank" rel="noopener">
+                Открыть MakeCode Arcade &rarr;
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>Ты написал настоящую аркадную игру на JavaScript! Сохрани проект и покажи друзьям.</p>
+        </div>
+    </div>
+
+    <!-- Three.js + Vanta -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+
+    <script>
+    /* ── Vanta background ── */
+    var vantaEffect = null;
+    function initVanta() {
+        if (vantaEffect) return;
+        try {
+            vantaEffect = VANTA.WAVES({
+                el: '#vanta-bg',
+                mouseControls: false,
+                touchControls: false,
+                minHeight: 200,
+                minWidth: 200,
+                scale: 1,
+                scaleMobile: 1,
+                color: 0x0a0a2e,
+                shininess: 35,
+                waveHeight: 15,
+                waveSpeed: 0.7,
+                zoom: 0.85
+            });
+        } catch(e) {}
+    }
+    function toggleBg() {
+        if (vantaEffect) { vantaEffect.destroy(); vantaEffect = null; }
+        else { initVanta(); }
+    }
+    initVanta();
+
+    /* ── Step progress ── */
+    var completedSteps = JSON.parse(localStorage.getItem('starDefenderProgress') || '[]');
+
+    function updateProgress() {
+        var count = completedSteps.length;
+        document.getElementById('progressCount').textContent = count;
+        document.getElementById('progressFill').style.width = (count / 10 * 100) + '%';
+        completedSteps.forEach(function(s) {
+            var card = document.querySelector('[data-step="' + s + '"]');
+            if (card) {
+                var badge = card.querySelector('.step-num');
+                if (badge) badge.classList.add('done');
+            }
+        });
+    }
+
+    function markDone(stepNum) {
+        if (completedSteps.indexOf(stepNum) === -1) {
+            completedSteps.push(stepNum);
+            localStorage.setItem('starDefenderProgress', JSON.stringify(completedSteps));
+        }
+        updateProgress();
+        var next = document.querySelector('[data-step="' + (stepNum + 1) + '"]');
+        if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function toggleStep(header) {
+        var body = header.nextElementSibling;
+        if (body && body.classList.contains('step-body')) {
+            body.style.display = body.style.display === 'none' ? 'block' : '';
+        }
+    }
+
+    function toggleFinalCode() {
+        var block = document.getElementById('finalCodeBlock');
+        block.style.display = block.style.display === 'none' ? 'block' : 'none';
+    }
+
+    updateProgress();
+
+    /* ── Disable copy on code blocks (but NOT sprite blocks) ── */
+    document.addEventListener('copy', function(e) {
+        var sel = window.getSelection();
+        if (sel && sel.anchorNode) {
+            var el = sel.anchorNode.parentElement;
+            while (el) {
+                if (el.classList && el.classList.contains('sprite-block')) return;
+                if (el.classList && el.classList.contains('code-block')) {
+                    e.preventDefault();
+                    return;
+                }
+                el = el.parentElement;
+            }
+        }
+    });
+    document.querySelectorAll('.code-block').forEach(function(block) {
+        block.addEventListener('dragstart', function(e) { e.preventDefault(); });
+    });
+    </script>
+</body>
+</html>
