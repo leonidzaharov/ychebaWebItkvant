@@ -64,6 +64,12 @@
     "title": "Игра: Звёздный Защитник",
     "meta": "MakeCode Arcade — шутер на JS за 10 шагов",
     "href": "./lessons/js-arcade-game-module.html"
+  },
+    {
+    "date": "26.02",
+    "title": "Игра: Голодный Кот",
+    "meta": "MakeCode Arcade — простая аркада за 8 шагов",
+    "href": "./lessons/js-arcade-cat-module.html"
   }
   ],
 

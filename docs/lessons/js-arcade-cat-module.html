@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>JS — Голодный Кот (модуль)</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    .wrap{max-width:1100px;margin:0 auto;padding:18px 16px 44px}
+    .box{
+      border:1px solid var(--stroke); border-radius:var(--radius);
+      background:color-mix(in srgb, var(--panel) 75%, transparent);
+      padding:14px; box-shadow:var(--shadow); margin-top:14px
+    }
+    .grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+    @media (min-width: 900px){ .grid{grid-template-columns:1fr 1fr} }
+    .cardLink{
+      display:block;text-decoration:none;color:var(--text);
+      border:1px solid var(--stroke); border-radius:var(--radius);
+      background:color-mix(in srgb, var(--panel) 70%, transparent);
+      padding:14px; box-shadow:var(--shadow);
+      transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    .cardLink:hover{
+      transform:translateY(-2px);
+      border-color: color-mix(in srgb, var(--accent2) 45%, var(--stroke));
+      box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent2) 30%, transparent);
+    }
+    .title{font-weight:900;margin:0 0 6px 0}
+    .meta{color:var(--muted);margin:0;line-height:1.4}
+    .badge{
+      display:inline-block; padding:3px 10px; border-radius:20px;
+      font-size:.78em; font-weight:700; margin-bottom:8px;
+      background:linear-gradient(135deg,#f59e0b,#f97316); color:#fff;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="btn ghost" href="../track.html?t=js">&larr; К JavaScript</a>
+      <div>
+        <div class="brandTitle">Модуль: Голодный Кот</div>
+        <div class="brandSub">sprites &bull; overlap &bull; interval &mdash; простая аркада</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn ghost" id="toggleTheme" type="button">Тема</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="box">
+      <span class="badge">MakeCode Arcade</span>
+      <h2 style="margin:0 0 8px 0;">Что делаем</h2>
+      <p style="margin:0;color:var(--muted);line-height:1.45;">
+        За урок мы соберём простую аркаду <b>&laquo;Голодный Кот&raquo;</b>.
+        Котик бегает влево-вправо и ловит рыбок, избегая кактусов.
+        Всего 8 шагов &mdash; справится каждый!
+      </p>
+
+      <div class="grid">
+        <a class="cardLink" href="./js-arcade-cat-tutorial.html">
+          <div class="title">Туториал: Голодный Кот</div>
+          <p class="meta">8 шагов &bull; простая игра с нуля &bull; ~45 мин</p>
+        </a>
+
+        <a class="cardLink" href="https://arcade.makecode.com/" target="_blank" rel="noopener">
+          <div class="title">Открыть MakeCode Arcade</div>
+          <p class="meta">arcade.makecode.com &bull; бесплатный редактор игр</p>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/main.js"></script>
+</body>
+</html>
