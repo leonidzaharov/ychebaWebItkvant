@@ -351,6 +351,27 @@
             transform: translateY(-1px);
         }
 
+        /* ── gif breaks ── */
+        .gif-break {
+            text-align: center;
+            margin: 24px 0 8px;
+            opacity: 0.9;
+        }
+        .gif-break img {
+            max-width: 280px;
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            border: 2px solid rgba(245, 158, 11, 0.2);
+        }
+        .gif-break .gif-caption {
+            display: block;
+            margin-top: 6px;
+            font-size: 0.82em;
+            color: #92400e;
+            font-style: italic;
+        }
+
         /* ── dividers ── */
         .divider {
             height: 1px;
@@ -463,6 +484,11 @@
                 </div>
 
                 <button class="btn-step" onclick="markDone(0)">Готово, поехали!</button>
+
+                <div class="gif-break">
+                    <img src="https://media.tenor.com/Ug6rDCKSZjYAAAAM/cat-typing.gif" alt="кот печатает" loading="lazy">
+                    <span class="gif-caption">Ты через 5 минут</span>
+                </div>
             </div>
         </div>
 
@@ -581,6 +607,11 @@ cat.setStayInScreen(<span class="kw">true</span>)
                 </div>
 
                 <button class="btn-step" onclick="markDone(2)">Готово!</button>
+
+                <div class="gif-break">
+                    <img src="https://media.tenor.com/ZynOXK_aoB4AAAAM/cat-cute.gif" alt="милый котик" loading="lazy">
+                    <span class="gif-caption">Котик ждёт, пока ты его оживишь!</span>
+                </div>
             </div>
         </div>
 
@@ -685,6 +716,11 @@ b c c c c c 1 c c c b .
 
                 <p>Запусти &mdash; рыбки полетят сверху вниз!</p>
                 <button class="btn-step" onclick="markDone(4)">Готово!</button>
+
+                <div class="gif-break">
+                    <img src="https://media.tenor.com/k1OGXJ3pCewAAAAM/cat-fish.gif" alt="кот и рыба" loading="lazy">
+                    <span class="gif-caption">Наш кот когда видит рыбку</span>
+                </div>
             </div>
         </div>
 
@@ -732,6 +768,11 @@ b c c c c c 1 c c c b .
 
                 <p>Запусти, лови рыбок &mdash; счёт должен расти!</p>
                 <button class="btn-step" onclick="markDone(5)">Готово!</button>
+
+                <div class="gif-break">
+                    <img src="https://media.tenor.com/DHkNyrTJt-gAAAAM/rigby-regular-show.gif" alt="Ригби" loading="lazy">
+                    <span class="gif-caption">Ригби одобряет твой прогресс!</span>
+                </div>
             </div>
         </div>
 
@@ -811,6 +852,11 @@ b c c c c c 1 c c c b .
 
                 <p>Запусти &mdash; теперь нужно <b>ловить рыбу</b> и <b>уворачиваться от кактусов</b>!</p>
                 <button class="btn-step" onclick="markDone(6)">Готово!</button>
+
+                <div class="gif-break">
+                    <img src="https://media.tenor.com/lCIIKLBu_IMAAAAM/cat-shocked.gif" alt="шокированный кот" loading="lazy">
+                    <span class="gif-caption">Кот когда врезался в кактус</span>
+                </div>
             </div>
         </div>
 
@@ -921,6 +967,11 @@ info.startCountdown(<span class="num">45</span>)<br>
                 </div>
 
                 <button class="btn-step" onclick="markDone(8)">Игра готова!</button>
+
+                <div class="gif-break">
+                    <img src="https://media.tenor.com/UN-yviDl2dMAAAAM/cat-dance.gif" alt="танцующий кот" loading="lazy">
+                    <span class="gif-caption">Ты сделал игру! Танцуем!</span>
+                </div>
             </div>
         </div>
 
