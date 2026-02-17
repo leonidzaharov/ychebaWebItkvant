@@ -208,6 +208,18 @@ setAnimEnabled(getAnimEnabled());
   unlockBtn?.addEventListener("click", tryUnlock);
   passInput?.addEventListener("keydown", e => { if (e.key === "Enter") tryUnlock(); });
   lockBtn?.addEventListener("click", lockSection);
+
+  // Collapsible subsections
+  document.querySelectorAll(".subsectionHead[data-toggle]").forEach(head => {
+    head.addEventListener("click", () => {
+      const bodyId = head.getAttribute("data-toggle");
+      const body = document.getElementById(bodyId);
+      if (!body) return;
+      const collapsed = body.hidden;
+      body.hidden = !collapsed;
+      head.classList.toggle("collapsed", !collapsed);
+    });
+  });
 })();
 
 // --- TRACK PAGE (HTML/CSS/JS) ---
