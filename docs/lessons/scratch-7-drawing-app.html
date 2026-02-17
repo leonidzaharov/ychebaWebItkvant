@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scratch — Рисовалка</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    .wrap{max-width:900px;margin:0 auto;padding:18px 16px 44px}
+    .box{border:1px solid var(--stroke);border-radius:var(--radius);background:color-mix(in srgb, var(--panel) 75%, transparent);padding:18px;box-shadow:var(--shadow);margin-top:16px}
+    .box h2{margin:0 0 10px 0} .box h3{margin:14px 0 6px 0;color:var(--accent2)}
+    .box p,.box li{color:var(--muted);line-height:1.55} .box ul,.box ol{margin:6px 0;padding-left:22px}
+    .badge{display:inline-block;padding:3px 10px;border-radius:8px;font-size:12px;font-weight:800;margin-left:8px}
+    .badge.advanced{background:#ef444422;color:#f87171;border:1px solid #f8717133}
+    .steps{counter-reset:step} .steps li{counter-increment:step;margin-bottom:10px}
+    .steps li::marker{content:counter(step) ". ";font-weight:900;color:var(--accent2)}
+    .criteria{border-left:3px solid var(--accent);padding-left:14px;margin:10px 0} .criteria li{margin-bottom:4px}
+    .bonus{background:color-mix(in srgb, var(--accent) 12%, transparent);border-radius:12px;padding:12px 14px;margin-top:10px}
+    .bonus p{margin:0 0 6px 0;font-weight:800;color:var(--text)}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="btn ghost" href="../index.html">&larr; На главную</a>
+      <div>
+        <div class="brandTitle">Проект 7: Рисовалка</div>
+        <div class="brandSub">Scratch &bull; Продвинутый</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn ghost" id="toggleTheme" type="button">Тема</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="box">
+      <h2>Рисовалка <span class="badge advanced">Продвинутый</span></h2>
+      <p>Создай полноценное приложение для рисования! Мышью рисуешь на холсте, выбираешь цвет из палитры, меняешь размер кисти, можешь очистить холст. Как настоящий Paint, только в Scratch!</p>
+    </section>
+
+    <section class="box">
+      <h3>Чему научишься</h3>
+      <ul>
+        <li>Работать с расширением <b>«Перо»</b> (опустить/поднять перо, стереть всё)</li>
+        <li>Отслеживать <b>позицию мыши</b> и <b>нажатие кнопки мыши</b></li>
+        <li>Создавать <b>пользовательский интерфейс</b> из спрайтов (кнопки, палитра)</li>
+        <li>Управлять <b>цветом</b> и <b>размером</b> пера через переменные</li>
+        <li>Использовать <b>сообщения</b> для связи между кнопками и кистью</li>
+        <li>Программировать <b>инструменты</b> (кисть, ластик, заливка)</li>
+      </ul>
+    </section>
+
+    <section class="box">
+      <h3>План реализации</h3>
+      <ol class="steps">
+        <li><b>Спрайт-кисть:</b> Создай маленький спрайт-точку (или курсор). В бесконечном цикле: «перейти к указателю мыши». Подключи расширение «Перо».</li>
+        <li><b>Рисование мышью:</b> «Если мышь нажата» → «опустить перо», иначе → «поднять перо». Теперь при зажатой мыши рисуется линия!</li>
+        <li><b>Палитра цветов:</b> Создай 6-8 спрайтов-кружков разных цветов (красный, синий, зелёный, жёлтый и т.д.). При клике на кружок — меняй цвет пера: «установить цвет пера».</li>
+        <li><b>Размер кисти:</b> Создай кнопки «+» и «-» (спрайты). При клике: «изменить размер пера на 2» или «на -2». Покажи текущий размер в переменной.</li>
+        <li><b>Кнопка «Очистить»:</b> Создай спрайт-кнопку «Очистить». При клике: «стереть всё» — холст очищается.</li>
+        <li><b>Ластик:</b> Создай кнопку «Ластик». При клике: установи цвет пера = цвет фона (белый). Кнопка «Кисть» возвращает выбранный цвет.</li>
+        <li><b>Ограничение области:</b> Рисовать можно только в области холста (не по кнопкам). Добавь проверку: если курсор в зоне палитры — поднять перо.</li>
+        <li><b>Оформление интерфейса:</b> Расположи палитру слева или сверху, кнопки — снизу. Сделай рамку холста. Добавь подписи к кнопкам.</li>
+      </ol>
+    </section>
+
+    <section class="box">
+      <h3>Критерии оценки</h3>
+      <div class="criteria">
+        <ul>
+          <li>Рисование мышью работает (зажал — рисуешь, отпустил — нет)</li>
+          <li>Минимум 6 цветов в палитре</li>
+          <li>Можно менять размер кисти (больше/меньше)</li>
+          <li>Есть кнопка «Очистить холст»</li>
+          <li>Есть ластик</li>
+          <li>Интерфейс понятный, кнопки не мешают рисованию</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="box">
+      <div class="bonus">
+        <p>Идеи для улучшения</p>
+        <ul>
+          <li>Добавь инструмент «штамп» — ставит готовые фигуры (звезда, сердце)</li>
+          <li>Сделай инструмент «линия» (клик → клик = прямая линия)</li>
+          <li>Добавь «отмену» последнего действия</li>
+          <li>Сделай режим «калейдоскоп» — рисуешь симметрично в 4 стороны</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/main.js"></script>
+</body>
+</html>

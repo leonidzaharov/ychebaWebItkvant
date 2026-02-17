@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scratch — Платформер</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    .wrap{max-width:900px;margin:0 auto;padding:18px 16px 44px}
+    .box{border:1px solid var(--stroke);border-radius:var(--radius);background:color-mix(in srgb, var(--panel) 75%, transparent);padding:18px;box-shadow:var(--shadow);margin-top:16px}
+    .box h2{margin:0 0 10px 0} .box h3{margin:14px 0 6px 0;color:var(--accent2)}
+    .box p,.box li{color:var(--muted);line-height:1.55} .box ul,.box ol{margin:6px 0;padding-left:22px}
+    .badge{display:inline-block;padding:3px 10px;border-radius:8px;font-size:12px;font-weight:800;margin-left:8px}
+    .badge.advanced{background:#ef444422;color:#f87171;border:1px solid #f8717133}
+    .steps{counter-reset:step} .steps li{counter-increment:step;margin-bottom:10px}
+    .steps li::marker{content:counter(step) ". ";font-weight:900;color:var(--accent2)}
+    .criteria{border-left:3px solid var(--accent);padding-left:14px;margin:10px 0} .criteria li{margin-bottom:4px}
+    .bonus{background:color-mix(in srgb, var(--accent) 12%, transparent);border-radius:12px;padding:12px 14px;margin-top:10px}
+    .bonus p{margin:0 0 6px 0;font-weight:800;color:var(--text)}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="btn ghost" href="../index.html">&larr; На главную</a>
+      <div>
+        <div class="brandTitle">Проект 8: Платформер</div>
+        <div class="brandSub">Scratch &bull; Продвинутый</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn ghost" id="toggleTheme" type="button">Тема</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="box">
+      <h2>Платформер <span class="badge advanced">Продвинутый</span></h2>
+      <p>Создай классическую игру-платформер в стиле Super Mario! Персонаж бегает, прыгает по платформам, собирает монетки, избегает врагов и проходит уровни. Настоящая физика гравитации и прыжков!</p>
+    </section>
+
+    <section class="box">
+      <h3>Чему научишься</h3>
+      <ul>
+        <li>Программировать <b>гравитацию</b> (переменная «скорость Y», постоянно уменьшается)</li>
+        <li>Определять <b>столкновение с платформой</b> (касается цвета → стоит на земле)</li>
+        <li>Создавать <b>механику прыжка</b> (пробел → скорость Y = 12, только если на земле)</li>
+        <li>Работать с <b>анимацией персонажа</b> (бег, прыжок, стояние — разные костюмы)</li>
+        <li>Программировать <b>врагов</b> с простым ИИ (патрулирование)</li>
+        <li>Создавать <b>систему уровней</b> с нарастающей сложностью</li>
+      </ul>
+    </section>
+
+    <section class="box">
+      <h3>План реализации</h3>
+      <ol class="steps">
+        <li><b>Нарисуй уровень:</b> Создай фон с платформами одного цвета (например, коричневый). Пол внизу, несколько платформ на разной высоте. Используй векторный редактор для ровных линий.</li>
+        <li><b>Персонаж и гравитация:</b> Создай переменную «скоростьY» (начало: 0). В цикле «всегда»: «изменить скоростьY на -1» (гравитация) → «изменить y на скоростьY». Персонаж падает!</li>
+        <li><b>Столкновение с полом:</b> «Если касается цвета [коричневый]» → «установить скоростьY в 0» и сдвигай вверх на 1 пиксель, пока не перестанет касаться. Теперь персонаж стоит на платформах.</li>
+        <li><b>Прыжок:</b> «Если клавиша пробел нажата И касается цвета [коричневый]» → «установить скоростьY в 12». Проверка касания нужна, чтобы нельзя было прыгать в воздухе.</li>
+        <li><b>Движение влево/вправо:</b> Стрелки: изменяй x на 5 (вправо) или -5 (влево). Добавь проверку: если при движении касается стены — отменить сдвиг.</li>
+        <li><b>Анимация:</b> Создай костюмы: стоит, бежит-1, бежит-2, прыгает. При движении — переключай костюмы бега. При прыжке — костюм прыжка. Зеркально отражай при смене направления.</li>
+        <li><b>Монетки:</b> Добавь спрайты-монетки. При касании персонажа: +1 к очкам, монетка исчезает, звук «дзинь».</li>
+        <li><b>Враги:</b> Создай спрайт-врага. Он двигается туда-сюда (патрулирует). Если персонаж касается врага — потеря жизни и возврат на старт.</li>
+        <li><b>Уровни:</b> При сборе всех монеток или достижении флага — смена фона, новый уровень. Сделай минимум 2 уровня.</li>
+      </ol>
+    </section>
+
+    <section class="box">
+      <h3>Критерии оценки</h3>
+      <div class="criteria">
+        <ul>
+          <li>Гравитация работает (персонаж падает, стоит на платформах)</li>
+          <li>Прыжок работает корректно (только с земли, не двойной прыжок)</li>
+          <li>Управление стрелками плавное</li>
+          <li>Есть монетки или другие собираемые предметы</li>
+          <li>Есть минимум 1 враг с простым поведением</li>
+          <li>Минимум 2 уровня</li>
+          <li>Есть счёт и жизни</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="box">
+      <div class="bonus">
+        <p>Идеи для улучшения</p>
+        <ul>
+          <li>Добавь «двойной прыжок» как бонус (подбираешь предмет — можно прыгать дважды)</li>
+          <li>Сделай движущиеся платформы</li>
+          <li>Добавь босса в конце уровня</li>
+          <li>Реализуй «прокрутку» уровня (камера следует за персонажем)</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/main.js"></script>
+</body>
+</html>

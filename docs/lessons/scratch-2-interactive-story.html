@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scratch — Интерактивная история</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    .wrap{max-width:900px;margin:0 auto;padding:18px 16px 44px}
+    .box{border:1px solid var(--stroke);border-radius:var(--radius);background:color-mix(in srgb, var(--panel) 75%, transparent);padding:18px;box-shadow:var(--shadow);margin-top:16px}
+    .box h2{margin:0 0 10px 0} .box h3{margin:14px 0 6px 0;color:var(--accent2)}
+    .box p,.box li{color:var(--muted);line-height:1.55} .box ul,.box ol{margin:6px 0;padding-left:22px}
+    .badge{display:inline-block;padding:3px 10px;border-radius:8px;font-size:12px;font-weight:800;margin-left:8px}
+    .badge.beginner{background:#22c55e22;color:#4ade80;border:1px solid #4ade8033}
+    .steps{counter-reset:step} .steps li{counter-increment:step;margin-bottom:10px}
+    .steps li::marker{content:counter(step) ". ";font-weight:900;color:var(--accent2)}
+    .criteria{border-left:3px solid var(--accent);padding-left:14px;margin:10px 0} .criteria li{margin-bottom:4px}
+    .bonus{background:color-mix(in srgb, var(--accent) 12%, transparent);border-radius:12px;padding:12px 14px;margin-top:10px}
+    .bonus p{margin:0 0 6px 0;font-weight:800;color:var(--text)}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="btn ghost" href="../index.html">&larr; На главную</a>
+      <div>
+        <div class="brandTitle">Проект 2: Интерактивная история</div>
+        <div class="brandSub">Scratch &bull; Начинающий</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn ghost" id="toggleTheme" type="button">Тема</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="box">
+      <h2>Интерактивная история <span class="badge beginner">Начинающий</span></h2>
+      <p>Создай мультик-историю, в которой зритель может влиять на сюжет! Персонажи разговаривают, перемещаются между локациями, а в ключевых моментах зритель выбирает, что будет дальше.</p>
+    </section>
+
+    <section class="box">
+      <h3>Чему научишься</h3>
+      <ul>
+        <li>Создавать <b>сценарий</b> с несколькими сценами</li>
+        <li>Использовать <b>сообщения</b> (передать/получить) для переключения сцен</li>
+        <li>Работать с блоком <b>«спросить и ждать»</b> для ввода от пользователя</li>
+        <li>Применять <b>условия</b> (если/иначе) для ветвления сюжета</li>
+        <li>Управлять <b>видимостью</b> спрайтов (показаться/спрятаться)</li>
+        <li>Синхронизировать действия нескольких персонажей</li>
+      </ul>
+    </section>
+
+    <section class="box">
+      <h3>План реализации</h3>
+      <ol class="steps">
+        <li><b>Придумай сюжет:</b> Напиши короткую историю с 3-5 сценами. Придумай минимум 1 точку выбора, где зритель решает, что будет дальше (например: «Пойти налево или направо?»).</li>
+        <li><b>Нарисуй раскадровку:</b> На бумаге нарисуй каждую сцену — какой фон, какие персонажи, что они говорят.</li>
+        <li><b>Создай фоны:</b> Сделай отдельный фон для каждой локации (лес, замок, город, космос — что подходит к твоей истории).</li>
+        <li><b>Добавь персонажей:</b> Создай 2-3 персонажа. Для каждого настрой начальную позицию, размер, костюмы для разных эмоций.</li>
+        <li><b>Запрограммируй диалоги:</b> Используй блоки «говорить ... секунд» для реплик. Между репликами добавь паузы «ждать». Синхронизируй персонажей через «передать сообщение».</li>
+        <li><b>Добавь выбор:</b> В ключевом моменте используй «спросить ... и ждать». Через «если ответ = ... то» направь историю по разным веткам.</li>
+        <li><b>Переходы между сценами:</b> Используй «передать сообщение» для смены фона и появления/исчезания нужных персонажей.</li>
+        <li><b>Финал и титры:</b> Сделай красивую концовку. Добавь титры — кто создал историю.</li>
+      </ol>
+    </section>
+
+    <section class="box">
+      <h3>Критерии оценки</h3>
+      <div class="criteria">
+        <ul>
+          <li>Минимум 3 сцены (разные фоны/локации)</li>
+          <li>Минимум 2 персонажа с диалогами</li>
+          <li>Есть хотя бы 1 точка выбора (зритель влияет на сюжет)</li>
+          <li>Сцены переключаются через сообщения</li>
+          <li>История имеет начало, развитие и конец</li>
+          <li>Нет ошибок — всё работает от зелёного флажка до финала</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="box">
+      <div class="bonus">
+        <p>Идеи для улучшения</p>
+        <ul>
+          <li>Добавь 2-3 точки выбора с разными концовками</li>
+          <li>Озвучь персонажей своим голосом</li>
+          <li>Добавь фоновую музыку, разную для каждой сцены</li>
+          <li>Сделай анимацию переходов между сценами (затемнение/осветление)</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/main.js"></script>
+</body>
+</html>

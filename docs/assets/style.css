@@ -295,6 +295,81 @@ html[data-theme="light"] .heroOverlay{
   overflow: auto;
   padding: 4px 6px; 
 }
+/* === PROJECTS SECTION === */
+.projects{
+  margin-top:18px;
+  border:1px solid var(--stroke);
+  border-radius: var(--radius);
+  padding:14px;
+  background: color-mix(in srgb, var(--panel) 70%, transparent);
+}
+
+.projectsLock{
+  display:flex; flex-direction:column; align-items:center;
+  gap:12px; padding:28px 14px; text-align:center;
+}
+.projectsLock h2{margin:0; font-size:22px}
+.projectsLock p{margin:0; color:var(--muted); font-size:14px}
+
+.projectsAuth{
+  display:flex; gap:8px; margin-top:4px; flex-wrap:wrap; justify-content:center;
+}
+.projectsAuth input{
+  padding:10px 14px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background: color-mix(in srgb, var(--panel) 85%, transparent);
+  color:var(--text);
+  font-size:14px;
+  outline:none;
+  width:200px;
+}
+.projectsAuth input:focus{
+  border-color: color-mix(in srgb, var(--accent2) 55%, var(--stroke));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent2) 18%, transparent);
+}
+.projectsError{
+  color:#ff5c5c; font-size:13px; font-weight:700;
+}
+
+.projectsHead{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px; margin-bottom:14px;
+}
+.projectsHead h2{margin:0}
+
+.projectsGrid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap:12px;
+}
+
+.projectCard{
+  display:block; text-decoration:none; color:var(--text);
+  border:1px solid var(--stroke); border-radius:var(--radius);
+  background: color-mix(in srgb, var(--panel) 75%, transparent);
+  padding:14px;
+  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.projectCard:hover{
+  transform:translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent2) 45%, var(--stroke));
+}
+.projectCard .cardTitle{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+
+.levelBadge{
+  display:inline-block;
+  padding:2px 8px;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.3px;
+}
+.levelBadge.beginner{background:#22c55e22; color:#4ade80; border:1px solid #4ade8033}
+.levelBadge.medium{background:#f59e0b22; color:#fbbf24; border:1px solid #fbbf2433}
+.levelBadge.advanced{background:#ef444422; color:#f87171; border:1px solid #f8717133}
+.levelBadge.expert{background:#a855f722; color:#c084fc; border:1px solid #c084fc33}
+
 .bgToggle{
   position: fixed;
   top: 14px;

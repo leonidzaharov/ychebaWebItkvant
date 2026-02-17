@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scratch — Лабиринт</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    .wrap{max-width:900px;margin:0 auto;padding:18px 16px 44px}
+    .box{border:1px solid var(--stroke);border-radius:var(--radius);background:color-mix(in srgb, var(--panel) 75%, transparent);padding:18px;box-shadow:var(--shadow);margin-top:16px}
+    .box h2{margin:0 0 10px 0} .box h3{margin:14px 0 6px 0;color:var(--accent2)}
+    .box p,.box li{color:var(--muted);line-height:1.55} .box ul,.box ol{margin:6px 0;padding-left:22px}
+    .badge{display:inline-block;padding:3px 10px;border-radius:8px;font-size:12px;font-weight:800;margin-left:8px}
+    .badge.medium{background:#f59e0b22;color:#fbbf24;border:1px solid #fbbf2433}
+    .steps{counter-reset:step} .steps li{counter-increment:step;margin-bottom:10px}
+    .steps li::marker{content:counter(step) ". ";font-weight:900;color:var(--accent2)}
+    .criteria{border-left:3px solid var(--accent);padding-left:14px;margin:10px 0} .criteria li{margin-bottom:4px}
+    .bonus{background:color-mix(in srgb, var(--accent) 12%, transparent);border-radius:12px;padding:12px 14px;margin-top:10px}
+    .bonus p{margin:0 0 6px 0;font-weight:800;color:var(--text)}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="btn ghost" href="../index.html">&larr; На главную</a>
+      <div>
+        <div class="brandTitle">Проект 5: Лабиринт</div>
+        <div class="brandSub">Scratch &bull; Средний</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn ghost" id="toggleTheme" type="button">Тема</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="box">
+      <h2>Лабиринт <span class="badge medium">Средний</span></h2>
+      <p>Создай игру, где персонаж должен пройти лабиринт, не касаясь стен! Управление стрелками, есть таймер, ловушки и несколько уровней. Дошёл до выхода — переход на следующий уровень!</p>
+    </section>
+
+    <section class="box">
+      <h3>Чему научишься</h3>
+      <ul>
+        <li>Управлять спрайтом <b>с клавиатуры</b> (стрелки вверх/вниз/влево/вправо)</li>
+        <li>Определять <b>столкновения с цветом</b> (касается цвета стены?)</li>
+        <li>Создавать <b>несколько уровней</b> (смена фонов-лабиринтов)</li>
+        <li>Работать с <b>таймером</b> и переменными</li>
+        <li>Программировать <b>условие победы</b> (достиг выхода)</li>
+        <li>Использовать <b>начальную позицию</b> и сброс при столкновении</li>
+      </ul>
+    </section>
+
+    <section class="box">
+      <h3>План реализации</h3>
+      <ol class="steps">
+        <li><b>Нарисуй лабиринт:</b> Создай фон с лабиринтом. Стены — один цвет (например, чёрный), проходы — другой. Отметь старт и финиш. Сделай 3 разных фона для 3 уровней.</li>
+        <li><b>Создай персонажа:</b> Нарисуй маленького персонажа (шарик, мышку, робота). Важно: он должен быть маленьким, чтобы помещаться в проходах.</li>
+        <li><b>Управление стрелками:</b> «Когда клавиша [стрелка вверх] нажата» → «изменить y на 3». Аналогично для всех 4 направлений. Скорость подбери так, чтобы было удобно.</li>
+        <li><b>Столкновение со стенами:</b> В цикле «всегда» проверяй: «если касается цвета [чёрный]» → верни персонажа на старт (или сдвинь назад). Добавь звук столкновения.</li>
+        <li><b>Условие победы:</b> «Если касается цвета [зелёный]» (цвет выхода) → переход на следующий уровень. Смени фон, верни персонажа на старт нового уровня.</li>
+        <li><b>Таймер:</b> Создай переменную «Время». Каждую секунду увеличивай на 1. Покажи на экране. После финиша — покажи итоговое время.</li>
+        <li><b>Уровни:</b> Сделай 3 уровня с нарастающей сложностью. Первый — простой, второй — узкие проходы, третий — с тупиками.</li>
+        <li><b>Экран победы:</b> После прохождения всех уровней покажи экран «Победа!» с итоговым временем.</li>
+      </ol>
+    </section>
+
+    <section class="box">
+      <h3>Критерии оценки</h3>
+      <div class="criteria">
+        <ul>
+          <li>Минимум 3 уровня (3 разных лабиринта)</li>
+          <li>Управление стрелками работает плавно</li>
+          <li>Столкновение со стенами корректно обрабатывается</li>
+          <li>Есть таймер, показывающий время прохождения</li>
+          <li>При достижении выхода — переход на следующий уровень</li>
+          <li>Есть экран победы в конце</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="box">
+      <div class="bonus">
+        <p>Идеи для улучшения</p>
+        <ul>
+          <li>Добавь движущиеся ловушки (спрайты-враги, которые патрулируют)</li>
+          <li>Добавь бонусы-монетки внутри лабиринта (собираешь — бонус к очкам)</li>
+          <li>Сделай «туман войны» — видно только область вокруг персонажа</li>
+          <li>Добавь второго игрока (WASD) для режима «кто быстрее»</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/main.js"></script>
+</body>
+</html>
