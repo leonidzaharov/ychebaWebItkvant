@@ -165,6 +165,51 @@ function wireUI() {
 setTheme(getTheme());
 wireUI();
 setAnimEnabled(getAnimEnabled());
+// --- PROJECTS SECTION (password) ---
+(function initProjects(){
+  const lock = document.getElementById("projectsLock");
+  const content = document.getElementById("projectsContent");
+  const passInput = document.getElementById("projectsPass");
+  const unlockBtn = document.getElementById("projectsUnlock");
+  const lockBtn = document.getElementById("projectsLockBtn");
+  const errorEl = document.getElementById("projectsError");
+
+  if (!lock || !content) return;
+
+  const SECRET = atob("TmF2aWE=");
+
+  function unlock(){
+    lock.hidden = true;
+    content.hidden = false;
+    localStorage.setItem("projects_unlocked", "1");
+  }
+
+  function lockSection(){
+    lock.hidden = false;
+    content.hidden = true;
+    localStorage.removeItem("projects_unlocked");
+    if (passInput) passInput.value = "";
+    if (errorEl) errorEl.hidden = true;
+  }
+
+  function tryUnlock(){
+    if (!passInput) return;
+    if (passInput.value === SECRET){
+      unlock();
+    } else {
+      if (errorEl) errorEl.hidden = false;
+      passInput.classList.add("shake");
+      setTimeout(() => passInput.classList.remove("shake"), 400);
+    }
+  }
+
+  if (localStorage.getItem("projects_unlocked") === "1") unlock();
+
+  unlockBtn?.addEventListener("click", tryUnlock);
+  passInput?.addEventListener("keydown", e => { if (e.key === "Enter") tryUnlock(); });
+  lockBtn?.addEventListener("click", lockSection);
+})();
+
 // --- TRACK PAGE (HTML/CSS/JS) ---
 (function initTrackPage(){
   const titleEl = document.getElementById("trackTitle");

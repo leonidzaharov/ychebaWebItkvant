@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scratch — Космический шутер</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    .wrap{max-width:900px;margin:0 auto;padding:18px 16px 44px}
+    .box{border:1px solid var(--stroke);border-radius:var(--radius);background:color-mix(in srgb, var(--panel) 75%, transparent);padding:18px;box-shadow:var(--shadow);margin-top:16px}
+    .box h2{margin:0 0 10px 0} .box h3{margin:14px 0 6px 0;color:var(--accent2)}
+    .box p,.box li{color:var(--muted);line-height:1.55} .box ul,.box ol{margin:6px 0;padding-left:22px}
+    .badge{display:inline-block;padding:3px 10px;border-radius:8px;font-size:12px;font-weight:800;margin-left:8px}
+    .badge.advanced{background:#ef444422;color:#f87171;border:1px solid #f8717133}
+    .steps{counter-reset:step} .steps li{counter-increment:step;margin-bottom:10px}
+    .steps li::marker{content:counter(step) ". ";font-weight:900;color:var(--accent2)}
+    .criteria{border-left:3px solid var(--accent);padding-left:14px;margin:10px 0} .criteria li{margin-bottom:4px}
+    .bonus{background:color-mix(in srgb, var(--accent) 12%, transparent);border-radius:12px;padding:12px 14px;margin-top:10px}
+    .bonus p{margin:0 0 6px 0;font-weight:800;color:var(--text)}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="btn ghost" href="../index.html">&larr; На главную</a>
+      <div>
+        <div class="brandTitle">Проект 9: Космический шутер</div>
+        <div class="brandSub">Scratch &bull; Продвинутый</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn ghost" id="toggleTheme" type="button">Тема</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="box">
+      <h2>Космический шутер <span class="badge advanced">Продвинутый</span></h2>
+      <p>Создай космическую стрелялку! Твой корабль летит в космосе, стреляет лазерами по волнам пришельцев. Враги атакуют в ответ, есть здоровье, бонусы и эпичный финальный босс!</p>
+    </section>
+
+    <section class="box">
+      <h3>Чему научишься</h3>
+      <ul>
+        <li>Создавать <b>снаряды через клоны</b> (стрельба: пробел → клон пули летит вверх)</li>
+        <li>Программировать <b>волны врагов</b> (клоны врагов с разным поведением)</li>
+        <li>Определять <b>столкновения между клонами</b> (пуля попала во врага)</li>
+        <li>Работать с <b>несколькими переменными</b> (HP игрока, HP врага, очки, волна)</li>
+        <li>Создавать <b>босс-файт</b> (особый враг с большим HP и атаками)</li>
+        <li>Управлять <b>сложной игровой логикой</b> (состояния игры, паузы, переходы)</li>
+      </ul>
+    </section>
+
+    <section class="box">
+      <h3>План реализации</h3>
+      <ol class="steps">
+        <li><b>Корабль игрока:</b> Нарисуй спрайт корабля. Управление стрелками (влево/вправо внизу экрана). Можно добавить движение вверх/вниз в небольшом диапазоне.</li>
+        <li><b>Стрельба:</b> Создай спрайт «Пуля». При нажатии пробела: создать клон пули в позиции корабля. «Когда я начинаю как клон»: двигаться вверх (изменять y на 10), если y > 170 — удалить клон.</li>
+        <li><b>Враги:</b> Создай спрайт «Враг» с несколькими костюмами (разные типы). Через сообщения запускай волны: создавай N клонов. Каждый клон появляется сверху в случайной позиции, медленно спускается вниз.</li>
+        <li><b>Попадание пули во врага:</b> В скрипте клона врага: «если касается [Пуля]» → уменьшить HP врага, если HP=0 → анимация взрыва, +очки, удалить клон. В скрипте пули: «если касается [Враг]» → удалить клон пули.</li>
+        <li><b>Атака врагов:</b> Враги тоже стреляют! Создай спрайт «Вражеская пуля». Клоны врагов периодически создают клон вражеской пули, которая летит вниз. При касании корабля — урон игроку.</li>
+        <li><b>Здоровье игрока:</b> Переменная «HP» (начало: 3). При попадании вражеской пули: HP-1, мигание корабля. При HP=0 — Game Over.</li>
+        <li><b>Волны:</b> Переменная «Волна». Волна 1: 5 простых врагов. Волна 2: 8 врагов, быстрее. Волна 3: босс! Между волнами — пауза с текстом «Волна 2!».</li>
+        <li><b>Босс:</b> Особый спрайт с большим HP (например, 20). Двигается влево-вправо сверху, стреляет часто. При уничтожении — победа!</li>
+        <li><b>Бонусы:</b> Изредка падают бонусы: +1 HP (лечение), двойная стрельба (на 10 секунд), щит (на 5 секунд).</li>
+      </ol>
+    </section>
+
+    <section class="box">
+      <h3>Критерии оценки</h3>
+      <div class="criteria">
+        <ul>
+          <li>Корабль управляется стрелками, стреляет по пробелу</li>
+          <li>Пули реализованы через клоны</li>
+          <li>Враги появляются волнами, двигаются и могут стрелять</li>
+          <li>Есть определение попаданий (пуля → враг, враг → игрок)</li>
+          <li>Есть HP, очки и номер волны</li>
+          <li>Есть минимум 3 волны и финальный босс</li>
+          <li>Есть экраны Game Over и Victory</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="box">
+      <div class="bonus">
+        <p>Идеи для улучшения</p>
+        <ul>
+          <li>Добавь прокручивающийся фон (звёзды летят вниз — эффект полёта)</li>
+          <li>Сделай магазин между волнами (за очки покупаешь улучшения)</li>
+          <li>Добавь разные типы оружия (лазер, ракеты, тройной выстрел)</li>
+          <li>Создай систему «комбо» — за серию попаданий подряд множитель очков растёт</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/main.js"></script>
+</body>
+</html>

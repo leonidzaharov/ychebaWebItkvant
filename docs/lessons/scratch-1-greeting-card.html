@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scratch — Анимированная открытка</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    .wrap{max-width:900px;margin:0 auto;padding:18px 16px 44px}
+    .box{
+      border:1px solid var(--stroke); border-radius:var(--radius);
+      background:color-mix(in srgb, var(--panel) 75%, transparent);
+      padding:18px; box-shadow:var(--shadow); margin-top:16px;
+    }
+    .box h2{margin:0 0 10px 0}
+    .box h3{margin:14px 0 6px 0; color:var(--accent2)}
+    .box p, .box li{color:var(--muted); line-height:1.55}
+    .box ul, .box ol{margin:6px 0; padding-left:22px}
+    .badge{display:inline-block;padding:3px 10px;border-radius:8px;font-size:12px;font-weight:800;margin-left:8px}
+    .badge.beginner{background:#22c55e22;color:#4ade80;border:1px solid #4ade8033}
+    .steps{counter-reset:step}
+    .steps li{counter-increment:step; margin-bottom:10px}
+    .steps li::marker{content:counter(step) ". ";font-weight:900;color:var(--accent2)}
+    .criteria{border-left:3px solid var(--accent);padding-left:14px;margin:10px 0}
+    .criteria li{margin-bottom:4px}
+    .bonus{background:color-mix(in srgb, var(--accent) 12%, transparent);border-radius:12px;padding:12px 14px;margin-top:10px}
+    .bonus p{margin:0 0 6px 0;font-weight:800;color:var(--text)}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="btn ghost" href="../index.html">&larr; На главную</a>
+      <div>
+        <div class="brandTitle">Проект 1: Анимированная открытка</div>
+        <div class="brandSub">Scratch &bull; Начинающий</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn ghost" id="toggleTheme" type="button">Тема</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="box">
+      <h2>Анимированная открытка <span class="badge beginner">Начинающий</span></h2>
+      <p>Создай красивую анимированную открытку к празднику (Новый год, день рождения, 8 марта и т.д.). Открытка оживает: персонажи двигаются, меняют костюмы, звучит музыка, а фон плавно сменяется.</p>
+    </section>
+
+    <section class="box">
+      <h3>Чему научишься</h3>
+      <ul>
+        <li>Работать со <b>спрайтами</b> и <b>костюмами</b> (смена внешнего вида)</li>
+        <li>Добавлять и настраивать <b>фоны</b> (backdrops)</li>
+        <li>Использовать блоки <b>движения</b> (плавное перемещение, вращение)</li>
+        <li>Добавлять <b>звуки</b> и музыку</li>
+        <li>Применять блоки <b>внешности</b> (говорить, думать, эффекты)</li>
+        <li>Управлять <b>последовательностью</b> событий (ждать, повторить)</li>
+      </ul>
+    </section>
+
+    <section class="box">
+      <h3>План реализации</h3>
+      <ol class="steps">
+        <li><b>Идея и эскиз:</b> Выбери праздник и нарисуй на бумаге, как будет выглядеть открытка. Какие персонажи, какой фон, какой текст.</li>
+        <li><b>Создай фон:</b> Нарисуй или выбери из библиотеки 2-3 фона. Настрой плавную смену фонов через блок «сменить фон на...».</li>
+        <li><b>Добавь спрайты:</b> Выбери или нарисуй 2-4 персонажа/объекта. Каждому создай минимум 2 костюма для анимации.</li>
+        <li><b>Анимация движения:</b> Сделай так, чтобы персонажи двигались — плавно перемещались, вращались, меняли размер. Используй блоки «плыть к...», «повернуть», «изменить размер».</li>
+        <li><b>Диалоги и текст:</b> Добавь поздравительный текст через блоки «говорить» и «думать». Настрой последовательность — сначала один персонаж, потом другой.</li>
+        <li><b>Звук и музыка:</b> Добавь фоновую мелодию и звуковые эффекты (аплодисменты, фанфары). Используй «играть звук... до конца».</li>
+        <li><b>Визуальные эффекты:</b> Примени эффекты: призрак (появление/исчезание), цвет, рыбий глаз. Сделай плавное появление элементов.</li>
+        <li><b>Финальная сборка:</b> Проверь всю анимацию от начала до конца. Убедись, что всё работает по нажатию зелёного флажка.</li>
+      </ol>
+    </section>
+
+    <section class="box">
+      <h3>Критерии оценки</h3>
+      <div class="criteria">
+        <ul>
+          <li>Минимум 2 фона (фон меняется по ходу анимации)</li>
+          <li>Минимум 3 спрайта с анимацией (смена костюмов или движение)</li>
+          <li>Есть поздравительный текст (блоки «говорить»/«думать»)</li>
+          <li>Есть фоновая музыка или звуковые эффекты</li>
+          <li>Анимация запускается по зелёному флажку и идёт без ошибок</li>
+          <li>Открытка выглядит аккуратно и красиво</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="box">
+      <div class="bonus">
+        <p>Идеи для улучшения</p>
+        <ul>
+          <li>Добавь интерактивность: при клике на персонажа он делает что-то особенное</li>
+          <li>Сделай «конверт» — начальный экран, который открывается по клику</li>
+          <li>Добавь падающий снег или конфетти (используй клоны)</li>
+          <li>Запиши собственный голос с поздравлением</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/main.js"></script>
+</body>
+</html>

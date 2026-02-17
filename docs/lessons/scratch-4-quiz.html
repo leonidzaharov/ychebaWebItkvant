@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scratch — Викторина</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    .wrap{max-width:900px;margin:0 auto;padding:18px 16px 44px}
+    .box{border:1px solid var(--stroke);border-radius:var(--radius);background:color-mix(in srgb, var(--panel) 75%, transparent);padding:18px;box-shadow:var(--shadow);margin-top:16px}
+    .box h2{margin:0 0 10px 0} .box h3{margin:14px 0 6px 0;color:var(--accent2)}
+    .box p,.box li{color:var(--muted);line-height:1.55} .box ul,.box ol{margin:6px 0;padding-left:22px}
+    .badge{display:inline-block;padding:3px 10px;border-radius:8px;font-size:12px;font-weight:800;margin-left:8px}
+    .badge.medium{background:#f59e0b22;color:#fbbf24;border:1px solid #fbbf2433}
+    .steps{counter-reset:step} .steps li{counter-increment:step;margin-bottom:10px}
+    .steps li::marker{content:counter(step) ". ";font-weight:900;color:var(--accent2)}
+    .criteria{border-left:3px solid var(--accent);padding-left:14px;margin:10px 0} .criteria li{margin-bottom:4px}
+    .bonus{background:color-mix(in srgb, var(--accent) 12%, transparent);border-radius:12px;padding:12px 14px;margin-top:10px}
+    .bonus p{margin:0 0 6px 0;font-weight:800;color:var(--text)}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="btn ghost" href="../index.html">&larr; На главную</a>
+      <div>
+        <div class="brandTitle">Проект 4: Викторина</div>
+        <div class="brandSub">Scratch &bull; Средний</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn ghost" id="toggleTheme" type="button">Тема</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="box">
+      <h2>Викторина <span class="badge medium">Средний</span></h2>
+      <p>Создай игру-викторину на любую тему: география, математика, кино, природа. Ведущий задаёт вопросы, игрок вводит ответы, набирает очки. В конце — итоговый результат и оценка!</p>
+    </section>
+
+    <section class="box">
+      <h3>Чему научишься</h3>
+      <ul>
+        <li>Работать с <b>переменными</b> (счёт, номер вопроса)</li>
+        <li>Использовать блок <b>«спросить и ждать»</b> + переменную <b>«ответ»</b></li>
+        <li>Применять <b>условия</b> (если ответ правильный / неправильный)</li>
+        <li>Работать со <b>списками</b> (хранить вопросы и правильные ответы)</li>
+        <li>Создавать <b>обратную связь</b> (правильно/неправильно)</li>
+        <li>Показывать <b>итоговый результат</b> с оценкой</li>
+      </ul>
+    </section>
+
+    <section class="box">
+      <h3>План реализации</h3>
+      <ol class="steps">
+        <li><b>Выбери тему:</b> Придумай 8-10 вопросов на одну тему (или микс). Запиши вопросы и правильные ответы в тетрадь.</li>
+        <li><b>Создай списки:</b> Сделай 2 списка: «Вопросы» и «Ответы». Заполни их соответствующими данными (вопрос #1 — ответ #1 и т.д.).</li>
+        <li><b>Переменные:</b> Создай переменные «Счёт» (начинается с 0), «Номер вопроса» (начинается с 1), «Всего вопросов».</li>
+        <li><b>Цикл вопросов:</b> Сделай цикл «повторить (Всего вопросов) раз». Внутри: задай вопрос из списка по номеру, получи ответ.</li>
+        <li><b>Проверка ответа:</b> «Если ответ = элемент (Номер вопроса) списка Ответы» — увеличь счёт, скажи «Правильно!». Иначе — скажи «Неправильно, верный ответ: ...».</li>
+        <li><b>Персонаж-ведущий:</b> Добавь спрайт-ведущего, который задаёт вопросы, реагирует на ответы (меняет костюм — радостный/грустный).</li>
+        <li><b>Итоговый экран:</b> После всех вопросов покажи результат: «Ты набрал X из Y!». Добавь оценку: 5 — все правильно, 4 — одна ошибка, и т.д.</li>
+        <li><b>Оформление:</b> Добавь звуки (правильно/неправильно), фоновую музыку, красивый фон.</li>
+      </ol>
+    </section>
+
+    <section class="box">
+      <h3>Критерии оценки</h3>
+      <div class="criteria">
+        <ul>
+          <li>Минимум 8 вопросов</li>
+          <li>Вопросы и ответы хранятся в списках</li>
+          <li>Есть подсчёт очков (переменная «Счёт»)</li>
+          <li>Есть обратная связь — правильно/неправильно после каждого вопроса</li>
+          <li>В конце показывается итоговый результат</li>
+          <li>Есть персонаж-ведущий с анимацией</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="box">
+      <div class="bonus">
+        <p>Идеи для улучшения</p>
+        <ul>
+          <li>Добавь таймер на каждый вопрос (10 секунд на ответ)</li>
+          <li>Сделай случайный порядок вопросов (перемешивание списка)</li>
+          <li>Добавь подсказки (50/50 — убрать неправильные варианты)</li>
+          <li>Сделай таблицу рекордов (лучший результат сохраняется в переменную)</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/main.js"></script>
+</body>
+</html>

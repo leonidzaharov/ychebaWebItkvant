@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scratch — Аркада «Ловец»</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    .wrap{max-width:900px;margin:0 auto;padding:18px 16px 44px}
+    .box{border:1px solid var(--stroke);border-radius:var(--radius);background:color-mix(in srgb, var(--panel) 75%, transparent);padding:18px;box-shadow:var(--shadow);margin-top:16px}
+    .box h2{margin:0 0 10px 0} .box h3{margin:14px 0 6px 0;color:var(--accent2)}
+    .box p,.box li{color:var(--muted);line-height:1.55} .box ul,.box ol{margin:6px 0;padding-left:22px}
+    .badge{display:inline-block;padding:3px 10px;border-radius:8px;font-size:12px;font-weight:800;margin-left:8px}
+    .badge.medium{background:#f59e0b22;color:#fbbf24;border:1px solid #fbbf2433}
+    .steps{counter-reset:step} .steps li{counter-increment:step;margin-bottom:10px}
+    .steps li::marker{content:counter(step) ". ";font-weight:900;color:var(--accent2)}
+    .criteria{border-left:3px solid var(--accent);padding-left:14px;margin:10px 0} .criteria li{margin-bottom:4px}
+    .bonus{background:color-mix(in srgb, var(--accent) 12%, transparent);border-radius:12px;padding:12px 14px;margin-top:10px}
+    .bonus p{margin:0 0 6px 0;font-weight:800;color:var(--text)}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="btn ghost" href="../index.html">&larr; На главную</a>
+      <div>
+        <div class="brandTitle">Проект 6: Аркада «Ловец»</div>
+        <div class="brandSub">Scratch &bull; Средний</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn ghost" id="toggleTheme" type="button">Тема</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="box">
+      <h2>Аркада «Ловец» <span class="badge medium">Средний</span></h2>
+      <p>Классическая аркада: сверху падают объекты (фрукты, звёзды, монетки), а ты ловишь их корзинкой внизу! Хорошие предметы дают очки, плохие — отнимают жизни. Скорость нарастает!</p>
+    </section>
+
+    <section class="box">
+      <h3>Чему научишься</h3>
+      <ul>
+        <li>Работать с <b>клонами</b> (создать клон, когда я начинаю как клон, удалить клон)</li>
+        <li>Генерировать <b>случайные</b> позиции и типы объектов</li>
+        <li>Управлять <b>нарастающей сложностью</b> (скорость увеличивается со временем)</li>
+        <li>Работать с <b>несколькими переменными</b> (очки, жизни, скорость)</li>
+        <li>Программировать <b>условие проигрыша</b> (жизни = 0)</li>
+        <li>Использовать <b>бесконечный цикл</b> с условием выхода</li>
+      </ul>
+    </section>
+
+    <section class="box">
+      <h3>План реализации</h3>
+      <ol class="steps">
+        <li><b>Создай корзинку:</b> Нарисуй спрайт-корзинку (или тарелку, руки). Расположи внизу экрана. Управление: стрелки влево/вправо или мышь (x корзинки = x мыши).</li>
+        <li><b>Создай падающий объект:</b> Нарисуй спрайт с несколькими костюмами: яблоко, звезда, монетка (хорошие) и бомба, камень (плохие).</li>
+        <li><b>Клоны:</b> В бесконечном цикле каждые 1-2 секунды создавай клон падающего объекта. Каждый клон: случайный костюм, случайная позиция x сверху, движение вниз.</li>
+        <li><b>Логика клона:</b> «Когда я начинаю как клон»: выбери случайный костюм, поставь y=170, x=случайное(-200,200). В цикле: изменяй y на -скорость. Если касается корзинки — обработай. Если y < -170 — удали клон.</li>
+        <li><b>Подсчёт очков:</b> Если хороший предмет касается корзинки: +1 к очкам, звук «бонус», удалить клон. Если плохой предмет: -1 жизнь, звук «ошибка», удалить клон.</li>
+        <li><b>Нарастающая сложность:</b> Каждые 10 очков увеличивай скорость падения на 0.5 и уменьшай интервал между клонами.</li>
+        <li><b>Жизни и проигрыш:</b> Создай переменную «Жизни» (начало: 3). Когда жизни = 0 → остановить всё, показать «Игра окончена! Очки: X».</li>
+        <li><b>Оформление:</b> Красивый фон, звуки при ловле, анимация при потере жизни (экран мигает красным).</li>
+      </ol>
+    </section>
+
+    <section class="box">
+      <h3>Критерии оценки</h3>
+      <div class="criteria">
+        <ul>
+          <li>Объекты падают сверху с помощью клонов</li>
+          <li>Корзинка управляется стрелками или мышью</li>
+          <li>Есть хорошие и плохие предметы с разной логикой</li>
+          <li>Очки и жизни отображаются на экране</li>
+          <li>Сложность нарастает со временем</li>
+          <li>Есть экран проигрыша с итоговым счётом</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="box">
+      <div class="bonus">
+        <p>Идеи для улучшения</p>
+        <ul>
+          <li>Добавь «золотой предмет» — редкий, но даёт +5 очков</li>
+          <li>Сделай бонус «замедление» — на 5 секунд всё падает медленнее</li>
+          <li>Добавь таблицу рекордов (топ-3 лучших результатов)</li>
+          <li>Сделай разные уровни с разными темами (космос, океан, лес)</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/main.js"></script>
+</body>
+</html>

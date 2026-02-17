@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scratch — Музыкальный синтезатор</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    .wrap{max-width:900px;margin:0 auto;padding:18px 16px 44px}
+    .box{border:1px solid var(--stroke);border-radius:var(--radius);background:color-mix(in srgb, var(--panel) 75%, transparent);padding:18px;box-shadow:var(--shadow);margin-top:16px}
+    .box h2{margin:0 0 10px 0} .box h3{margin:14px 0 6px 0;color:var(--accent2)}
+    .box p,.box li{color:var(--muted);line-height:1.55} .box ul,.box ol{margin:6px 0;padding-left:22px}
+    .badge{display:inline-block;padding:3px 10px;border-radius:8px;font-size:12px;font-weight:800;margin-left:8px}
+    .badge.beginner{background:#22c55e22;color:#4ade80;border:1px solid #4ade8033}
+    .steps{counter-reset:step} .steps li{counter-increment:step;margin-bottom:10px}
+    .steps li::marker{content:counter(step) ". ";font-weight:900;color:var(--accent2)}
+    .criteria{border-left:3px solid var(--accent);padding-left:14px;margin:10px 0} .criteria li{margin-bottom:4px}
+    .bonus{background:color-mix(in srgb, var(--accent) 12%, transparent);border-radius:12px;padding:12px 14px;margin-top:10px}
+    .bonus p{margin:0 0 6px 0;font-weight:800;color:var(--text)}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="btn ghost" href="../index.html">&larr; На главную</a>
+      <div>
+        <div class="brandTitle">Проект 3: Музыкальный синтезатор</div>
+        <div class="brandSub">Scratch &bull; Начинающий</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn ghost" id="toggleTheme" type="button">Тема</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="box">
+      <h2>Музыкальный синтезатор <span class="badge beginner">Начинающий</span></h2>
+      <p>Создай виртуальное пианино или ксилофон, на котором можно играть! Каждая клавиша на клавиатуре — отдельная нота. Нажимаешь — звучит нота, а клавиша анимируется. Можно даже записать и воспроизвести мелодию!</p>
+    </section>
+
+    <section class="box">
+      <h3>Чему научишься</h3>
+      <ul>
+        <li>Работать с расширением <b>«Музыка»</b> (ноты, инструменты, темп)</li>
+        <li>Обрабатывать <b>события клавиатуры</b> (когда клавиша нажата)</li>
+        <li>Создавать <b>визуальную обратную связь</b> (анимация при нажатии)</li>
+        <li>Использовать <b>спрайты как кнопки</b> (клик мышью)</li>
+        <li>Работать с блоками <b>звука</b> и <b>музыки</b></li>
+        <li>Создавать простой <b>пользовательский интерфейс</b></li>
+      </ul>
+    </section>
+
+    <section class="box">
+      <h3>План реализации</h3>
+      <ol class="steps">
+        <li><b>Выбери инструмент:</b> Реши, что это будет — пианино, ксилофон, барабаны или что-то своё. Нарисуй, как будет выглядеть интерфейс.</li>
+        <li><b>Создай клавиши-спрайты:</b> Нарисуй 7-8 клавиш (нот До-Си). Каждая клавиша — отдельный спрайт. Расположи их в ряд.</li>
+        <li><b>Подключи расширение «Музыка»:</b> Добавь расширение. Для каждого спрайта-клавиши настрой блок «играть ноту ... длительностью ...».</li>
+        <li><b>Управление с клавиатуры:</b> Назначь клавиши: A=До, S=Ре, D=Ми, F=Фа, G=Соль, H=Ля, J=Си. При нажатии — воспроизводи соответствующую ноту.</li>
+        <li><b>Анимация нажатия:</b> При нажатии клавиша меняет цвет или слегка уменьшается (эффект нажатия). Используй «изменить эффект цвет» или смену костюма.</li>
+        <li><b>Управление мышью:</b> Добавь обработку клика — при нажатии на спрайт-клавишу тоже играет нота.</li>
+        <li><b>Смена инструмента:</b> Добавь кнопку «Сменить инструмент». При нажатии — переключает звучание (пианино, гитара, флейта и т.д.).</li>
+      </ol>
+    </section>
+
+    <section class="box">
+      <h3>Критерии оценки</h3>
+      <div class="criteria">
+        <ul>
+          <li>Минимум 7 клавиш/нот (полная октава До-Си)</li>
+          <li>Можно играть с клавиатуры И мышью</li>
+          <li>Есть визуальная обратная связь при нажатии (анимация клавиши)</li>
+          <li>Используется расширение «Музыка»</li>
+          <li>Есть возможность сменить инструмент (минимум 2 варианта)</li>
+          <li>Интерфейс понятный и аккуратный</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="box">
+      <div class="bonus">
+        <p>Идеи для улучшения</p>
+        <ul>
+          <li>Добавь вторую октаву (верхний ряд клавиатуры)</li>
+          <li>Сделай запись мелодии: нажатые ноты сохраняются в список и потом воспроизводятся</li>
+          <li>Добавь режим «барабаны» с ударными звуками</li>
+          <li>Создай режим «автоигра» — проект сам играет известную мелодию</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/main.js"></script>
+</body>
+</html>
