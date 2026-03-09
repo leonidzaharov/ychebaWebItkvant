@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Взлом мозга 🧠 — Латеральное мышление</title>
+
+  <!-- Reveal.js CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+
+  <style>
+    /* ====== CUSTOM THEME ====== */
+    :root {
+      --c-bg:       #0d0d1a;
+      --c-bg2:      #13132b;
+      --c-purple:   #9b5de5;
+      --c-pink:     #f15bb5;
+      --c-yellow:   #fee440;
+      --c-cyan:     #00bbf9;
+      --c-green:    #00f5d4;
+      --c-text:     #f0f0ff;
+      --c-muted:    #a0a0c0;
+    }
+
+    .reveal-viewport { background: var(--c-bg); }
+
+    .reveal {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: var(--c-text);
+    }
+
+    /* ---- Progress & controls ---- */
+    .reveal .progress { height: 4px; color: var(--c-purple); }
+    .reveal .controls { color: var(--c-purple); }
+    .reveal .slide-number { color: var(--c-muted); font-size: 14px; }
+
+    /* ---- Slide base ---- */
+    .reveal .slides section {
+      height: 100%;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 30px 40px;
+      box-sizing: border-box;
+    }
+
+    /* ---- Typography ---- */
+    .reveal h1 {
+      font-size: 2.8em;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+    .reveal h2 {
+      font-size: 2em;
+      font-weight: 800;
+      margin-bottom: 20px;
+      letter-spacing: -.5px;
+    }
+    .reveal h3 { font-size: 1.4em; font-weight: 700; margin-bottom: 14px; }
+    .reveal p  { font-size: 1.05em; line-height: 1.55; color: var(--c-muted); margin: 8px 0; }
+
+    /* ---- Accent colours ---- */
+    .accent-purple { color: var(--c-purple); }
+    .accent-pink   { color: var(--c-pink);   }
+    .accent-yellow { color: var(--c-yellow); }
+    .accent-cyan   { color: var(--c-cyan);   }
+    .accent-green  { color: var(--c-green);  }
+
+    /* ---- Gradient headings ---- */
+    .grad-title {
+      background: linear-gradient(135deg, var(--c-purple), var(--c-pink) 50%, var(--c-yellow));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ---- Image placeholders ---- */
+    .slide-img {
+      width: 100%;
+      max-width: 420px;
+      max-height: 220px;
+      object-fit: cover;
+      border-radius: 18px;
+      margin: 14px auto;
+      display: block;
+      box-shadow: 0 8px 40px rgba(155,93,229,.4);
+    }
+    /* fallback when image is missing */
+    .slide-img[src=""] , .slide-img:not([src]) {
+      background: linear-gradient(135deg, #1a1a3e, #2a1a4e);
+      height: 180px;
+    }
+
+    /* ---- Content cards ---- */
+    .card-row {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding: 16px 22px;
+      flex: 1 1 180px;
+      max-width: 260px;
+      text-align: left;
+    }
+    .card .label {
+      font-size: .75em;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .card p { font-size: .9em; margin: 0; color: var(--c-text); opacity: .85; }
+
+    /* ---- Pill badge ---- */
+    .pill {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 99px;
+      font-size: .78em;
+      font-weight: 800;
+      letter-spacing: .5px;
+      margin: 3px 4px;
+    }
+
+    /* ---- SCAMPER list ---- */
+    .scamper-list {
+      list-style: none;
+      padding: 0; margin: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 20px;
+      text-align: left;
+    }
+    .scamper-list li {
+      background: rgba(255,255,255,.05);
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-size: .95em;
+    }
+    .scamper-list li b { font-size: 1.3em; margin-right: 6px; }
+
+    /* ---- Reveal-answer button (Slide 3) ---- */
+    #answer-box {
+      margin-top: 14px;
+      cursor: pointer;
+      user-select: none;
+    }
+    #answer-btn {
+      background: linear-gradient(135deg, var(--c-purple), var(--c-pink));
+      border: none;
+      color: #fff;
+      font-size: 1em;
+      font-weight: 800;
+      padding: 12px 28px;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: transform .15s, filter .15s;
+    }
+    #answer-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+    #answer-text {
+      display: none;
+      margin-top: 12px;
+      background: rgba(0,245,212,.12);
+      border: 1px solid var(--c-green);
+      border-radius: 14px;
+      padding: 14px 24px;
+      font-size: 1.1em;
+      font-weight: 700;
+      color: var(--c-green);
+    }
+
+    /* ---- Timer (Slide 4) ---- */
+    #timer-box {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    #timer-display {
+      font-size: 3em;
+      font-weight: 900;
+      color: var(--c-yellow);
+      letter-spacing: 3px;
+      font-variant-numeric: tabular-nums;
+    }
+    .timer-btn {
+      background: linear-gradient(135deg, var(--c-yellow), var(--c-pink));
+      border: none;
+      color: #0d0d1a;
+      font-size: .95em;
+      font-weight: 900;
+      padding: 10px 26px;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: transform .15s;
+    }
+    .timer-btn:hover { transform: translateY(-2px); }
+
+    /* ---- Slide-specific backgrounds ---- */
+    .slide-1  { background: radial-gradient(ellipse at 30% 40%, #2a0d4e 0%, var(--c-bg) 65%); }
+    .slide-2  { background: radial-gradient(ellipse at 70% 30%, #0d2a4e 0%, var(--c-bg) 65%); }
+    .slide-3  { background: radial-gradient(ellipse at 50% 50%, #1a2a0d 0%, var(--c-bg) 65%); }
+    .slide-4  { background: radial-gradient(ellipse at 20% 60%, #4e2a0d 0%, var(--c-bg) 65%); }
+    .slide-5  { background: radial-gradient(ellipse at 80% 50%, #0d1a4e 0%, var(--c-bg) 65%); }
+    .slide-6  { background: radial-gradient(ellipse at 40% 30%, #2a4e0d 0%, var(--c-bg) 65%); }
+    .slide-7  { background: radial-gradient(ellipse at 60% 70%, #4e0d2a 0%, var(--c-bg) 65%); }
+    .slide-8  { background: radial-gradient(ellipse at 50% 40%, #1a0d4e 0%, var(--c-bg) 65%),
+                            radial-gradient(ellipse at 80% 80%, #4e2a0d 0%, transparent 60%); }
+
+    /* ---- Emoji big ---- */
+    .big-emoji { font-size: 3em; display: block; margin-bottom: 8px; }
+
+    /* ---- Divider line ---- */
+    .divider {
+      width: 60px; height: 4px;
+      border-radius: 99px;
+      margin: 12px auto;
+    }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+  <!-- ================================================
+       СЛАЙД 1: Титульный
+       Картинка: presentations/images/01_title.jpg
+       Что подобрать: яркий взрыв мозга, креативная лампочка или
+       абстрактный "взрыв идей" (психоделичная иллюстрация/3D-рендер).
+       Поищи: "brain explosion creative illustration" на Unsplash / Pinterest.
+  ================================================ -->
+  <section class="slide-1">
+    <!-- Замените src на ./images/01_title.jpg после добавления файла -->
+    <img class="slide-img" src="./images/01_title.jpg"
+         alt="Взрыв мозга — иллюстрация"
+         onerror="this.style.display='none'" />
+    <h1 class="grad-title">Взлом мозга 🧠</h1>
+    <div class="divider" style="background: linear-gradient(90deg,var(--c-purple),var(--c-pink))"></div>
+    <p style="font-size:1.2em; color:var(--c-text); max-width:560px;">
+      Как придумывать гениальные идеи,<br>
+      <span class="accent-yellow">когда ничего не лезет в голову</span>
+    </p>
+    <p style="margin-top:18px; font-size:.85em;">
+      Нажимай <span class="pill" style="background:rgba(255,255,255,.1)">→</span>
+      или пробел, чтобы идти дальше
+    </p>
+  </section>
+
+  <!-- ================================================
+       СЛАЙД 2: Что такое латеральное мышление?
+       Картинка: presentations/images/02_lateral.jpg
+       Что подобрать: схема "одна глубокая яма vs много маленьких ям"
+       или мем "вертикальное vs латеральное мышление".
+       Можно нарисовать самим в Canva — это займёт 5 минут.
+  ================================================ -->
+  <section class="slide-2">
+    <h2>Что такое <span class="accent-cyan">латеральное мышление?</span></h2>
+    <img class="slide-img" src="./images/02_lateral.jpg"
+         alt="Схема двух типов мышления"
+         onerror="this.style.display='none'" />
+    <div class="card-row">
+      <div class="card">
+        <div class="label" style="color:var(--c-muted)">🔽 Вертикальное</div>
+        <p>Копаем одну яму всё глубже и глубже.<br><b style="color:var(--c-text)">Логика.</b></p>
+      </div>
+      <div class="card" style="border-color:rgba(0,187,249,.3); background:rgba(0,187,249,.07)">
+        <div class="label" style="color:var(--c-cyan)">↔️ Латеральное</div>
+        <p>Копаем <b style="color:var(--c-cyan)">10 разных ям</b>, чтобы найти клад.<br><b style="color:var(--c-text)">Креатив.</b></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       СЛАЙД 3: Загадка для разогрева
+       Картинка: presentations/images/03_bottle.png
+       Что подобрать: бутылка вина с пробкой и монеткой внутри.
+       Поищи "wine bottle cork riddle illustration" или нарисуй схему.
+  ================================================ -->
+  <section class="slide-3">
+    <h2>🍾 Загадка для разогрева</h2>
+    <img class="slide-img" src="./images/03_bottle.png"
+         alt="Бутылка с пробкой и монеткой"
+         onerror="this.style.display='none'" />
+    <p style="font-size:1.15em; color:var(--c-text); max-width:540px; margin: 10px auto;">
+      Как достать монетку из пустой бутылки из-под вина,<br>
+      <span class="accent-yellow">не вынимая пробку и не разбивая бутылку?</span>
+    </p>
+
+    <div id="answer-box">
+      <button id="answer-btn" onclick="revealAnswer()">Показать ответ 💡</button>
+      <div id="answer-text">
+        ✅ Протолкнуть пробку <b>внутрь</b> бутылки!
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       СЛАЙД 4: Игра 1 — Безумная вариативность
+       Картинка: presentations/images/04_object.jpg
+       Что подобрать: фото обычного предмета крупным планом —
+       кирпич, скрепка или пластиковый стаканчик.
+       Лучше — что-то одно конкретное, что дашь группам.
+  ================================================ -->
+  <section class="slide-4">
+    <span class="big-emoji">🎮</span>
+    <h2>Игра 1. <span class="accent-yellow">Безумная вариативность</span></h2>
+    <img class="slide-img" src="./images/04_object.jpg"
+         alt="Обычный предмет для задания"
+         onerror="this.style.display='none'" />
+    <p style="font-size:1.1em; color:var(--c-text); max-width:500px; margin: 8px auto;">
+      Придумайте <b>как можно больше нестандартных</b><br>
+      способов применения этого предмета!
+    </p>
+
+    <div id="timer-box">
+      <div id="timer-display">3:00</div>
+      <div style="display:flex; gap:10px;">
+        <button class="timer-btn" onclick="startTimer()">▶ Старт</button>
+        <button class="timer-btn" style="background:linear-gradient(135deg,#555,#333); color:#fff;"
+                onclick="resetTimer()">↺ Сброс</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       СЛАЙД 5: Метод SCAMPER
+       Картинка: presentations/images/05_scamper.jpg
+       Что подобрать: иллюстрация-таблица SCAMPER или
+       схема трансформации обычного предмета (кружка → термос → умная кружка).
+       Можно сделать в Canva с аббревиатурой SCAMPER.
+  ================================================ -->
+  <section class="slide-5">
+    <h2>Игра 2. Метод <span class="accent-purple">SCAMPER</span></h2>
+    <p style="margin-bottom:14px;">Формула взлома реальности 🔧</p>
+    <ul class="scamper-list">
+      <li><b class="accent-purple">S</b> — Заменить что-то</li>
+      <li><b class="accent-pink">C</b> — Комбинировать с другим</li>
+      <li><b class="accent-yellow">A</b> — Адаптировать под новое</li>
+      <li><b class="accent-cyan">M</b> — Модифицировать / Увеличить</li>
+      <li><b class="accent-green">P</b> — Применить иначе</li>
+      <li style="grid-column: span 2; text-align:center; background: rgba(155,93,229,.15);">
+        <b class="accent-purple">E</b> — Убрать лишнее &nbsp;|&nbsp;
+        <b class="accent-pink">R</b> — Развернуть / Перевернуть
+      </li>
+    </ul>
+    <img class="slide-img" src="./images/05_scamper.jpg"
+         alt="Иллюстрация метода SCAMPER"
+         style="max-height:140px; margin-top:14px;"
+         onerror="this.style.display='none'" />
+  </section>
+
+  <!-- ================================================
+       СЛАЙД 6: Практика SCAMPER
+       Картинка: presentations/images/06_desk.jpg
+       Что подобрать: фото скучной школьной парты (желательно старой
+       советской или простой деревянной). Чем скучнее — тем лучше для контраста.
+  ================================================ -->
+  <section class="slide-6">
+    <span class="big-emoji">🛠️</span>
+    <h2>Практика <span class="accent-green">SCAMPER</span></h2>
+    <img class="slide-img" src="./images/06_desk.jpg"
+         alt="Школьная парта"
+         onerror="this.style.display='none'" />
+    <div class="card" style="max-width:480px; text-align:center; margin: 0 auto;">
+      <p style="color:var(--c-text); font-size:1.05em;">
+        Задание: прокачай <b>школьную парту</b>.<br>
+        Сделай <span class="accent-green">«Парту 2050 года»</span><br>
+        используя шаги SCAMPER.
+      </p>
+    </div>
+    <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+      <span class="pill" style="background:rgba(0,245,212,.15); color:var(--c-green);">⏱ 10 минут</span>
+      <span class="pill" style="background:rgba(255,255,255,.08); color:var(--c-text);">👥 В группах</span>
+      <span class="pill" style="background:rgba(241,91,181,.15); color:var(--c-pink);">🎨 Рисуем / записываем</span>
+    </div>
+  </section>
+
+  <!-- ================================================
+       СЛАЙД 7: Игра 3 — Решение из шляпы
+       Картинка: presentations/images/07_random_word.jpg
+       Что подобрать: шляпа фокусника с вопросительным знаком или
+       колесо случайных слов / генератор слов на экране.
+       Поищи "magic hat random word generator illustration".
+  ================================================ -->
+  <section class="slide-7">
+    <span class="big-emoji">🎩</span>
+    <h2>Игра 3. <span class="accent-pink">Решение из шляпы</span></h2>
+    <img class="slide-img" src="./images/07_random_word.jpg"
+         alt="Шляпа фокусника с идеями"
+         onerror="this.style.display:'none'" />
+
+    <div class="card-row" style="margin-top:10px;">
+      <div class="card" style="text-align:center; border-color:rgba(241,91,181,.3);">
+        <div class="label" style="color:var(--c-pink)">Нерешаемая проблема</div>
+        <p>«Все забывают сменку»</p>
+      </div>
+      <div class="card" style="font-size:1.8em; display:flex; align-items:center;
+           justify-content:center; padding:14px; background:transparent; border:none;">+</div>
+      <div class="card" style="text-align:center; border-color:rgba(254,228,64,.3);">
+        <div class="label" style="color:var(--c-yellow)">Случайное слово</div>
+        <p>«Банан» 🍌</p>
+      </div>
+      <div class="card" style="font-size:1.8em; display:flex; align-items:center;
+           justify-content:center; padding:14px; background:transparent; border:none;">=</div>
+      <div class="card" style="text-align:center; border-color:rgba(0,245,212,.3); background:rgba(0,245,212,.07);">
+        <div class="label" style="color:var(--c-green)">Гениальная идея 💡</div>
+        <p style="font-size:.85em;">Сменка с жёлтой меткой,<br>как банановая кожура — не заметишь!</p>
+      </div>
+    </div>
+
+    <div id="word-gen" style="margin-top:14px;">
+      <button class="timer-btn" onclick="randomWord()"
+              style="background:linear-gradient(135deg,var(--c-pink),var(--c-purple));">
+        🎲 Случайное слово
+      </button>
+      <div id="random-word-output" style="margin-top:10px; font-size:1.8em;
+           font-weight:900; color:var(--c-yellow); min-height:1.5em;"></div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       СЛАЙД 8: Финал
+       Картинка: presentations/images/08_final.jpg
+       Что подобрать: мем про гениальность (например "big brain" meme),
+       команда победителей или позитивная иллюстрация с конфетти.
+       Поищи "big brain genius meme" или "team winner celebration illustration".
+  ================================================ -->
+  <section class="slide-8">
+    <img class="slide-img" src="./images/08_final.jpg"
+         alt="Финальная картинка про гениальность"
+         style="max-height:180px;"
+         onerror="this.style.display='none'" />
+    <h1 class="grad-title">Лучшие идеи<br>рождаются из абсурда!</h1>
+    <div class="divider" style="background:linear-gradient(90deg,var(--c-cyan),var(--c-green))"></div>
+    <p style="font-size:1.2em; color:var(--c-text); max-width:500px; margin:10px auto;">
+      Не бойтесь предлагать <span class="accent-pink">самые странные решения</span>.<br>
+      Именно из них получаются инновации. 🚀
+    </p>
+    <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+      <span class="pill" style="background:rgba(155,93,229,.2); color:var(--c-purple); font-size:.9em;">🧠 Думай иначе</span>
+      <span class="pill" style="background:rgba(241,91,181,.2); color:var(--c-pink); font-size:.9em;">💡 Задавай вопросы</span>
+      <span class="pill" style="background:rgba(0,245,212,.2); color:var(--c-green); font-size:.9em;">🎲 Пробуй абсурдное</span>
+    </div>
+  </section>
+
+</div><!-- /slides -->
+</div><!-- /reveal -->
+
+<!-- Reveal.js -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    progress: true,
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    backgroundTransition: 'fade',
+    controls: true,
+    controlsLayout: 'bottom-right',
+    keyboard: true,
+    overview: true,
+    center: false,
+  });
+
+  /* ---- Слайд 3: показать ответ ---- */
+  function revealAnswer() {
+    const btn  = document.getElementById('answer-btn');
+    const text = document.getElementById('answer-text');
+    text.style.display = 'block';
+    btn.style.display  = 'none';
+  }
+
+  /* ---- Слайд 4: таймер 3 минуты ---- */
+  let timerInterval = null;
+  let timerSeconds  = 180;
+
+  function formatTime(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${m}:${String(sec).padStart(2,'0')}`;
+  }
+
+  function startTimer() {
+    if (timerInterval) return;
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      document.getElementById('timer-display').textContent = formatTime(timerSeconds);
+      if (timerSeconds <= 10) {
+        document.getElementById('timer-display').style.color = '#f15bb5';
+      }
+      if (timerSeconds <= 0) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        document.getElementById('timer-display').textContent = '⏰ Время!';
+      }
+    }, 1000);
+  }
+
+  function resetTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    timerSeconds  = 180;
+    document.getElementById('timer-display').textContent = '3:00';
+    document.getElementById('timer-display').style.color = '#fee440';
+  }
+
+  /* ---- Слайд 7: генератор случайного слова ---- */
+  const WORDS = [
+    'Банан','Облако','Лестница','Зеркало','Носок','Пингвин',
+    'Спагетти','Парашют','Кактус','Трамплин','Шоколад','Компас',
+    'Батарейка','Вулкан','Лупа','Пропеллер','Термос','Якорь',
+    'Магнит','Скрепка','Зонтик','Фонарик','Клей','Пружина',
+    'Ластик','Мел','Верёвка','Пуговица','Воздушный шар','Бумеранг'
+  ];
+
+  function randomWord() {
+    const w   = WORDS[Math.floor(Math.random() * WORDS.length)];
+    const el  = document.getElementById('random-word-output');
+    el.style.opacity = '0';
+    el.textContent = w;
+    setTimeout(() => { el.style.transition = 'opacity .3s'; el.style.opacity = '1'; }, 50);
+  }
+</script>
+</body>
+</html>
