@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сбор данных: практика анкетирования и интервью</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;800;900&family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-dark: #0a0a1a;
+  --accent-cyan: #00e5ff;
+  --accent-magenta: #ff2d95;
+  --accent-yellow: #ffd600;
+  --accent-green: #00e676;
+  --text-light: #e8eaf6;
+  --text-muted: #9fa8da;
+  --glass-bg: rgba(15, 15, 40, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Onest', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* ===== ANIMATED BACKGROUND ===== */
+.bg-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: -2;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0a0a1a 0%, #0d1b2a 40%, #1b0a2e 100%);
+}
+
+.bg-canvas::before {
+  content: '';
+  position: absolute;
+  width: 200%; height: 200%;
+  top: -50%; left: -50%;
+  background:
+    radial-gradient(ellipse 600px 600px at 20% 30%, rgba(0, 229, 255, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 500px at 80% 70%, rgba(255, 45, 149, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 400px at 50% 50%, rgba(255, 214, 0, 0.05) 0%, transparent 70%);
+  animation: bgShift 20s ease-in-out infinite;
+}
+
+@keyframes bgShift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(-3%, 2%) rotate(1deg); }
+  50% { transform: translate(2%, -3%) rotate(-1deg); }
+  75% { transform: translate(-1%, -2%) rotate(0.5deg); }
+}
+
+/* Floating particles */
+.particle {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+  animation: floatParticle linear infinite;
+}
+
+@keyframes floatParticle {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+/* Grid overlay */
+.grid-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+  background-size: 80px 80px;
+  animation: gridPulse 8s ease-in-out infinite;
+}
+
+@keyframes gridPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+/* ===== SLIDES ===== */
+.slide {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 60px;
+  position: relative;
+}
+
+/* ===== NAVIGATION ===== */
+.nav-dots {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nav-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-dot:hover { background: rgba(0, 229, 255, 0.4); transform: scale(1.3); }
+.nav-dot.active {
+  background: var(--accent-cyan);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
+  transform: scale(1.3);
+}
+
+.page-counter {
+  position: fixed;
+  bottom: 24px;
+  right: 28px;
+  z-index: 100;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+}
+
+
+
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h3 {
+  font-family: 'Unbounded', sans-serif;
+}
+
+.slide-title {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 800;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.slide-subtitle {
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+  font-weight: 300;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-2 {
+  background: linear-gradient(135deg, var(--accent-yellow), var(--accent-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-3 {
+  background: linear-gradient(135deg, var(--accent-magenta), var(--accent-yellow));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ===== CARDS & GLASS ===== */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 32px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+.cards-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 28px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* ===== SPECIFIC ELEMENTS ===== */
+.emoji-icon {
+  font-size: 2.8rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.card-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.card-text {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* Tag pills */
+.tag {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin: 4px;
+}
+
+.tag-cyan { background: rgba(0, 229, 255, 0.15); color: var(--accent-cyan); border: 1px solid rgba(0, 229, 255, 0.25); }
+.tag-magenta { background: rgba(255, 45, 149, 0.15); color: var(--accent-magenta); border: 1px solid rgba(255, 45, 149, 0.25); }
+.tag-yellow { background: rgba(255, 214, 0, 0.15); color: var(--accent-yellow); border: 1px solid rgba(255, 214, 0, 0.25); }
+.tag-green { background: rgba(0, 230, 118, 0.15); color: var(--accent-green); border: 1px solid rgba(0, 230, 118, 0.25); }
+
+/* Bad/Good question compare */
+.compare-box {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  max-width: 900px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.bad-q, .good-q {
+  flex: 1;
+  min-width: 280px;
+  border-radius: 20px;
+  padding: 28px;
+  backdrop-filter: blur(20px);
+}
+
+.bad-q {
+  background: rgba(255, 45, 45, 0.08);
+  border: 2px solid rgba(255, 45, 45, 0.3);
+}
+
+.good-q {
+  background: rgba(0, 230, 118, 0.08);
+  border: 2px solid rgba(0, 230, 118, 0.3);
+}
+
+.q-label {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.bad-q .q-label { color: #ff5252; }
+.good-q .q-label { color: var(--accent-green); }
+
+.q-text {
+  font-size: 1.15rem;
+  font-style: italic;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.q-explain {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Steps timeline */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 700px;
+  width: 100%;
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 28px;
+  top: 20px;
+  bottom: 20px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent-cyan), var(--accent-magenta), var(--accent-yellow));
+  border-radius: 2px;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  position: relative;
+}
+
+.timeline-num {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 800;
+  font-size: 1.2rem;
+  z-index: 1;
+}
+
+.timeline-content {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  flex: 1;
+}
+
+.timeline-content h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.timeline-content p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* GIF containers */
+.gif-container {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  margin: 16px auto;
+}
+
+.gif-container img {
+  width: 100%;
+  display: block;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  max-width: 1100px;
+  width: 100%;
+  align-items: center;
+}
+
+.two-col-text { display: flex; flex-direction: column; gap: 16px; }
+
+/* Quiz section */
+.quiz-option {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  border: 2px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 18px 24px;
+  margin: 10px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  max-width: 700px;
+  width: 100%;
+}
+
+.quiz-option:hover {
+  border-color: var(--accent-cyan);
+  background: rgba(0, 229, 255, 0.06);
+  transform: translateX(8px);
+}
+
+.quiz-option.correct {
+  border-color: var(--accent-green) !important;
+  background: rgba(0, 230, 118, 0.12) !important;
+  box-shadow: 0 0 20px rgba(0, 230, 118, 0.15);
+}
+
+.quiz-option.wrong {
+  border-color: #ff5252 !important;
+  background: rgba(255, 45, 45, 0.12) !important;
+}
+
+.quiz-feedback {
+  margin-top: 16px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  display: none;
+  max-width: 700px;
+  width: 100%;
+}
+
+/* Scroll animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* Practice task */
+.task-box {
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), rgba(255, 45, 149, 0.08));
+  border: 2px solid rgba(0, 229, 255, 0.2);
+  border-radius: 20px;
+  padding: 36px;
+  max-width: 800px;
+  width: 100%;
+}
+
+.task-box h3 {
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+}
+
+.task-box ol {
+  padding-left: 20px;
+  color: var(--text-muted);
+  line-height: 2;
+  font-size: 1rem;
+}
+
+.task-box li { margin-bottom: 4px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .slide { padding: 30px 24px; }
+  .two-col { grid-template-columns: 1fr; }
+  .cards-grid, .cards-grid-2 { grid-template-columns: 1fr; }
+  .compare-box { flex-direction: column; }
+  .nav-dots { right: 12px; gap: 8px; }
+  .nav-dot { width: 8px; height: 8px; }
+}
+
+/* Decorative blobs per slide */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Fun fact highlight */
+.fun-fact {
+  background: linear-gradient(135deg, rgba(255, 214, 0, 0.1), rgba(255, 45, 149, 0.1));
+  border-left: 4px solid var(--accent-yellow);
+  border-radius: 0 12px 12px 0;
+  padding: 16px 24px;
+  margin: 12px 0;
+  font-size: 0.95rem;
+}
+
+.fun-fact strong {
+  color: var(--accent-yellow);
+}
+
+/* Pulse ring for title slide */
+.pulse-ring {
+  position: absolute;
+  width: 420px; height: 420px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(0, 229, 255, 0.2);
+  box-shadow: 0 0 40px rgba(0, 229, 255, 0.06), inset 0 0 40px rgba(0, 229, 255, 0.04);
+  animation: pulseRing 4s ease-in-out infinite;
+}
+
+@keyframes pulseRing {
+  0% { transform: scale(0.6); opacity: 0.8; border-color: rgba(0, 229, 255, 0.25); }
+  50% { transform: scale(1.4); opacity: 0; border-color: rgba(255, 45, 149, 0.15); }
+  100% { transform: scale(0.6); opacity: 0.8; border-color: rgba(0, 229, 255, 0.25); }
+}
+
+.pulse-ring:nth-child(2) {
+  animation-delay: 1.3s; width: 580px; height: 580px;
+  border-color: rgba(255, 45, 149, 0.18);
+  box-shadow: 0 0 50px rgba(255, 45, 149, 0.06), inset 0 0 50px rgba(255, 45, 149, 0.03);
+}
+
+.pulse-ring:nth-child(3) {
+  animation-delay: 2.6s; width: 740px; height: 740px;
+  border-color: rgba(255, 214, 0, 0.15);
+  box-shadow: 0 0 60px rgba(255, 214, 0, 0.05), inset 0 0 60px rgba(255, 214, 0, 0.03);
+}
+
+/* Tooltip for interactive */
+.tip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: rgba(0, 229, 255, 0.2);
+  color: var(--accent-cyan);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: help;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+/* Accent bar on top of card */
+.accent-top-cyan { border-top: 3px solid var(--accent-cyan); }
+.accent-top-magenta { border-top: 3px solid var(--accent-magenta); }
+.accent-top-yellow { border-top: 3px solid var(--accent-yellow); }
+.accent-top-green { border-top: 3px solid var(--accent-green); }
+</style>
+</head>
+<body>
+
+<!-- ANIMATED BACKGROUND -->
+<div class="bg-canvas"></div>
+<div class="grid-overlay"></div>
+
+<!-- NAV DOTS -->
+<div class="nav-dots" id="navDots"></div>
+<div class="page-counter" id="pageCounter">01 / 10</div>
+
+
+<!-- ==================== SLIDE 1: TITLE ==================== -->
+<section class="slide" id="slide-0">
+  <div class="pulse-ring"></div>
+  <div class="pulse-ring"></div>
+  <div class="pulse-ring"></div>
+  <div class="blob" style="width:400px;height:400px;background:rgba(0,229,255,0.06);top:10%;left:-10%;"></div>
+  <div class="blob" style="width:350px;height:350px;background:rgba(255,45,149,0.06);bottom:10%;right:-5%;"></div>
+
+  <div style="text-align:center; position:relative; z-index:1;">
+    <span class="tag tag-cyan" style="margin-bottom:20px; display:inline-block;">Занятие 24.02.2026</span>
+    <h1 class="slide-title reveal" style="font-size:clamp(2.2rem, 5vw, 3.8rem);">
+      Сбор данных:<br>
+      <span class="gradient-text">практика анкетирования</span><br>
+      <span class="gradient-text-3">и интервью</span>
+    </h1>
+    <p class="slide-subtitle reveal reveal-delay-1" style="max-width:600px; margin:0 auto;">
+      Полевая работа · Основы проектной деятельности
+    </p>
+    <div class="reveal reveal-delay-2" style="margin-top:32px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <span class="tag tag-magenta">📋 Анкеты</span>
+      <span class="tag tag-green">🎤 Интервью</span>
+      <span class="tag tag-yellow">📊 Данные</span>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 2: RECAP ==================== -->
+<section class="slide" id="slide-1">
+  <div class="blob" style="width:300px;height:300px;background:rgba(255,214,0,0.06);top:20%;right:5%;"></div>
+
+  <h2 class="slide-title reveal" style="text-align:center;">
+    Что было на <span class="gradient-text-2">прошлом занятии?</span>
+  </h2>
+  <p class="slide-subtitle reveal reveal-delay-1" style="text-align:center; max-width:600px;">
+    Мы разобрали 4 главных метода исследования
+  </p>
+
+  <div class="cards-grid reveal reveal-delay-2">
+    <div class="glass-card accent-top-cyan">
+      <span class="emoji-icon">📝</span>
+      <div class="card-title">Анкетирование</div>
+      <div class="card-text">Массовый сбор данных через вопросы. Охватывает большую аудиторию быстро.</div>
+    </div>
+    <div class="glass-card accent-top-magenta">
+      <span class="emoji-icon">🎙️</span>
+      <div class="card-title">Интервью</div>
+      <div class="card-text">Глубокий разговор 1 на 1. Позволяет узнать детали, мотивы и эмоции.</div>
+    </div>
+    <div class="glass-card accent-top-yellow">
+      <span class="emoji-icon">👁️</span>
+      <div class="card-title">Наблюдение</div>
+      <div class="card-text">Фиксация поведения без вмешательства. «Смотрю и записываю».</div>
+    </div>
+    <div class="glass-card accent-top-green">
+      <span class="emoji-icon">🔬</span>
+      <div class="card-title">Эксперимент</div>
+      <div class="card-text">Контролируемое тестирование гипотезы. Меняем условия — смотрим результат.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 3: BAD QUESTION ==================== -->
+<section class="slide" id="slide-2">
+  <div class="blob" style="width:350px;height:350px;background:rgba(255,45,45,0.06);top:15%;left:5%;"></div>
+
+  <h2 class="slide-title reveal" style="text-align:center;">
+    <span class="gradient-text-3">Ловушки</span> в вопросах
+  </h2>
+  <p class="slide-subtitle reveal reveal-delay-1" style="text-align:center; max-width:650px;">
+    Помните наш пример? Почему этот вопрос — ошибка?
+  </p>
+
+  <div class="compare-box reveal reveal-delay-2">
+    <div class="bad-q">
+      <div class="q-label">❌ Плохой вопрос</div>
+      <div class="q-text">«А правда, что у нас плохая столовая?»</div>
+      <div class="q-explain">
+        Ответ уже <strong style="color:#ff5252;">спрятан в вопросе</strong>! Слово «правда» подталкивает к ответу «да». А слово «плохая» — это оценка, а не факт. Респондент чувствует давление согласиться.
+      </div>
+      <div style="margin-top:12px;">
+        <span class="tag" style="background:rgba(255,45,45,0.15);color:#ff5252;border:1px solid rgba(255,45,45,0.3);">наводящий</span>
+        <span class="tag" style="background:rgba(255,45,45,0.15);color:#ff5252;border:1px solid rgba(255,45,45,0.3);">содержит оценку</span>
+      </div>
+    </div>
+    <div class="good-q">
+      <div class="q-label">✅ Правильные варианты</div>
+      <div class="q-text">«Оцените качество питания в столовой от 1 до 5»</div>
+      <div class="q-text">«Что бы вы хотели изменить в школьной столовой?»</div>
+      <div class="q-explain">
+        Нейтральная формулировка даёт респонденту свободу ответить честно, без давления в любую сторону.
+      </div>
+      <div style="margin-top:12px;">
+        <span class="tag tag-green">нейтральный</span>
+        <span class="tag tag-green">открытый</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="fun-fact reveal reveal-delay-3" style="max-width:700px; margin-top:24px;">
+    <strong>💡 Факт:</strong> Исследования показывают, что наводящие вопросы могут изменить ответ у 70–80% респондентов! Поэтому объективность формулировок — основа достоверных данных.
+  </div>
+</section>
+
+<!-- ==================== SLIDE 4: TYPES OF QUESTIONS ==================== -->
+<section class="slide" id="slide-3">
+  <div class="blob" style="width:300px;height:300px;background:rgba(0,230,118,0.06);bottom:10%;right:10%;"></div>
+
+  <h2 class="slide-title reveal" style="text-align:center;">
+    Типы <span class="gradient-text">вопросов</span> в анкете
+  </h2>
+  <p class="slide-subtitle reveal reveal-delay-1" style="text-align:center;">
+    Каждый тип даёт разный тип данных
+  </p>
+
+  <div class="cards-grid-2 reveal reveal-delay-2">
+    <div class="glass-card accent-top-cyan">
+      <div class="card-title">🔒 Закрытые вопросы</div>
+      <div class="card-text" style="margin-bottom:14px;">
+        Варианты ответа заданы заранее. Легко считать и сравнивать.
+      </div>
+      <div style="background:rgba(0,229,255,0.06);border-radius:12px;padding:16px;font-size:0.9rem;">
+        <div style="color:var(--accent-cyan);font-weight:600;margin-bottom:8px;">Пример:</div>
+        <em>«Сколько раз в неделю вы обедаете в столовой?»</em><br>
+        ○ Каждый день &nbsp; ○ 3–4 раза &nbsp; ○ 1–2 раза &nbsp; ○ Никогда
+      </div>
+    </div>
+
+    <div class="glass-card accent-top-magenta">
+      <div class="card-title">🔓 Открытые вопросы</div>
+      <div class="card-text" style="margin-bottom:14px;">
+        Свободный ответ. Дают глубину, но сложнее анализировать.
+      </div>
+      <div style="background:rgba(255,45,149,0.06);border-radius:12px;padding:16px;font-size:0.9rem;">
+        <div style="color:var(--accent-magenta);font-weight:600;margin-bottom:8px;">Пример:</div>
+        <em>«Что бы вы хотели видеть в меню школьной столовой?»</em><br>
+        ________________
+      </div>
+    </div>
+
+    <div class="glass-card accent-top-yellow">
+      <div class="card-title">⭐ Шкала оценки</div>
+      <div class="card-text" style="margin-bottom:14px;">
+        Ответы на числовой шкале. Удобно для статистики.
+      </div>
+      <div style="background:rgba(255,214,0,0.06);border-radius:12px;padding:16px;font-size:0.9rem;">
+        <div style="color:var(--accent-yellow);font-weight:600;margin-bottom:8px;">Пример (шкала Лайкерта):</div>
+        <em>«Мне нравится разнообразие блюд»</em><br>
+        1 — совсем нет &nbsp;…&nbsp; 5 — полностью согласен
+      </div>
+    </div>
+
+    <div class="glass-card accent-top-green">
+      <div class="card-title">🔀 Множественный выбор</div>
+      <div class="card-text" style="margin-bottom:14px;">
+        Можно выбрать несколько ответов сразу.
+      </div>
+      <div style="background:rgba(0,230,118,0.06);border-radius:12px;padding:16px;font-size:0.9rem;">
+        <div style="color:var(--accent-green);font-weight:600;margin-bottom:8px;">Пример:</div>
+        <em>«Что вас не устраивает?» (выберите все подходящие)</em><br>
+        ☐ Цена &nbsp; ☐ Вкус &nbsp; ☐ Очереди &nbsp; ☐ Чистота
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 5: RULES OF GOOD SURVEY ==================== -->
+<section class="slide" id="slide-4">
+  <div class="blob" style="width:350px;height:350px;background:rgba(0,229,255,0.07);top:5%;left:-8%;"></div>
+
+  <h2 class="slide-title reveal" style="text-align:center;">
+    <span class="gradient-text-2">Золотые правила</span> анкеты
+  </h2>
+
+  <div class="timeline reveal reveal-delay-1">
+    <div class="timeline-item">
+      <div class="timeline-num" style="background:rgba(0,229,255,0.15);color:var(--accent-cyan);border:2px solid var(--accent-cyan);">1</div>
+      <div class="timeline-content">
+        <h3>Не больше 10–15 вопросов</h3>
+        <p>Длинные анкеты утомляют. После 15-го вопроса люди начинают отвечать наугад или бросают.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-num" style="background:rgba(255,45,149,0.15);color:var(--accent-magenta);border:2px solid var(--accent-magenta);">2</div>
+      <div class="timeline-content">
+        <h3>От простого к сложному</h3>
+        <p>Начинай с лёгких вопросов (возраст, класс), заканчивай открытыми и сложными.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-num" style="background:rgba(255,214,0,0.15);color:var(--accent-yellow);border:2px solid var(--accent-yellow);">3</div>
+      <div class="timeline-content">
+        <h3>Один вопрос = одна мысль</h3>
+        <p>«Нравится ли вам еда и атмосфера?» — это ДВА вопроса в одном. Разделяй!</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-num" style="background:rgba(0,230,118,0.15);color:var(--accent-green);border:2px solid var(--accent-green);">4</div>
+      <div class="timeline-content">
+        <h3>Без наводящих формулировок</h3>
+        <p>Никаких «правда ли», «согласитесь ли», «ведь очевидно что...». Только нейтральность!</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-num" style="background:rgba(0,229,255,0.15);color:var(--accent-cyan);border:2px solid var(--accent-cyan);">5</div>
+      <div class="timeline-content">
+        <h3>Анонимность = честность</h3>
+        <p>Когда люди знают, что ответы анонимные, они отвечают в 2–3 раза честнее.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 6: INTERVIEW ==================== -->
+<section class="slide" id="slide-5">
+  <div class="blob" style="width:300px;height:300px;background:rgba(255,45,149,0.07);bottom:5%;left:5%;"></div>
+
+  <h2 class="slide-title reveal" style="text-align:center;">
+    Искусство <span class="gradient-text-3">интервью</span>
+  </h2>
+  <p class="slide-subtitle reveal reveal-delay-1" style="text-align:center; max-width:600px;">
+    Интервью — это не допрос, а разговор с целью
+  </p>
+
+  <div class="cards-grid reveal reveal-delay-2">
+    <div class="glass-card accent-top-magenta">
+      <span class="emoji-icon">🎯</span>
+      <div class="card-title">Подготовь вопросы заранее</div>
+      <div class="card-text">Составь 5–8 вопросов. Но будь готов отклоняться — лучшие ответы часто приходят через уточняющие вопросы.</div>
+    </div>
+    <div class="glass-card accent-top-cyan">
+      <span class="emoji-icon">👂</span>
+      <div class="card-title">Слушай больше, чем говоришь</div>
+      <div class="card-text">Правило 80/20: 80% времени говорит респондент, 20% — ты. Делай паузы — человек часто продолжает, если помолчать.</div>
+    </div>
+    <div class="glass-card accent-top-green">
+      <span class="emoji-icon">📱</span>
+      <div class="card-title">Записывай (с разрешения!)</div>
+      <div class="card-text">Диктофон + блокнот. Всегда спрашивай разрешение на запись. Это этика и уважение к собеседнику.</div>
+    </div>
+  </div>
+
+  <div class="fun-fact reveal reveal-delay-3" style="max-width:700px; margin-top:24px;">
+    <strong>🎤 Трюк интервьюера:</strong> Если хочешь развёрнутый ответ, используй фразу «Расскажите подробнее…» или «Можете привести пример?» — это работает лучше, чем повторять вопрос.
+  </div>
+</section>
+
+<!-- ==================== SLIDE 7: INTERVIEW vs SURVEY ==================== -->
+<section class="slide" id="slide-6">
+  <div class="blob" style="width:350px;height:350px;background:rgba(255,214,0,0.06);top:10%;right:-5%;"></div>
+
+  <h2 class="slide-title reveal" style="text-align:center;">
+    Анкета vs Интервью: <span class="gradient-text">когда что?</span>
+  </h2>
+
+  <div class="cards-grid-2 reveal reveal-delay-1" style="margin-top:16px;">
+    <div class="glass-card" style="border-top:3px solid var(--accent-cyan);">
+      <div style="text-align:center; margin-bottom:16px;">
+        <span style="font-size:3rem;">📋</span>
+        <div class="card-title" style="color:var(--accent-cyan); font-size:1.3rem;">Анкета</div>
+      </div>
+      <div class="card-text">
+        <div style="margin-bottom:10px;">✓ Нужно <strong style="color:var(--text-light);">много</strong> ответов (30+)</div>
+        <div style="margin-bottom:10px;">✓ Вопросы <strong style="color:var(--text-light);">простые</strong> и конкретные</div>
+        <div style="margin-bottom:10px;">✓ Нужна <strong style="color:var(--text-light);">статистика</strong> и цифры</div>
+        <div style="margin-bottom:10px;">✓ Ограничено <strong style="color:var(--text-light);">время</strong></div>
+        <div>✓ Тема <strong style="color:var(--text-light);">не деликатная</strong></div>
+      </div>
+    </div>
+
+    <div class="glass-card" style="border-top:3px solid var(--accent-magenta);">
+      <div style="text-align:center; margin-bottom:16px;">
+        <span style="font-size:3rem;">🎙️</span>
+        <div class="card-title" style="color:var(--accent-magenta); font-size:1.3rem;">Интервью</div>
+      </div>
+      <div class="card-text">
+        <div style="margin-bottom:10px;">✓ Нужны <strong style="color:var(--text-light);">глубокие</strong> ответы</div>
+        <div style="margin-bottom:10px;">✓ Тема <strong style="color:var(--text-light);">сложная</strong> или личная</div>
+        <div style="margin-bottom:10px;">✓ Хочется понять <strong style="color:var(--text-light);">«почему»</strong></div>
+        <div style="margin-bottom:10px;">✓ Мало <strong style="color:var(--text-light);">респондентов</strong> (3–10)</div>
+        <div>✓ Нужны <strong style="color:var(--text-light);">живые истории</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fun-fact reveal reveal-delay-2" style="max-width:700px; margin-top:24px;">
+    <strong>💡 Лайфхак:</strong> Лучшие проекты комбинируют оба метода! Сначала массовый опрос, чтобы найти тенденции. Потом 3–5 интервью, чтобы разобраться «почему» за цифрами.
+  </div>
+</section>
+
+<!-- ==================== SLIDE 8: REAL EXAMPLES ==================== -->
+<section class="slide" id="slide-7">
+  <div class="blob" style="width:300px;height:300px;background:rgba(0,229,255,0.06);bottom:15%;right:0%;"></div>
+
+  <h2 class="slide-title reveal" style="text-align:center;">
+    <span class="gradient-text-2">Примеры</span> из реальной жизни
+  </h2>
+
+  <div class="cards-grid reveal reveal-delay-1" style="margin-top:8px;">
+    <div class="glass-card accent-top-yellow">
+      <span class="emoji-icon">🏫</span>
+      <div class="card-title">Проект «Школьная столовая»</div>
+      <div class="card-text">
+        Ученики 8 класса провели опрос 150 школьников. Выяснилось, что 72% хотят больше фруктов. Результат: администрация добавила фрукты в меню!
+      </div>
+      <div style="margin-top:12px;">
+        <span class="tag tag-cyan">анкета</span>
+        <span class="tag tag-green">150 чел.</span>
+      </div>
+    </div>
+
+    <div class="glass-card accent-top-magenta">
+      <span class="emoji-icon">🌳</span>
+      <div class="card-title">Проект «Зелёный двор»</div>
+      <div class="card-text">
+        Ученики провели интервью с жителями района. Узнали, что люди хотят лавочки и деревья. Создали план озеленения и отправили в администрацию.
+      </div>
+      <div style="margin-top:12px;">
+        <span class="tag tag-magenta">интервью</span>
+        <span class="tag tag-yellow">12 чел.</span>
+      </div>
+    </div>
+
+    <div class="glass-card accent-top-green">
+      <span class="emoji-icon">📱</span>
+      <div class="card-title">Проект «Digital Detox»</div>
+      <div class="card-text">
+        Подростки из Южной Кореи провели анкетирование 500 сверстников о времени за экраном. Данные использовали для школьной кампании «1 час без телефона».
+      </div>
+      <div style="margin-top:12px;">
+        <span class="tag tag-cyan">анкета + интервью</span>
+        <span class="tag tag-green">500 чел.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 9: QUIZ ==================== -->
+<section class="slide" id="slide-8">
+  <div class="blob" style="width:350px;height:350px;background:rgba(0,230,118,0.06);top:10%;left:-5%;"></div>
+
+  <h2 class="slide-title reveal" style="text-align:center;">
+    <span class="gradient-text">Мини-квиз</span> 🧠
+  </h2>
+  <p class="slide-subtitle reveal reveal-delay-1" style="text-align:center; max-width:600px;">
+    Какой вопрос для анкеты составлен правильно?
+  </p>
+
+  <div id="quiz1" class="reveal reveal-delay-2" style="max-width:700px; width:100%;">
+    <div class="quiz-option" onclick="checkQuiz(this, false, 'quiz1')">
+      А) «Правда ведь, что в нашей школе слишком много домашки?»
+    </div>
+    <div class="quiz-option" onclick="checkQuiz(this, false, 'quiz1')">
+      Б) «Вы же согласны, что школьная форма — это ужасно?»
+    </div>
+    <div class="quiz-option" onclick="checkQuiz(this, true, 'quiz1')">
+      В) «Сколько времени в день вы тратите на домашнее задание?»
+    </div>
+    <div class="quiz-option" onclick="checkQuiz(this, false, 'quiz1')">
+      Г) «Разве вам не кажется, что уроки слишком длинные?»
+    </div>
+  </div>
+
+  <div class="quiz-feedback" id="quiz1-feedback"></div>
+
+  <div style="margin-top:32px; max-width:700px; width:100%;">
+    <p class="slide-subtitle reveal reveal-delay-3" style="margin-bottom:12px;">Вопрос 2: Когда лучше использовать интервью вместо анкеты?</p>
+    <div id="quiz2" class="reveal reveal-delay-3">
+      <div class="quiz-option" onclick="checkQuiz(this, false, 'quiz2')">
+        А) Когда нужно опросить 200 человек за час
+      </div>
+      <div class="quiz-option" onclick="checkQuiz(this, true, 'quiz2')">
+        Б) Когда нужно понять глубинные причины поведения
+      </div>
+      <div class="quiz-option" onclick="checkQuiz(this, false, 'quiz2')">
+        В) Когда нужна только статистика
+      </div>
+    </div>
+    <div class="quiz-feedback" id="quiz2-feedback"></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 10: PRACTICE TASK ==================== -->
+<section class="slide" id="slide-9">
+  <div class="blob" style="width:400px;height:400px;background:rgba(255,45,149,0.06);top:5%;right:-10%;"></div>
+  <div class="blob" style="width:300px;height:300px;background:rgba(0,229,255,0.06);bottom:5%;left:-5%;"></div>
+
+  <h2 class="slide-title reveal" style="text-align:center;">
+    <span class="gradient-text-3">Практика!</span> 🚀
+  </h2>
+  <p class="slide-subtitle reveal reveal-delay-1" style="text-align:center; max-width:600px;">
+    Сегодня вы — настоящие исследователи
+  </p>
+
+  <div class="task-box reveal reveal-delay-2">
+    <h3 style="font-family:'Unbounded',sans-serif;"><span class="gradient-text">Задание на занятие:</span></h3>
+    <ol>
+      <li><strong>Сформулируйте 5–7 вопросов</strong> для мини-анкеты по теме вашего проекта (или по теме «Школьная столовая» для тренировки).
+        <div style="margin-top:8px; padding:12px 16px; background:rgba(0,229,255,0.06); border-radius:10px; border-left:3px solid var(--accent-cyan); font-style:italic; font-size:0.9rem;">
+          <span style="color:var(--accent-cyan); font-weight:600;">Примеры:</span><br>
+          • «Как часто вы пользуетесь школьной библиотекой?» (○ Каждый день ○ Раз в неделю ○ Раз в месяц ○ Никогда)<br>
+          • «Оцените удобство расписания уроков от 1 до 5»
+        </div>
+      </li>
+      <li><strong>Проверьте каждый вопрос:</strong> нет ли наводящих формулировок? Один вопрос = одна мысль?</li>
+      <li><strong>Подготовьте 3 вопроса для интервью</strong> — с открытыми формулировками.
+        <div style="margin-top:8px; padding:12px 16px; background:rgba(255,45,149,0.06); border-radius:10px; border-left:3px solid var(--accent-magenta); font-style:italic; font-size:0.9rem;">
+          <span style="color:var(--accent-magenta); font-weight:600;">Примеры:</span><br>
+          • «Расскажите, как проходит ваш обычный обед в столовой?»<br>
+          • «Что бы вы изменили в школьном расписании и почему?»
+        </div>
+      </li>
+      <li><strong>Проведите мини-исследование:</strong> опросите 5 одногруппников по анкете и возьмите 1 короткое интервью</li>
+      <li><strong>Запишите результаты</strong> и подготовьтесь поделиться находками с группой</li>
+    </ol>
+  </div>
+
+  <div class="reveal reveal-delay-3" style="margin-top:28px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+    <span class="tag tag-cyan" style="font-size:0.9rem; padding:8px 20px;">⏱ Время: 25 минут</span>
+    <span class="tag tag-magenta" style="font-size:0.9rem; padding:8px 20px;">👥 Работа в парах/тройках</span>
+    <span class="tag tag-yellow" style="font-size:0.9rem; padding:8px 20px;">📊 Обсуждение результатов</span>
+  </div>
+
+  <div class="fun-fact reveal reveal-delay-4" style="max-width:700px; margin-top:20px;">
+    <strong>🏆 Бонус:</strong> Лучшая анкета по итогам обсуждения будет использована для реального сбора данных на следующем занятии!
+  </div>
+</section>
+
+
+<script>
+// ===== PARTICLES =====
+function createParticles() {
+  const colors = ['rgba(0,229,255,0.3)', 'rgba(255,45,149,0.25)', 'rgba(255,214,0,0.2)', 'rgba(0,230,118,0.25)'];
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 4 + 2;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    document.body.appendChild(p);
+  }
+}
+createParticles();
+
+// ===== NAV DOTS =====
+const slides = document.querySelectorAll('.slide');
+const navDots = document.getElementById('navDots');
+const pageCounter = document.getElementById('pageCounter');
+
+slides.forEach((_, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  dot.addEventListener('click', () => {
+    slides[i].scrollIntoView({ behavior: 'smooth' });
+  });
+  navDots.appendChild(dot);
+});
+
+// ===== SCROLL OBSERVER =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const idx = Array.from(slides).indexOf(entry.target);
+      document.querySelectorAll('.nav-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === idx);
+      });
+      pageCounter.textContent = String(idx + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
+    }
+  });
+}, { threshold: 0.5 });
+
+slides.forEach(s => observer.observe(s));
+
+// ===== REVEAL ON SCROLL =====
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ===== KEYBOARD NAV =====
+let currentSlide = 0;
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'PageDown' || e.key === 'ArrowDown') {
+    e.preventDefault();
+    currentSlide = Math.min(currentSlide + 1, slides.length - 1);
+    slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
+  } else if (e.key === 'PageUp' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    currentSlide = Math.max(currentSlide - 1, 0);
+    slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+// Keep currentSlide in sync with scroll
+const syncObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      currentSlide = Array.from(slides).indexOf(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+slides.forEach(s => syncObserver.observe(s));
+
+// ===== QUIZ =====
+function checkQuiz(el, isCorrect, quizId) {
+  const container = document.getElementById(quizId);
+  const feedback = document.getElementById(quizId + '-feedback');
+
+  // Disable all options
+  container.querySelectorAll('.quiz-option').forEach(opt => {
+    opt.style.pointerEvents = 'none';
+    opt.style.opacity = '0.5';
+  });
+
+  el.style.opacity = '1';
+
+  if (isCorrect) {
+    el.classList.add('correct');
+    feedback.style.display = 'block';
+    feedback.style.background = 'rgba(0,230,118,0.1)';
+    feedback.style.border = '1px solid rgba(0,230,118,0.3)';
+    feedback.innerHTML = quizId === 'quiz1'
+      ? '✅ <strong>Верно!</strong> Вариант В нейтрален — не содержит оценки и не подталкивает к определённому ответу.'
+      : '✅ <strong>Верно!</strong> Интервью даёт возможность задать уточняющие вопросы и понять глубинные мотивы.';
+  } else {
+    el.classList.add('wrong');
+    // Highlight correct
+    const options = container.querySelectorAll('.quiz-option');
+    const correctIdx = quizId === 'quiz1' ? 2 : 1;
+    options[correctIdx].classList.add('correct');
+    options[correctIdx].style.opacity = '1';
+
+    feedback.style.display = 'block';
+    feedback.style.background = 'rgba(255,45,45,0.1)';
+    feedback.style.border = '1px solid rgba(255,45,45,0.3)';
+    feedback.innerHTML = quizId === 'quiz1'
+      ? '❌ Этот вопрос наводящий! Правильный ответ — <strong>В</strong>: «Сколько времени в день вы тратите на домашнее задание?» — нейтральная формулировка без давления.'
+      : '❌ Не совсем! Правильный ответ — <strong>Б</strong>. Интервью идеально для глубинного понимания «почему».';
+  }
+}
+</script>
+
+</body>
+</html>
