@@ -3,48 +3,54 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Взлом мозга 🧠 — Латеральное мышление</title>
+  <title>Взлом мозга — Латеральное мышление</title>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
 
-  <!-- Animate.css для дополнительных анимаций -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=JetBrains+Mono:wght@700&display=swap');
 
     :root {
-      --c-bg:       #0a0a18;
-      --c-purple:   #9b5de5;
-      --c-pink:     #f15bb5;
-      --c-yellow:   #fee440;
-      --c-cyan:     #00bbf9;
-      --c-green:    #00f5d4;
-      --c-text:     #f0f0ff;
-      --c-muted:    #8888b0;
+      --c-bg:       #0b0b1a;
+      --c-purple:   #a855f7;
+      --c-pink:     #ec4899;
+      --c-yellow:   #facc15;
+      --c-cyan:     #22d3ee;
+      --c-green:    #34d399;
+      --c-text:     #f1f5f9;
+      --c-muted:    #94a3b8;
+      --c-glass:    rgba(255,255,255,.06);
+      --c-border:   rgba(255,255,255,.1);
+    }
+
+    * { box-sizing: border-box; }
+
+    /* Vanta.js canvas sits behind everything */
+    #vanta-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
     }
 
     .reveal-viewport {
-      background: var(--c-bg);
-      background-image:
-        radial-gradient(ellipse 800px 600px at 15% 20%, rgba(155,93,229,.12), transparent),
-        radial-gradient(ellipse 600px 500px at 85% 80%, rgba(241,91,181,.08), transparent);
+      background: transparent !important;
     }
 
     .reveal {
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: 'Montserrat', system-ui, sans-serif;
       color: var(--c-text);
+      position: relative;
+      z-index: 1;
     }
 
     /* ---- Controls ---- */
-    .reveal .progress { height: 5px; color: var(--c-pink); }
+    .reveal .progress { height: 4px; color: var(--c-purple); }
     .reveal .controls { color: var(--c-cyan); }
-    .reveal .controls button { transition: color .3s; }
     .reveal .controls button:hover { color: var(--c-pink) !important; }
-    .reveal .slide-number { color: var(--c-muted); font-size: 14px; }
+    .reveal .slide-number { color: var(--c-muted); font-size: 13px; }
 
-    /* ---- Base slide ---- */
+    /* ---- Slides ---- */
     .reveal .slides section {
       height: 100%;
       display: flex !important;
@@ -52,205 +58,257 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 30px 40px;
-      box-sizing: border-box;
+      padding: 30px 50px;
     }
 
     /* ---- Typography ---- */
-    .reveal h1 { font-size: 3em; font-weight: 900; line-height: 1.05; margin-bottom: 16px; letter-spacing: -1.5px; }
-    .reveal h2 { font-size: 2.1em; font-weight: 800; margin-bottom: 18px; letter-spacing: -.5px; }
-    .reveal h3 { font-size: 1.5em; font-weight: 700; margin-bottom: 12px; }
-    .reveal p  { font-size: 1.05em; line-height: 1.55; color: var(--c-muted); margin: 8px 0; }
+    .reveal h1 {
+      font-size: 3.2em; font-weight: 900; line-height: 1.05;
+      margin-bottom: 16px; letter-spacing: -2px;
+    }
+    .reveal h2 {
+      font-size: 2.2em; font-weight: 800; margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+    .reveal h3 { font-size: 1.4em; font-weight: 700; margin-bottom: 10px; }
+    .reveal p  { font-size: 1.05em; line-height: 1.6; color: var(--c-muted); margin: 6px 0; }
 
-    /* ---- Colours ---- */
+    /* ---- Accent colours ---- */
     .accent-purple { color: var(--c-purple); }
     .accent-pink   { color: var(--c-pink);   }
     .accent-yellow { color: var(--c-yellow); }
     .accent-cyan   { color: var(--c-cyan);   }
     .accent-green  { color: var(--c-green);  }
 
-    /* ---- Gradient heading ---- */
     .grad-title {
-      background: linear-gradient(135deg, var(--c-purple), var(--c-pink) 45%, var(--c-yellow));
+      background: linear-gradient(135deg, var(--c-purple), var(--c-pink) 50%, var(--c-yellow));
       -webkit-background-clip: text; background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     /* ---- Images ---- */
     .slide-img {
-      width: 100%; max-width: 420px; max-height: 220px;
-      object-fit: cover; border-radius: 18px;
-      margin: 14px auto; display: block;
-      box-shadow: 0 8px 40px rgba(155,93,229,.35), 0 0 80px rgba(155,93,229,.1);
-      transition: transform .5s cubic-bezier(.25,.8,.25,1), box-shadow .5s;
+      width: 100%; max-width: 400px; max-height: 200px;
+      object-fit: cover; border-radius: 16px;
+      margin: 12px auto; display: block;
+      border: 1px solid var(--c-border);
+      box-shadow: 0 8px 40px rgba(168,85,247,.25);
+      transition: transform .4s ease, box-shadow .4s;
     }
-    .slide-img:hover { transform: scale(1.03); box-shadow: 0 12px 50px rgba(241,91,181,.4); }
+    .slide-img:hover {
+      transform: scale(1.03);
+      box-shadow: 0 12px 50px rgba(236,72,153,.35);
+    }
 
-    /* ---- Cards ---- */
-    .card-row { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+    /* ---- Glass card ---- */
+    .glass {
+      background: rgba(15,15,35,.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--c-border);
+      border-radius: 20px;
+      padding: 22px 28px;
+    }
+
+    /* ---- Card row ---- */
+    .card-row {
+      display: flex; gap: 16px; justify-content: center;
+      flex-wrap: wrap; margin-top: 14px;
+    }
     .card {
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 18px;
-      padding: 18px 24px;
+      background: var(--c-glass);
+      border: 1px solid var(--c-border);
+      border-radius: 16px;
+      padding: 18px 22px;
       flex: 1 1 200px;
-      max-width: 280px;
+      max-width: 260px;
       text-align: left;
-      backdrop-filter: blur(8px);
-      transition: transform .4s cubic-bezier(.25,.8,.25,1), border-color .4s, box-shadow .4s;
+      backdrop-filter: blur(12px);
+      transition: transform .3s ease, border-color .3s, box-shadow .3s;
     }
     .card:hover {
       transform: translateY(-4px);
-      border-color: rgba(155,93,229,.4);
-      box-shadow: 0 8px 30px rgba(155,93,229,.15);
+      border-color: rgba(168,85,247,.4);
+      box-shadow: 0 6px 25px rgba(168,85,247,.15);
     }
-    .card .label { font-size: .72em; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+    .card .label {
+      font-size: .72em; font-weight: 800;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      margin-bottom: 6px;
+    }
     .card p { font-size: .92em; margin: 0; color: var(--c-text); opacity: .85; }
 
     /* ---- Pill ---- */
     .pill {
       display: inline-block; padding: 5px 16px; border-radius: 99px;
-      font-size: .78em; font-weight: 800; letter-spacing: .5px; margin: 3px 4px;
-      transition: transform .3s, box-shadow .3s;
+      font-size: .78em; font-weight: 700; letter-spacing: .3px; margin: 3px 4px;
+      transition: transform .25s;
     }
-    .pill:hover { transform: scale(1.08); }
+    .pill:hover { transform: scale(1.06); }
 
-    /* ---- SCAMPER list ---- */
-    .scamper-list {
-      list-style: none; padding: 0; margin: 0;
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 10px 20px; text-align: left;
+    /* ---- SCAMPER hexagonal layout (Slide 5) ---- */
+    .scamper-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
     }
-    .scamper-list li {
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 14px;
-      padding: 12px 18px; font-size: .95em;
-      transition: transform .3s, background .3s, border-color .3s;
+    .scamper-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
     }
-    .scamper-list li:hover {
-      transform: translateX(6px);
-      background: rgba(155,93,229,.1);
-      border-color: rgba(155,93,229,.3);
+    .scamper-cell {
+      width: 160px;
+      padding: 16px 12px;
+      border-radius: 16px;
+      text-align: center;
+      background: rgba(15,15,35,.6);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--c-border);
+      transition: transform .35s ease, border-color .35s, box-shadow .35s;
+      position: relative;
+      overflow: hidden;
     }
-    .scamper-list li b { font-size: 1.4em; margin-right: 8px; }
+    .scamper-cell::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      opacity: 0;
+      transition: opacity .35s;
+    }
+    .scamper-cell:hover {
+      transform: translateY(-5px) scale(1.04);
+      box-shadow: 0 8px 30px rgba(168,85,247,.2);
+    }
+    .scamper-cell:hover::before { opacity: 1; }
+    .scamper-cell .letter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2em; font-weight: 700;
+      display: block; margin-bottom: 4px;
+    }
+    .scamper-cell .desc {
+      font-size: .82em; color: var(--c-muted);
+      font-weight: 600;
+    }
+    /* Individual cell accents */
+    .cell-s { border-color: rgba(168,85,247,.35); }
+    .cell-s::before { background: radial-gradient(circle, rgba(168,85,247,.12), transparent 70%); }
+    .cell-s .letter { color: var(--c-purple); }
+    .cell-c { border-color: rgba(236,72,153,.35); }
+    .cell-c::before { background: radial-gradient(circle, rgba(236,72,153,.12), transparent 70%); }
+    .cell-c .letter { color: var(--c-pink); }
+    .cell-a { border-color: rgba(250,204,21,.35); }
+    .cell-a::before { background: radial-gradient(circle, rgba(250,204,21,.12), transparent 70%); }
+    .cell-a .letter { color: var(--c-yellow); }
+    .cell-m { border-color: rgba(34,211,238,.35); }
+    .cell-m::before { background: radial-gradient(circle, rgba(34,211,238,.12), transparent 70%); }
+    .cell-m .letter { color: var(--c-cyan); }
+    .cell-p { border-color: rgba(52,211,153,.35); }
+    .cell-p::before { background: radial-gradient(circle, rgba(52,211,153,.12), transparent 70%); }
+    .cell-p .letter { color: var(--c-green); }
+    .cell-e { border-color: rgba(251,146,60,.35); }
+    .cell-e::before { background: radial-gradient(circle, rgba(251,146,60,.12), transparent 70%); }
+    .cell-e .letter { color: #fb923c; }
+    .cell-r { border-color: rgba(244,114,182,.35); }
+    .cell-r::before { background: radial-gradient(circle, rgba(244,114,182,.12), transparent 70%); }
+    .cell-r .letter { color: #f472b6; }
 
     /* ---- Answer box (Slide 3) ---- */
-    #answer-box { margin-top: 16px; }
+    #answer-box { margin-top: 14px; }
     #answer-btn {
       background: linear-gradient(135deg, var(--c-purple), var(--c-pink));
       border: none; color: #fff;
-      font-size: 1.05em; font-weight: 800;
-      padding: 14px 32px; border-radius: 99px; cursor: pointer;
-      transition: transform .25s cubic-bezier(.25,.8,.25,1), box-shadow .3s;
-      box-shadow: 0 4px 20px rgba(155,93,229,.3);
+      font-size: 1em; font-weight: 800;
+      padding: 14px 34px; border-radius: 99px; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(168,85,247,.3);
+      transition: transform .25s ease, box-shadow .3s;
     }
-    #answer-btn:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 30px rgba(241,91,181,.4); }
+    #answer-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 8px 30px rgba(236,72,153,.4);
+    }
     #answer-text {
       display: none; margin-top: 14px;
-      background: rgba(0,245,212,.08);
+      background: rgba(52,211,153,.08);
       border: 2px solid var(--c-green);
       border-radius: 16px; padding: 16px 28px;
       font-size: 1.15em; font-weight: 700; color: var(--c-green);
-      animation: bounceIn .6s;
+      animation: popIn .5s cubic-bezier(.17,.67,.35,1.5);
     }
 
     /* ---- Timer (Slide 4) ---- */
-    #timer-box { margin-top: 14px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    #timer-box {
+      margin-top: 14px;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 10px;
+    }
     #timer-display {
-      font-size: 4em; font-weight: 900;
-      color: var(--c-yellow); letter-spacing: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 4.5em; font-weight: 700;
+      color: var(--c-yellow); letter-spacing: 3px;
       font-variant-numeric: tabular-nums;
-      text-shadow: 0 0 30px rgba(254,228,64,.3);
+      text-shadow: 0 0 40px rgba(250,204,21,.25);
       transition: color .5s, text-shadow .5s;
     }
-    #timer-display.urgent { color: var(--c-pink); text-shadow: 0 0 40px rgba(241,91,181,.5); }
+    #timer-display.urgent {
+      color: var(--c-pink);
+      text-shadow: 0 0 50px rgba(236,72,153,.4);
+    }
     #timer-display.done { animation: pulse 1s infinite; }
     #timer-hint {
       font-size: .85em; color: var(--c-muted);
-      padding: 6px 16px; border-radius: 99px;
-      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
-      animation: fadeInUp .8s;
+      padding: 6px 18px; border-radius: 99px;
+      background: var(--c-glass); border: 1px solid var(--c-border);
     }
     #timer-hint.hidden-hint { display: none; }
 
-    /* lock indicator */
+    /* Lock indicator */
     #lock-indicator {
       position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-      background: rgba(241,91,181,.15); border: 1px solid var(--c-pink);
+      background: rgba(236,72,153,.12); border: 1px solid var(--c-pink);
       color: var(--c-pink); font-weight: 800; font-size: .85em;
-      padding: 8px 22px; border-radius: 99px; z-index: 100;
-      display: none; backdrop-filter: blur(8px);
-      animation: fadeIn .4s;
+      padding: 8px 24px; border-radius: 99px; z-index: 100;
+      display: none; backdrop-filter: blur(10px);
     }
 
     /* ---- Buttons ---- */
     .action-btn {
-      border: none; font-weight: 900; padding: 12px 28px;
+      border: none; font-weight: 800; padding: 12px 28px;
       border-radius: 99px; cursor: pointer; font-size: .95em;
-      transition: transform .25s cubic-bezier(.25,.8,.25,1), box-shadow .3s;
+      transition: transform .25s ease, box-shadow .3s;
     }
     .action-btn:hover { transform: translateY(-3px); }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--c-yellow), var(--c-pink));
-      color: #0a0a18;
-      box-shadow: 0 4px 20px rgba(254,228,64,.25);
-    }
-    .btn-secondary {
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.15) !important;
-      color: var(--c-text);
-    }
     .btn-random {
       background: linear-gradient(135deg, var(--c-pink), var(--c-purple));
       color: #fff;
-      box-shadow: 0 4px 20px rgba(155,93,229,.3);
+      box-shadow: 0 4px 20px rgba(168,85,247,.3);
     }
 
-    /* ---- Per-slide backgrounds ---- */
-    .slide-1 { background: radial-gradient(ellipse at 30% 35%, rgba(60,20,120,.6) 0%, transparent 55%),
-                            radial-gradient(ellipse at 75% 75%, rgba(241,91,181,.15) 0%, transparent 50%); }
-    .slide-2 { background: radial-gradient(ellipse at 70% 25%, rgba(0,187,249,.2) 0%, transparent 55%); }
-    .slide-3 { background: radial-gradient(ellipse at 50% 45%, rgba(0,245,212,.12) 0%, transparent 50%); }
-    .slide-4 { background: radial-gradient(ellipse at 25% 60%, rgba(254,228,64,.12) 0%, transparent 50%),
-                            radial-gradient(ellipse at 80% 30%, rgba(241,91,181,.1) 0%, transparent 50%); }
-    .slide-5 { background: radial-gradient(ellipse at 80% 45%, rgba(155,93,229,.18) 0%, transparent 55%); }
-    .slide-6 { background: radial-gradient(ellipse at 35% 30%, rgba(0,245,212,.12) 0%, transparent 50%); }
-    .slide-7 { background: radial-gradient(ellipse at 55% 65%, rgba(241,91,181,.15) 0%, transparent 55%); }
-    .slide-8 { background: radial-gradient(ellipse at 45% 35%, rgba(155,93,229,.2) 0%, transparent 50%),
-                            radial-gradient(ellipse at 80% 80%, rgba(254,228,64,.1) 0%, transparent 50%); }
+    .big-emoji { font-size: 3.5em; display: block; margin-bottom: 4px; }
+    .divider { width: 60px; height: 4px; border-radius: 99px; margin: 12px auto; }
 
-    .big-emoji { font-size: 3.5em; display: block; margin-bottom: 6px; }
-    .divider { width: 70px; height: 4px; border-radius: 99px; margin: 14px auto; }
-
-    /* ---- Glow ring on image ---- */
-    @keyframes glowPulse {
-      0%, 100% { box-shadow: 0 0 20px rgba(155,93,229,.2), 0 8px 40px rgba(155,93,229,.15); }
-      50%      { box-shadow: 0 0 35px rgba(241,91,181,.3), 0 8px 50px rgba(241,91,181,.2); }
+    /* ---- Animations ---- */
+    @keyframes popIn {
+      0%   { opacity: 0; transform: scale(.6); }
+      100% { opacity: 1; transform: scale(1); }
     }
-    .glow-img { animation: glowPulse 3s ease-in-out infinite; }
-
-    /* ---- Floating animation ---- */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.05); }
+    }
     @keyframes float {
       0%, 100% { transform: translateY(0); }
       50%      { transform: translateY(-10px); }
     }
     .float { animation: float 3s ease-in-out infinite; }
-
-    /* ---- Pulse ---- */
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50%      { transform: scale(1.05); }
-    }
-
-    /* ---- Typewriter for random word ---- */
     @keyframes typeIn {
       from { opacity: 0; transform: scale(.7) rotateX(40deg); }
       to   { opacity: 1; transform: scale(1) rotateX(0); }
     }
     .word-pop { animation: typeIn .4s cubic-bezier(.25,.8,.25,1); }
-
-    /* ---- Shake (wrong answer) ---- */
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       20%, 60% { transform: translateX(-8px); }
@@ -268,25 +326,26 @@
       .reveal h1 { font-size: 2em; }
       .reveal h2 { font-size: 1.5em; }
       .card-row { flex-direction: column; align-items: center; }
-      .scamper-list { grid-template-columns: 1fr; }
+      .scamper-row { flex-direction: column; align-items: center; }
+      .scamper-cell { width: 90%; }
       #timer-display { font-size: 2.5em; }
     }
   </style>
 </head>
 <body>
+
+<!-- Vanta.js animated background -->
+<div id="vanta-bg"></div>
+
 <div class="reveal">
 <div class="slides">
 
-  <!-- ====== СЛАЙД 1: Титульный ======
-       Картинка: ./images/01_title.jpg
-       Что подобрать: яркий взрыв мозга / креативная лампочка / абстрактный "взрыв идей".
-       Поищи: "brain explosion creative illustration" на Unsplash / Pinterest.
-  -->
-  <section class="slide-1" data-transition="zoom-in fade-out" data-transition-speed="slow">
-    <img class="slide-img glow-img fragment fade-in" data-fragment-index="0"
+  <!-- ====== SLIDE 1: Title ====== -->
+  <section data-transition="fade" data-transition-speed="slow">
+    <img class="slide-img fragment fade-in" data-fragment-index="0"
          src="./images/01_title.jpg" alt="Взрыв мозга"
          onerror="this.style.display='none'" />
-    <h1 class="grad-title fragment fade-up" data-fragment-index="1">Взлом мозга 🧠</h1>
+    <h1 class="grad-title fragment fade-up" data-fragment-index="1">Взлом мозга</h1>
     <div class="divider fragment fade-up" data-fragment-index="2"
          style="background:linear-gradient(90deg,var(--c-purple),var(--c-pink))"></div>
     <p class="fragment fade-up" data-fragment-index="2"
@@ -296,39 +355,31 @@
     </p>
     <p class="fragment fade-in" data-fragment-index="3"
        style="margin-top:22px; font-size:.82em;">
-      <span class="pill" style="background:rgba(255,255,255,.08)">→ или пробел</span>
+      <span class="pill" style="background:var(--c-glass); border:1px solid var(--c-border);">&#8594; или пробел</span>
       чтобы идти дальше
     </p>
   </section>
 
-  <!-- ====== СЛАЙД 2: Что такое латеральное мышление? ======
-       Картинка: ./images/02_lateral.jpg
-       Что подобрать: схема "одна глубокая яма vs много маленьких ям"
-       или мем "вертикальное vs латеральное мышление". Можно нарисовать в Canva.
-  -->
-  <section class="slide-2" data-transition="convex" data-transition-speed="default">
+  <!-- ====== SLIDE 2: What is lateral thinking ====== -->
+  <section data-transition="slide" data-transition-speed="default">
     <h2 class="fragment fade-down">Что такое <span class="accent-cyan">латеральное мышление?</span></h2>
     <img class="slide-img fragment zoom-in" src="./images/02_lateral.jpg"
          alt="Схема двух типов мышления" onerror="this.style.display='none'" />
     <div class="card-row">
       <div class="card fragment fade-right">
-        <div class="label" style="color:var(--c-muted)">🔽 Вертикальное</div>
+        <div class="label" style="color:var(--c-muted)">&#x1F53D; Вертикальное</div>
         <p>Копаем одну яму всё глубже и глубже.<br><b style="color:var(--c-text)">Логика.</b></p>
       </div>
-      <div class="card fragment fade-left" style="border-color:rgba(0,187,249,.3); background:rgba(0,187,249,.06)">
-        <div class="label" style="color:var(--c-cyan)">↔️ Латеральное</div>
+      <div class="card fragment fade-left" style="border-color:rgba(34,211,238,.3); background:rgba(34,211,238,.06)">
+        <div class="label" style="color:var(--c-cyan)">&#x2194;&#xFE0F; Латеральное</div>
         <p>Копаем <b style="color:var(--c-cyan)">10 разных ям</b>, чтобы найти клад.<br><b style="color:var(--c-text)">Креатив.</b></p>
       </div>
     </div>
   </section>
 
-  <!-- ====== СЛАЙД 3: Загадка для разогрева ======
-       Картинка: ./images/03_bottle.png
-       Что подобрать: бутылка вина с пробкой и монеткой внутри.
-       Поищи "wine bottle cork riddle illustration" или нарисуй схему.
-  -->
-  <section class="slide-3" data-transition="concave" data-transition-speed="default">
-    <h2 class="fragment fade-down">🍾 Загадка для разогрева</h2>
+  <!-- ====== SLIDE 3: Riddle ====== -->
+  <section data-transition="slide" data-transition-speed="default">
+    <h2 class="fragment fade-down">&#x1F37E; Загадка для разогрева</h2>
     <img class="slide-img fragment zoom-in" src="./images/03_bottle.png"
          alt="Бутылка с пробкой" onerror="this.style.display='none'" />
     <p class="fragment fade-up" style="font-size:1.15em; color:var(--c-text); max-width:540px; margin:10px auto;">
@@ -336,19 +387,14 @@
       <span class="accent-yellow">не вынимая пробку и не разбивая бутылку?</span>
     </p>
     <div id="answer-box" class="fragment fade-up">
-      <button id="answer-btn" onclick="revealAnswer()">Показать ответ 💡</button>
-      <div id="answer-text">✅ Протолкнуть пробку <b>внутрь</b> бутылки!</div>
+      <button id="answer-btn" onclick="revealAnswer()">Показать ответ &#x1F4A1;</button>
+      <div id="answer-text">&#x2705; Протолкнуть пробку <b>внутрь</b> бутылки!</div>
     </div>
   </section>
 
-  <!-- ====== СЛАЙД 4: Игра 1 — Безумная вариативность ======
-       ТАЙМЕР: PageDown запускает таймер.
-       Переход на следующий слайд заблокирован, пока таймер идёт.
-       Картинка: ./images/04_object.jpg
-       Что подобрать: фото обычного предмета крупным планом — кирпич, скрепка, стаканчик.
-  -->
-  <section class="slide-4" data-transition="zoom" data-transition-speed="default" id="timer-slide">
-    <span class="big-emoji float fragment fade-in">🎮</span>
+  <!-- ====== SLIDE 4: Game 1 — Timer ====== -->
+  <section data-transition="slide" data-transition-speed="default" id="timer-slide">
+    <span class="big-emoji float fragment fade-in">&#x1F3AE;</span>
     <h2 class="fragment fade-up">Игра 1. <span class="accent-yellow">Безумная вариативность</span></h2>
     <img class="slide-img fragment zoom-in" src="./images/04_object.jpg"
          alt="Обычный предмет для задания" onerror="this.style.display='none'" />
@@ -358,105 +404,122 @@
     </p>
     <div id="timer-box" class="fragment fade-up">
       <div id="timer-display">3:00</div>
-      <div id="timer-hint">Нажмите <b>PageDown</b> или <b>↓</b> чтобы запустить таймер</div>
+      <div id="timer-hint">Нажмите <b>PageDown</b> или <b>&#x2193;</b> чтобы запустить таймер</div>
     </div>
   </section>
 
-  <!-- ====== СЛАЙД 5: Метод SCAMPER ======
-       Картинка: ./images/05_scamper.jpg
-       Что подобрать: иллюстрация-таблица SCAMPER или схема трансформации предмета.
-  -->
-  <section class="slide-5" data-transition="slide-in convex-out" data-transition-speed="default">
+  <!-- ====== SLIDE 5: SCAMPER — redesigned layout ====== -->
+  <section data-transition="slide" data-transition-speed="default">
     <h2 class="fragment fade-down">Игра 2. Метод <span class="accent-purple">SCAMPER</span></h2>
-    <p class="fragment fade-in" style="margin-bottom:14px;">Формула взлома реальности 🔧</p>
-    <ul class="scamper-list">
-      <li class="fragment fade-right" data-fragment-index="2"><b class="accent-purple">S</b> — Заменить что-то</li>
-      <li class="fragment fade-left"  data-fragment-index="2"><b class="accent-pink">C</b> — Комбинировать с другим</li>
-      <li class="fragment fade-right" data-fragment-index="3"><b class="accent-yellow">A</b> — Адаптировать под новое</li>
-      <li class="fragment fade-left"  data-fragment-index="3"><b class="accent-cyan">M</b> — Модифицировать / Увеличить</li>
-      <li class="fragment fade-right" data-fragment-index="4"><b class="accent-green">P</b> — Применить иначе</li>
-      <li class="fragment fade-up"    data-fragment-index="5"
-          style="grid-column:span 2; text-align:center; background:rgba(155,93,229,.1); border-color:rgba(155,93,229,.25);">
-        <b class="accent-purple">E</b> — Убрать лишнее &nbsp;|&nbsp;
-        <b class="accent-pink">R</b> — Развернуть / Перевернуть
-      </li>
-    </ul>
+    <p class="fragment fade-in" style="margin-bottom:10px; font-size:1.05em;">Формула взлома реальности &#x1F527;</p>
+
+    <div class="scamper-grid">
+      <!-- Row 1: S C A -->
+      <div class="scamper-row fragment fade-up" data-fragment-index="2">
+        <div class="scamper-cell cell-s">
+          <span class="letter">S</span>
+          <span class="desc">Заменить что-то</span>
+        </div>
+        <div class="scamper-cell cell-c">
+          <span class="letter">C</span>
+          <span class="desc">Комбинировать с другим</span>
+        </div>
+        <div class="scamper-cell cell-a">
+          <span class="letter">A</span>
+          <span class="desc">Адаптировать под новое</span>
+        </div>
+      </div>
+      <!-- Row 2: M P -->
+      <div class="scamper-row fragment fade-up" data-fragment-index="3">
+        <div class="scamper-cell cell-m">
+          <span class="letter">M</span>
+          <span class="desc">Модифицировать / Увеличить</span>
+        </div>
+        <div class="scamper-cell cell-p">
+          <span class="letter">P</span>
+          <span class="desc">Применить иначе</span>
+        </div>
+      </div>
+      <!-- Row 3: E R -->
+      <div class="scamper-row fragment fade-up" data-fragment-index="4">
+        <div class="scamper-cell cell-e">
+          <span class="letter">E</span>
+          <span class="desc">Убрать лишнее</span>
+        </div>
+        <div class="scamper-cell cell-r">
+          <span class="letter">R</span>
+          <span class="desc">Развернуть / Перевернуть</span>
+        </div>
+      </div>
+    </div>
+
     <img class="slide-img fragment zoom-in" src="./images/05_scamper.jpg"
-         alt="SCAMPER" style="max-height:130px; margin-top:14px;"
+         alt="SCAMPER" style="max-height:110px; margin-top:12px;"
          onerror="this.style.display='none'" />
   </section>
 
-  <!-- ====== СЛАЙД 6: Практика SCAMPER ======
-       Картинка: ./images/06_desk.jpg
-       Что подобрать: фото скучной школьной парты — чем скучнее, тем лучше.
-  -->
-  <section class="slide-6" data-transition="convex" data-transition-speed="default">
-    <span class="big-emoji float fragment fade-in">🛠️</span>
+  <!-- ====== SLIDE 6: SCAMPER practice ====== -->
+  <section data-transition="slide" data-transition-speed="default">
+    <span class="big-emoji float fragment fade-in">&#x1F6E0;&#xFE0F;</span>
     <h2 class="fragment fade-up">Практика <span class="accent-green">SCAMPER</span></h2>
     <img class="slide-img fragment zoom-in" src="./images/06_desk.jpg"
          alt="Школьная парта" onerror="this.style.display='none'" />
-    <div class="card fragment fade-up" style="max-width:500px; text-align:center; margin:0 auto;">
-      <p style="color:var(--c-text); font-size:1.08em;">
+    <div class="glass card fragment fade-up" style="max-width:480px; text-align:center; margin:0 auto;">
+      <p style="color:var(--c-text); font-size:1.08em; margin:0;">
         Прокачай <b>школьную парту</b>.<br>
-        Создай <span class="accent-green">«Парту 2050 года»</span><br>
+        Создай <span class="accent-green">&laquo;Парту 2050 года&raquo;</span><br>
         используя шаги SCAMPER.
       </p>
     </div>
     <div class="fragment fade-up" style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
-      <span class="pill" style="background:rgba(0,245,212,.12); color:var(--c-green); border:1px solid rgba(0,245,212,.25);">⏱ 10 минут</span>
-      <span class="pill" style="background:rgba(255,255,255,.06); color:var(--c-text); border:1px solid rgba(255,255,255,.12);">👥 В группах</span>
-      <span class="pill" style="background:rgba(241,91,181,.12); color:var(--c-pink); border:1px solid rgba(241,91,181,.25);">🎨 Рисуем / записываем</span>
+      <span class="pill" style="background:rgba(52,211,153,.12); color:var(--c-green); border:1px solid rgba(52,211,153,.25);">&#x23F1; 10 минут</span>
+      <span class="pill" style="background:var(--c-glass); color:var(--c-text); border:1px solid var(--c-border);">&#x1F465; В группах</span>
+      <span class="pill" style="background:rgba(236,72,153,.12); color:var(--c-pink); border:1px solid rgba(236,72,153,.25);">&#x1F3A8; Рисуем / записываем</span>
     </div>
   </section>
 
-  <!-- ====== СЛАЙД 7: Игра 3 — Решение из шляпы ======
-       Картинка: ./images/07_random_word.jpg
-       Что подобрать: шляпа фокусника / генератор случайных слов.
-  -->
-  <section class="slide-7" data-transition="concave-in zoom-out" data-transition-speed="default">
-    <span class="big-emoji float fragment fade-in">🎩</span>
+  <!-- ====== SLIDE 7: Game 3 — Random word ====== -->
+  <section data-transition="slide" data-transition-speed="default">
+    <span class="big-emoji float fragment fade-in">&#x1F3A9;</span>
     <h2 class="fragment fade-up">Игра 3. <span class="accent-pink">Решение из шляпы</span></h2>
     <div class="card-row fragment fade-up">
-      <div class="card" style="text-align:center; border-color:rgba(241,91,181,.25);">
+      <div class="card" style="text-align:center; border-color:rgba(236,72,153,.25);">
         <div class="label" style="color:var(--c-pink)">Проблема</div>
-        <p>«Все забывают сменку»</p>
+        <p>&laquo;Все забывают сменку&raquo;</p>
       </div>
       <div style="font-size:2em; display:flex; align-items:center; color:var(--c-muted);">+</div>
-      <div class="card" style="text-align:center; border-color:rgba(254,228,64,.25);">
+      <div class="card" style="text-align:center; border-color:rgba(250,204,21,.25);">
         <div class="label" style="color:var(--c-yellow)">Случайное слово</div>
-        <p>«Банан» 🍌</p>
+        <p>&laquo;Банан&raquo; &#x1F34C;</p>
       </div>
       <div style="font-size:2em; display:flex; align-items:center; color:var(--c-muted);">=</div>
-      <div class="card" style="text-align:center; border-color:rgba(0,245,212,.25); background:rgba(0,245,212,.05);">
-        <div class="label" style="color:var(--c-green)">Идея 💡</div>
+      <div class="card" style="text-align:center; border-color:rgba(52,211,153,.25); background:rgba(52,211,153,.05);">
+        <div class="label" style="color:var(--c-green)">Идея &#x1F4A1;</div>
         <p style="font-size:.85em;">Жёлтая метка — не пропустишь!</p>
       </div>
     </div>
     <div class="fragment fade-up" style="margin-top:16px;">
-      <button class="action-btn btn-random" onclick="randomWord()">🎲 Случайное слово</button>
+      <button class="action-btn btn-random" onclick="randomWord()">&#x1F3B2; Случайное слово</button>
       <div id="random-word-output" style="margin-top:12px; font-size:2.2em;
            font-weight:900; color:var(--c-yellow); min-height:1.6em;
-           text-shadow: 0 0 20px rgba(254,228,64,.3);"></div>
+           text-shadow: 0 0 25px rgba(250,204,21,.25);"></div>
     </div>
   </section>
 
-  <!-- ====== СЛАЙД 8: Финал ======
-       Картинка: ./images/08_final.jpg
-       Что подобрать: "big brain" мем, команда победителей с конфетти.
-  -->
-  <section class="slide-8" data-transition="zoom-in fade-out" data-transition-speed="slow" id="final-slide">
-    <img class="slide-img glow-img fragment zoom-in" src="./images/08_final.jpg"
+  <!-- ====== SLIDE 8: Final ====== -->
+  <section data-transition="fade" data-transition-speed="slow" id="final-slide">
+    <img class="slide-img fragment zoom-in" src="./images/08_final.jpg"
          alt="Гениальность" style="max-height:180px;" onerror="this.style.display='none'" />
     <h1 class="grad-title fragment fade-up">Лучшие идеи<br>рождаются из абсурда!</h1>
     <div class="divider fragment fade-up" style="background:linear-gradient(90deg,var(--c-cyan),var(--c-green))"></div>
     <p class="fragment fade-up" style="font-size:1.2em; color:var(--c-text); max-width:520px; margin:10px auto;">
       Не бойтесь предлагать <span class="accent-pink">самые странные решения</span>.<br>
-      Именно из них получаются инновации. 🚀
+      Именно из них получаются инновации. &#x1F680;
     </p>
-    <div class="fragment fade-up" style="margin-top:22px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
-      <span class="pill" style="background:rgba(155,93,229,.15); color:var(--c-purple); border:1px solid rgba(155,93,229,.3); font-size:.9em;">🧠 Думай иначе</span>
-      <span class="pill" style="background:rgba(241,91,181,.15); color:var(--c-pink); border:1px solid rgba(241,91,181,.3); font-size:.9em;">💡 Задавай вопросы</span>
-      <span class="pill" style="background:rgba(0,245,212,.15); color:var(--c-green); border:1px solid rgba(0,245,212,.3); font-size:.9em;">🎲 Пробуй абсурдное</span>
+    <div class="fragment fade-up" style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+      <span class="pill" style="background:rgba(168,85,247,.15); color:var(--c-purple); border:1px solid rgba(168,85,247,.3); font-size:.9em;">&#x1F9E0; Думай иначе</span>
+      <span class="pill" style="background:rgba(236,72,153,.15); color:var(--c-pink); border:1px solid rgba(236,72,153,.3); font-size:.9em;">&#x1F4A1; Задавай вопросы</span>
+      <span class="pill" style="background:rgba(52,211,153,.15); color:var(--c-green); border:1px solid rgba(52,211,153,.3); font-size:.9em;">&#x1F3B2; Пробуй абсурдное</span>
     </div>
   </section>
 
@@ -464,15 +527,44 @@
 </div>
 
 <!-- Lock indicator -->
-<div id="lock-indicator">⏳ Таймер идёт — переход заблокирован</div>
+<div id="lock-indicator">&#x23F3; Таймер идёт — переход заблокирован</div>
 
 <!-- Confetti canvas -->
 <canvas id="confetti-canvas"></canvas>
+
+<!-- Three.js (required by Vanta) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<!-- Vanta.js NET effect -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js"></script>
 
 <!-- Reveal.js -->
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
 
 <script>
+/* =============== VANTA.JS BACKGROUND =============== */
+let vantaEffect = null;
+try {
+  vantaEffect = VANTA.NET({
+    el: '#vanta-bg',
+    mouseControls: true,
+    touchControls: true,
+    gyroControls: false,
+    minHeight: 200.0,
+    minWidth: 200.0,
+    scale: 1.0,
+    scaleMobile: 1.0,
+    color: 0xa855f7,
+    backgroundColor: 0x0b0b1a,
+    points: 12.0,
+    maxDistance: 22.0,
+    spacing: 18.0,
+    showDots: true,
+  });
+} catch(e) {
+  // Fallback: just dark background
+  document.getElementById('vanta-bg').style.background = '#0b0b1a';
+}
+
 /* =============== REVEAL INIT =============== */
 const deck = Reveal.initialize({
   hash: true,
@@ -480,7 +572,7 @@ const deck = Reveal.initialize({
   progress: true,
   transition: 'slide',
   transitionSpeed: 'default',
-  backgroundTransition: 'zoom',
+  backgroundTransition: 'fade',
   controls: true,
   controlsLayout: 'bottom-right',
   keyboard: true,
@@ -503,11 +595,11 @@ let timerInterval  = null;
 let timerSeconds   = 180;
 let timerRunning   = false;
 let timerFinished  = false;
-const TIMER_SLIDE  = 3; // 0-indexed: slide #4
+const TIMER_SLIDE  = 3; // 0-indexed
 
 function fmtTime(s) {
   const m = Math.floor(s / 60);
-  return `${m}:${String(s % 60).padStart(2, '0')}`;
+  return m + ':' + String(s % 60).padStart(2, '0');
 }
 
 function startTimer() {
@@ -520,9 +612,9 @@ function startTimer() {
 
   document.getElementById('lock-indicator').style.display = 'block';
 
-  timerInterval = setInterval(() => {
+  timerInterval = setInterval(function() {
     timerSeconds--;
-    const el = document.getElementById('timer-display');
+    var el = document.getElementById('timer-display');
     el.textContent = fmtTime(timerSeconds);
 
     if (timerSeconds <= 10) el.classList.add('urgent');
@@ -532,7 +624,7 @@ function startTimer() {
       timerInterval = null;
       timerRunning = false;
       timerFinished = true;
-      el.textContent = '⏰ Время вышло!';
+      el.textContent = '\u23F0 Время вышло!';
       el.classList.remove('urgent');
       el.classList.add('done');
       document.getElementById('lock-indicator').style.display = 'none';
@@ -540,58 +632,49 @@ function startTimer() {
   }, 1000);
 }
 
-/* Intercept navigation: on timer slide, PageDown / ArrowDown / Space starts timer if not started;
-   block forward navigation while timer is running. */
-Reveal.on('slidechanged', evt => {
-  // leaving timer slide: hide lock indicator
+/* Intercept navigation on timer slide */
+Reveal.on('slidechanged', function(evt) {
   if (evt.previousSlide && evt.previousSlide.id === 'timer-slide') {
     document.getElementById('lock-indicator').style.display = 'none';
   }
-  // arriving at final slide: launch confetti
   if (evt.currentSlide.id === 'final-slide') {
     launchConfetti();
   }
 });
 
-/* Block forward nav while timer is running */
-document.addEventListener('keydown', e => {
-  const currentIdx = Reveal.getIndices().h;
+document.addEventListener('keydown', function(e) {
+  var currentIdx = Reveal.getIndices().h;
 
   if (currentIdx === TIMER_SLIDE) {
-    const isForward = ['ArrowRight','ArrowDown','PageDown',' '].includes(e.key);
+    var isForward = ['ArrowRight','ArrowDown','PageDown',' '].indexOf(e.key) !== -1;
 
-    // If all fragments are shown, next press = start timer or advance
     if (isForward) {
-      // Check if all fragments on this slide have been shown
-      const slide = Reveal.getCurrentSlide();
-      const totalFragments = slide.querySelectorAll('.fragment').length;
-      const shownFragments = slide.querySelectorAll('.fragment.visible').length;
-      const allFragmentsShown = (shownFragments >= totalFragments);
+      var slide = Reveal.getCurrentSlide();
+      var totalFragments = slide.querySelectorAll('.fragment').length;
+      var shownFragments = slide.querySelectorAll('.fragment.visible').length;
+      var allFragmentsShown = (shownFragments >= totalFragments);
 
       if (allFragmentsShown && !timerRunning && !timerFinished) {
-        // Start timer instead of advancing
         e.preventDefault();
         e.stopImmediatePropagation();
         startTimer();
         return;
       }
       if (timerRunning) {
-        // Block navigation while timer is running
         e.preventDefault();
         e.stopImmediatePropagation();
-        const lockEl = document.getElementById('lock-indicator');
+        var lockEl = document.getElementById('lock-indicator');
         lockEl.style.animation = 'none';
-        lockEl.offsetHeight; // reflow
+        lockEl.offsetHeight;
         lockEl.style.animation = 'shake .4s';
         return;
       }
-      // timerFinished — allow navigation
     }
   }
-}, true); // capture phase — before Reveal.js handles it
+}, true);
 
 /* =============== SLIDE 7: RANDOM WORD =============== */
-const WORDS = [
+var WORDS = [
   'Банан','Облако','Лестница','Зеркало','Носок','Пингвин',
   'Спагетти','Парашют','Кактус','Трамплин','Шоколад','Компас',
   'Батарейка','Вулкан','Лупа','Пропеллер','Термос','Якорь',
@@ -601,35 +684,34 @@ const WORDS = [
 ];
 
 function randomWord() {
-  const el = document.getElementById('random-word-output');
-  // quick shuffle animation
-  let count = 0;
-  const shuffleInterval = setInterval(() => {
+  var el = document.getElementById('random-word-output');
+  var count = 0;
+  var shuffleInterval = setInterval(function() {
     el.textContent = WORDS[Math.floor(Math.random() * WORDS.length)];
     el.style.opacity = '0.4';
     count++;
     if (count > 8) {
       clearInterval(shuffleInterval);
-      const final = WORDS[Math.floor(Math.random() * WORDS.length)];
+      var final = WORDS[Math.floor(Math.random() * WORDS.length)];
       el.textContent = final;
       el.style.opacity = '1';
       el.className = 'word-pop';
-      setTimeout(() => el.className = '', 500);
+      setTimeout(function() { el.className = ''; }, 500);
     }
   }, 70);
 }
 
-/* =============== CONFETTI (final slide) =============== */
+/* =============== CONFETTI =============== */
 function launchConfetti() {
-  const canvas = document.getElementById('confetti-canvas');
-  const ctx = canvas.getContext('2d');
+  var canvas = document.getElementById('confetti-canvas');
+  var ctx = canvas.getContext('2d');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  const colors = ['#9b5de5','#f15bb5','#fee440','#00bbf9','#00f5d4'];
-  const pieces = [];
+  var colors = ['#a855f7','#ec4899','#facc15','#22d3ee','#34d399'];
+  var pieces = [];
 
-  for (let i = 0; i < 120; i++) {
+  for (var i = 0; i < 120; i++) {
     pieces.push({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height - canvas.height,
@@ -644,12 +726,13 @@ function launchConfetti() {
     });
   }
 
-  let frame = 0;
+  var frame = 0;
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     frame++;
-    let alive = false;
-    for (const p of pieces) {
+    var alive = false;
+    for (var j = 0; j < pieces.length; j++) {
+      var p = pieces[j];
       p.x += p.vx;
       p.y += p.vy;
       p.rot += p.rotV;
