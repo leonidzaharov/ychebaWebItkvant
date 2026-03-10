@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Взлом мозга — Шпаргалка для преподавателя + раздатка</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    line-height: 1.65;
+    padding: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 2em;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 6px;
+    color: #7c3aed;
+  }
+  h1 small {
+    display: block;
+    font-size: .45em;
+    font-weight: 600;
+    color: #888;
+    margin-top: 4px;
+  }
+
+  h2 {
+    font-size: 1.4em;
+    font-weight: 800;
+    margin: 30px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 3px solid #7c3aed;
+    color: #1a1a2e;
+  }
+  h2 .slide-num {
+    display: inline-block;
+    background: #7c3aed;
+    color: #fff;
+    font-size: .7em;
+    padding: 2px 10px;
+    border-radius: 99px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  h3 {
+    font-size: 1.1em;
+    font-weight: 700;
+    margin: 18px 0 8px;
+    color: #7c3aed;
+  }
+
+  p { margin: 6px 0; }
+
+  .speech {
+    background: #f0ebff;
+    border-left: 4px solid #7c3aed;
+    padding: 12px 16px;
+    border-radius: 0 12px 12px 0;
+    margin: 10px 0;
+    font-style: italic;
+  }
+  .speech::before {
+    content: '🗣️ ';
+    font-style: normal;
+  }
+
+  .tip {
+    background: #fff7e6;
+    border-left: 4px solid #f59e0b;
+    padding: 10px 16px;
+    border-radius: 0 12px 12px 0;
+    margin: 10px 0;
+  }
+  .tip::before {
+    content: '💡 Совет: ';
+    font-weight: 700;
+    color: #d97706;
+  }
+
+  .explain {
+    background: #e8f9f0;
+    border-left: 4px solid #10b981;
+    padding: 10px 16px;
+    border-radius: 0 12px 12px 0;
+    margin: 10px 0;
+  }
+  .explain::before {
+    content: '📋 Если не поняли: ';
+    font-weight: 700;
+    color: #059669;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+  }
+  th {
+    background: #7c3aed;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 700;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  tr:nth-child(even) td { background: #f9fafb; }
+
+  .problems-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .problem-card {
+    background: #fff;
+    border: 2px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 14px 16px;
+    position: relative;
+  }
+  .problem-card .num {
+    position: absolute;
+    top: -10px;
+    left: 14px;
+    background: #ec4899;
+    color: #fff;
+    font-weight: 800;
+    font-size: .75em;
+    padding: 2px 10px;
+    border-radius: 99px;
+  }
+  .problem-card .text {
+    font-weight: 700;
+    font-size: 1em;
+    margin-top: 4px;
+  }
+  .problem-card .hint {
+    font-size: .85em;
+    color: #6b7280;
+    margin-top: 4px;
+  }
+
+  .cut-line {
+    border: none;
+    border-top: 2px dashed #d1d5db;
+    margin: 40px 0 30px;
+    position: relative;
+  }
+  .cut-line::after {
+    content: '✂️ Раздатка для учеников — разрежьте здесь';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #f8f9fa;
+    padding: 0 16px;
+    font-size: .8em;
+    color: #9ca3af;
+    white-space: nowrap;
+  }
+
+  .handout {
+    background: #fff;
+    border: 2px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 24px;
+    margin: 14px 0;
+  }
+  .handout h3 {
+    text-align: center;
+    font-size: 1.3em;
+    margin-bottom: 14px;
+  }
+
+  .scamper-table td:first-child {
+    font-weight: 900;
+    font-size: 1.3em;
+    text-align: center;
+    width: 50px;
+  }
+
+  ul { padding-left: 22px; margin: 6px 0; }
+  li { margin: 4px 0; }
+
+  @media print {
+    body { padding: 15px; font-size: 11pt; }
+    .cut-line { page-break-before: always; border: none; margin: 0; }
+    .cut-line::after { display: none; }
+    h2 { page-break-after: avoid; }
+    .handout { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>
+  Взлом мозга — Латеральное мышление
+  <small>Шпаргалка для преподавателя + раздатка для учеников</small>
+</h1>
+
+<!-- ============================================= -->
+<h2><span class="slide-num">Слайд 1</span> Титульный</h2>
+
+<div class="speech">
+  Привет! Сегодня мы будем ломать мозг. Не в плохом смысле — мы научимся думать не так, как привыкли. Кто хоть раз сидел перед задачей и думал «я тупой, ничего не придумаю»? Вот сегодня мы это починим.
+</div>
+
+<div class="tip">Не торопитесь — пусть поднимут руки. Это включает их в процесс с первой секунды.</div>
+
+<!-- ============================================= -->
+<h2><span class="slide-num">Слайд 2</span> Что такое латеральное мышление?</h2>
+
+<div class="speech">
+  Представьте: вы ищете клад. Вертикальное мышление — это когда вы копаете одну яму всё глубже. Логично, да? Но клад может быть в другом месте! Латеральное мышление — это когда вы копаете 10 разных ям. Одна из них точно попадёт.
+</div>
+
+<div class="speech">
+  В школе нас учат вертикально: одно правильное решение, одна формула. Но в жизни часто побеждает тот, кто придумает 10 вариантов, а потом выберет лучший.
+</div>
+
+<div class="explain">
+  Вертикальное = глубоко в одну сторону (математика, логика).
+  Латеральное = широко во все стороны (креатив, изобретения).
+  Оба нужны! Но латеральному обычно не учат.
+</div>
+
+<!-- ============================================= -->
+<h2><span class="slide-num">Слайд 3</span> Загадка для разогрева</h2>
+
+<div class="speech">
+  Ок, вот вам загадка. Есть бутылка из-под вина. Внутри монетка. Бутылка закрыта пробкой. Как достать монетку, НЕ вынимая пробку и НЕ разбивая бутылку?
+</div>
+
+<div class="tip">Дайте 30–40 секунд на обсуждение. Пусть выкрикивают варианты — даже безумные. Это разогрев.</div>
+
+<p><b>Типичные ответы учеников:</b></p>
+<ul>
+  <li>«Магнитом!» — Монетка может быть не магнитной</li>
+  <li>«Перевернуть!» — Пробка мешает</li>
+  <li>«Растопить бутылку!» — Это = разбить</li>
+</ul>
+
+<div class="speech">
+  Ответ: протолкнуть пробку ВНУТРЬ бутылки! Никто не говорил, что нельзя. Мы сами придумали ограничение, которого не было. Вот это и есть латеральное мышление — посмотреть на задачу с другой стороны.
+</div>
+
+<!-- ============================================= -->
+<h2><span class="slide-num">Слайд 4</span> Игра 1: Безумная вариативность</h2>
+
+<div class="speech">
+  А теперь игра! Видите этот предмет? [покажите предмет/картинку]. У вас 3 минуты. Задача — придумать как можно больше НЕСТАНДАРТНЫХ способов его использования. Чем безумнее — тем лучше! Тут нет неправильных ответов.
+</div>
+
+<div class="tip">
+  Нажмите PageDown на кликере — запустится таймер на 3 минуты.
+  Пока идёт таймер, слайд заблокирован — случайно не переключите.
+</div>
+
+<div class="explain">
+  Это НЕ про правильные ответы. Это про количество. Если придумали «забить гвоздь кирпичом» — отлично. «Использовать кирпич как подушку» — ещё лучше! Цель: отключить внутреннего критика и генерировать идеи потоком.
+</div>
+
+<p><b>Примеры предметов (если нужна замена):</b></p>
+<table>
+  <tr><th>Предмет</th><th>Примеры безумных применений</th></tr>
+  <tr><td>Кирпич</td><td>Подставка для ноутбука, грузик для маринада, оружие в зомби-апокалипсисе, подушка для йога</td></tr>
+  <tr><td>Скрепка</td><td>Отмычка, серёжка, закладка, антенна для робота, зубочистка</td></tr>
+  <tr><td>Носок</td><td>Кукла для театра, фильтр для воды, чехол для телефона, мяч (набить рисом)</td></tr>
+  <tr><td>Пластиковый стакан</td><td>Мегафон, ловушка для паука, формочка для печенья, горшок для растения</td></tr>
+</table>
+
+<!-- ============================================= -->
+<h2><span class="slide-num">Слайд 5</span> Метод SCAMPER</h2>
+
+<div class="speech">
+  Ок, это было весело, но хаотично. А что если я скажу, что есть ФОРМУЛА для генерации идей? Называется SCAMPER. Каждая буква — это вопрос, который вы задаёте предмету или проблеме.
+</div>
+
+<table class="scamper-table">
+  <tr><th>Буква</th><th>Что делать</th><th>Пример (школьная парта)</th></tr>
+  <tr><td style="color:#a855f7">S</td><td><b>Заменить</b> что-то</td><td>Заменить дерево на прозрачный пластик</td></tr>
+  <tr><td style="color:#ec4899">C</td><td><b>Комбинировать</b> с другим</td><td>Парта + зарядка для телефона</td></tr>
+  <tr><td style="color:#facc15">A</td><td><b>Адаптировать</b> под новое</td><td>Парта, которая подстраивается под рост</td></tr>
+  <tr><td style="color:#22d3ee">M</td><td><b>Модифицировать</b> / увеличить</td><td>Огромная парта на 6 человек для проектов</td></tr>
+  <tr><td style="color:#34d399">P</td><td><b>Применить иначе</b></td><td>Парта как доска для рисования (поверхность = маркерная доска)</td></tr>
+  <tr><td style="color:#f97316">E</td><td><b>Убрать лишнее</b></td><td>Убрать ножки — парта крепится к стене, складывается</td></tr>
+  <tr><td style="color:#f472b6">R</td><td><b>Перевернуть</b></td><td>Ученик стоит, а парта — на уровне груди (стоячая парта)</td></tr>
+</table>
+
+<div class="explain">
+  Если не понятно — объясните так: «Возьмите любой скучный предмет. Задайте ему 7 вопросов: А если заменить? А если совместить? А если изменить размер? И так далее. Каждый вопрос — это новая идея.»
+</div>
+
+<!-- ============================================= -->
+<h2><span class="slide-num">Слайд 6</span> Практика SCAMPER</h2>
+
+<div class="speech">
+  Теперь вы в группах. Берём школьную парту — самую обычную, скучную парту. И превращаем её в «Парту 2050 года», пройдясь по каждому шагу SCAMPER. У вас 10 минут. Рисуйте, записывайте, фантазируйте!
+</div>
+
+<div class="tip">
+  Разделите на группы по 3–4 человека. Раздайте листы бумаги. Ходите между группами и подкидывайте вопросы: «А что если она летает?», «А что если она из еды?»
+</div>
+
+<div class="explain">
+  Каждая группа должна пройти минимум 4 из 7 шагов SCAMPER. Не обязательно все 7 — главное попробовать разные подходы. В конце каждая группа за 1 минуту рассказывает свою «Парту 2050».
+</div>
+
+<!-- ============================================= -->
+<h2><span class="slide-num">Слайд 7</span> Игра 3: Решение из шляпы</h2>
+
+<div class="speech">
+  Последняя игра! Берём реальную проблему и случайное слово. И находим связь между ними — это и будет идея. Звучит безумно? Именно! Так работает метод случайного стимула Эдварда де Боно.
+</div>
+
+<div class="tip">
+  Кликер теперь генерирует случайные слова! Каждое нажатие = новое слово.
+  Чтобы перейти на следующий слайд, нажмите ссылку «Дальше» на экране.
+</div>
+
+<h3>Проблемы для игры (выбирайте по 1-2):</h3>
+
+<div class="problems-grid">
+  <div class="problem-card">
+    <span class="num">1</span>
+    <div class="text">«Все забывают сменку»</div>
+    <div class="hint">Школьная классика. Легко придумывать решения.</div>
+  </div>
+  <div class="problem-card">
+    <span class="num">2</span>
+    <div class="text">«В столовой длинная очередь»</div>
+    <div class="hint">Знакомо каждому. Много вариантов.</div>
+  </div>
+  <div class="problem-card">
+    <span class="num">3</span>
+    <div class="text">«Домашку скучно делать»</div>
+    <div class="hint">Актуально и смешно обсуждать.</div>
+  </div>
+  <div class="problem-card">
+    <span class="num">4</span>
+    <div class="text">«В классе всегда душно»</div>
+    <div class="hint">Простая бытовая проблема.</div>
+  </div>
+  <div class="problem-card">
+    <span class="num">5</span>
+    <div class="text">«Телефон разряжается на уроке»</div>
+    <div class="hint">Вызовет живой отклик.</div>
+  </div>
+  <div class="problem-card">
+    <span class="num">6</span>
+    <div class="text">«Не успеваю завтракать по утрам»</div>
+    <div class="hint">Понятно всем, легко фантазировать.</div>
+  </div>
+  <div class="problem-card">
+    <span class="num">7</span>
+    <div class="text">«Рюкзак слишком тяжёлый»</div>
+    <div class="hint">Физическая проблема — интересные решения.</div>
+  </div>
+  <div class="problem-card">
+    <span class="num">8</span>
+    <div class="text">«На перемене негде сесть»</div>
+    <div class="hint">Архитектурная задача.</div>
+  </div>
+  <div class="problem-card">
+    <span class="num">9</span>
+    <div class="text">«Учитель не слышит тех, кто сзади»</div>
+    <div class="hint">Интересная коммуникационная задача.</div>
+  </div>
+  <div class="problem-card">
+    <span class="num">10</span>
+    <div class="text">«Дождь, а зонт забыл дома»</div>
+    <div class="hint">Бытовая — легко генерить абсурдные идеи.</div>
+  </div>
+</div>
+
+<h3>Пример хода игры:</h3>
+
+<table>
+  <tr><th>Проблема</th><th>Случайное слово</th><th>Идея (пример)</th></tr>
+  <tr><td>Забывают сменку</td><td>Банан</td><td>Жёлтая наклейка на дверь — напоминание цвета банана</td></tr>
+  <tr><td>Забывают сменку</td><td>Парашют</td><td>Сменка на верёвке опускается с потолка при входе</td></tr>
+  <tr><td>Тяжёлый рюкзак</td><td>Облако</td><td>Рюкзак с гелиевыми подушками — невесомый!</td></tr>
+  <tr><td>Душно в классе</td><td>Пингвин</td><td>Класс-холодильник с пингвином-талисманом</td></tr>
+  <tr><td>Длинная очередь</td><td>Магнит</td><td>Магнитная карточка — приложил, еда выезжает</td></tr>
+  <tr><td>Скучная домашка</td><td>Вулкан</td><td>Домашка-квест: каждое задание = этап к вершине вулкана</td></tr>
+  <tr><td>Телефон сел</td><td>Кактус</td><td>Кактус-зарядка: подключил к растению на окне — заряжает!</td></tr>
+  <tr><td>Дождь без зонта</td><td>Пружина</td><td>Пружинный козырёк в воротнике куртки — нажал, выскочил</td></tr>
+</table>
+
+<div class="explain">
+  Правила простые: я называю проблему, нажимаю кнопку — выпадает случайное слово. Ваша задача — найти связь между словом и проблемой и придумать решение. Чем абсурднее — тем лучше! Неправильных ответов нет.
+</div>
+
+<!-- ============================================= -->
+<h2><span class="slide-num">Слайд 8</span> Финал</h2>
+
+<div class="speech">
+  Вот и всё! Запомните главное: лучшие идеи рождаются из абсурда. Не бойтесь предлагать странные решения. Именно люди, которые думали «не как все», изобрели всё, чем мы пользуемся. Думайте иначе, задавайте вопросы, пробуйте абсурдное!
+</div>
+
+<div class="tip">На финальном слайде фон автоматически начнёт менять цвета — эффектная точка!</div>
+
+<!-- ===================== РАЗДАТКА ===================== -->
+<hr class="cut-line">
+
+<div class="handout">
+  <h3>🧠 Метод SCAMPER — Шпаргалка</h3>
+  <table class="scamper-table">
+    <tr><td style="color:#a855f7">S</td><td><b>Substitute</b> — Заменить. <i>Что можно заменить? Материал? Форму? Человека?</i></td></tr>
+    <tr><td style="color:#ec4899">C</td><td><b>Combine</b> — Комбинировать. <i>С чем можно объединить? Два в одном?</i></td></tr>
+    <tr><td style="color:#facc15">A</td><td><b>Adapt</b> — Адаптировать. <i>Что похожее уже существует? Как переделать под другое?</i></td></tr>
+    <tr><td style="color:#22d3ee">M</td><td><b>Modify</b> — Модифицировать. <i>Увеличить? Уменьшить? Изменить форму?</i></td></tr>
+    <tr><td style="color:#34d399">P</td><td><b>Put to other use</b> — Применить иначе. <i>Для чего ещё это можно использовать?</i></td></tr>
+    <tr><td style="color:#f97316">E</td><td><b>Eliminate</b> — Убрать. <i>Что лишнее? Без чего можно обойтись?</i></td></tr>
+    <tr><td style="color:#f472b6">R</td><td><b>Reverse</b> — Перевернуть. <i>А если наоборот? А если задом наперёд?</i></td></tr>
+  </table>
+</div>
+
+<div class="handout">
+  <h3>🎩 Решение из шляпы — Рабочий лист</h3>
+  <table>
+    <tr>
+      <th style="width:35%">Проблема</th>
+      <th style="width:25%">Случайное слово</th>
+      <th>Моя идея</th>
+    </tr>
+    <tr><td style="height:50px"></td><td></td><td></td></tr>
+    <tr><td style="height:50px"></td><td></td><td></td></tr>
+    <tr><td style="height:50px"></td><td></td><td></td></tr>
+    <tr><td style="height:50px"></td><td></td><td></td></tr>
+    <tr><td style="height:50px"></td><td></td><td></td></tr>
+  </table>
+</div>
+
+<div class="handout">
+  <h3>🛠️ Парта 2050 — Рабочий лист группы</h3>
+  <p style="text-align:center; color:#6b7280; margin-bottom:12px;">Пройдитесь по шагам SCAMPER и запишите идеи для «Парты будущего»</p>
+  <table>
+    <tr><th style="width:100px">Шаг</th><th>Наша идея</th></tr>
+    <tr><td style="height:45px"><b style="color:#a855f7">S</b> Заменить</td><td></td></tr>
+    <tr><td style="height:45px"><b style="color:#ec4899">C</b> Комбинировать</td><td></td></tr>
+    <tr><td style="height:45px"><b style="color:#facc15">A</b> Адаптировать</td><td></td></tr>
+    <tr><td style="height:45px"><b style="color:#22d3ee">M</b> Модифицировать</td><td></td></tr>
+    <tr><td style="height:45px"><b style="color:#34d399">P</b> Применить иначе</td><td></td></tr>
+    <tr><td style="height:45px"><b style="color:#f97316">E</b> Убрать лишнее</td><td></td></tr>
+    <tr><td style="height:45px"><b style="color:#f472b6">R</b> Перевернуть</td><td></td></tr>
+  </table>
+  <p style="text-align:center; margin-top:14px; font-weight:700;">Название нашей парты: ___________________________</p>
+</div>
+
+</body>
+</html>
