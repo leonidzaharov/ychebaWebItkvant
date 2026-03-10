@@ -5,37 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Взлом мозга 🧠 — Латеральное мышление</title>
 
-  <!-- Reveal.js CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
 
+  <!-- Animate.css для дополнительных анимаций -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
   <style>
-    /* ====== CUSTOM THEME ====== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
     :root {
-      --c-bg:       #0d0d1a;
-      --c-bg2:      #13132b;
+      --c-bg:       #0a0a18;
       --c-purple:   #9b5de5;
       --c-pink:     #f15bb5;
       --c-yellow:   #fee440;
       --c-cyan:     #00bbf9;
       --c-green:    #00f5d4;
       --c-text:     #f0f0ff;
-      --c-muted:    #a0a0c0;
+      --c-muted:    #8888b0;
     }
 
-    .reveal-viewport { background: var(--c-bg); }
+    .reveal-viewport {
+      background: var(--c-bg);
+      background-image:
+        radial-gradient(ellipse 800px 600px at 15% 20%, rgba(155,93,229,.12), transparent),
+        radial-gradient(ellipse 600px 500px at 85% 80%, rgba(241,91,181,.08), transparent);
+    }
 
     .reveal {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-family: 'Inter', system-ui, sans-serif;
       color: var(--c-text);
     }
 
-    /* ---- Progress & controls ---- */
-    .reveal .progress { height: 4px; color: var(--c-purple); }
-    .reveal .controls { color: var(--c-purple); }
+    /* ---- Controls ---- */
+    .reveal .progress { height: 5px; color: var(--c-pink); }
+    .reveal .controls { color: var(--c-cyan); }
+    .reveal .controls button { transition: color .3s; }
+    .reveal .controls button:hover { color: var(--c-pink) !important; }
     .reveal .slide-number { color: var(--c-muted); font-size: 14px; }
 
-    /* ---- Slide base ---- */
+    /* ---- Base slide ---- */
     .reveal .slides section {
       height: 100%;
       display: flex !important;
@@ -48,185 +57,219 @@
     }
 
     /* ---- Typography ---- */
-    .reveal h1 {
-      font-size: 2.8em;
-      font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 16px;
-      letter-spacing: -1px;
-    }
-    .reveal h2 {
-      font-size: 2em;
-      font-weight: 800;
-      margin-bottom: 20px;
-      letter-spacing: -.5px;
-    }
-    .reveal h3 { font-size: 1.4em; font-weight: 700; margin-bottom: 14px; }
+    .reveal h1 { font-size: 3em; font-weight: 900; line-height: 1.05; margin-bottom: 16px; letter-spacing: -1.5px; }
+    .reveal h2 { font-size: 2.1em; font-weight: 800; margin-bottom: 18px; letter-spacing: -.5px; }
+    .reveal h3 { font-size: 1.5em; font-weight: 700; margin-bottom: 12px; }
     .reveal p  { font-size: 1.05em; line-height: 1.55; color: var(--c-muted); margin: 8px 0; }
 
-    /* ---- Accent colours ---- */
+    /* ---- Colours ---- */
     .accent-purple { color: var(--c-purple); }
     .accent-pink   { color: var(--c-pink);   }
     .accent-yellow { color: var(--c-yellow); }
     .accent-cyan   { color: var(--c-cyan);   }
     .accent-green  { color: var(--c-green);  }
 
-    /* ---- Gradient headings ---- */
+    /* ---- Gradient heading ---- */
     .grad-title {
-      background: linear-gradient(135deg, var(--c-purple), var(--c-pink) 50%, var(--c-yellow));
-      -webkit-background-clip: text;
+      background: linear-gradient(135deg, var(--c-purple), var(--c-pink) 45%, var(--c-yellow));
+      -webkit-background-clip: text; background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
     }
 
-    /* ---- Image placeholders ---- */
+    /* ---- Images ---- */
     .slide-img {
-      width: 100%;
-      max-width: 420px;
-      max-height: 220px;
-      object-fit: cover;
-      border-radius: 18px;
-      margin: 14px auto;
-      display: block;
-      box-shadow: 0 8px 40px rgba(155,93,229,.4);
+      width: 100%; max-width: 420px; max-height: 220px;
+      object-fit: cover; border-radius: 18px;
+      margin: 14px auto; display: block;
+      box-shadow: 0 8px 40px rgba(155,93,229,.35), 0 0 80px rgba(155,93,229,.1);
+      transition: transform .5s cubic-bezier(.25,.8,.25,1), box-shadow .5s;
     }
-    /* fallback when image is missing */
-    .slide-img[src=""] , .slide-img:not([src]) {
-      background: linear-gradient(135deg, #1a1a3e, #2a1a4e);
-      height: 180px;
-    }
+    .slide-img:hover { transform: scale(1.03); box-shadow: 0 12px 50px rgba(241,91,181,.4); }
 
-    /* ---- Content cards ---- */
-    .card-row {
-      display: flex;
-      gap: 18px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
+    /* ---- Cards ---- */
+    .card-row { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
     .card {
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 16px;
-      padding: 16px 22px;
-      flex: 1 1 180px;
-      max-width: 260px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 18px;
+      padding: 18px 24px;
+      flex: 1 1 200px;
+      max-width: 280px;
       text-align: left;
+      backdrop-filter: blur(8px);
+      transition: transform .4s cubic-bezier(.25,.8,.25,1), border-color .4s, box-shadow .4s;
     }
-    .card .label {
-      font-size: .75em;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-bottom: 6px;
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(155,93,229,.4);
+      box-shadow: 0 8px 30px rgba(155,93,229,.15);
     }
-    .card p { font-size: .9em; margin: 0; color: var(--c-text); opacity: .85; }
+    .card .label { font-size: .72em; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+    .card p { font-size: .92em; margin: 0; color: var(--c-text); opacity: .85; }
 
-    /* ---- Pill badge ---- */
+    /* ---- Pill ---- */
     .pill {
-      display: inline-block;
-      padding: 4px 14px;
-      border-radius: 99px;
-      font-size: .78em;
-      font-weight: 800;
-      letter-spacing: .5px;
-      margin: 3px 4px;
+      display: inline-block; padding: 5px 16px; border-radius: 99px;
+      font-size: .78em; font-weight: 800; letter-spacing: .5px; margin: 3px 4px;
+      transition: transform .3s, box-shadow .3s;
     }
+    .pill:hover { transform: scale(1.08); }
 
     /* ---- SCAMPER list ---- */
     .scamper-list {
-      list-style: none;
-      padding: 0; margin: 0;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px 20px;
-      text-align: left;
+      list-style: none; padding: 0; margin: 0;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px 20px; text-align: left;
     }
     .scamper-list li {
-      background: rgba(255,255,255,.05);
-      border-radius: 12px;
-      padding: 10px 16px;
-      font-size: .95em;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      padding: 12px 18px; font-size: .95em;
+      transition: transform .3s, background .3s, border-color .3s;
     }
-    .scamper-list li b { font-size: 1.3em; margin-right: 6px; }
+    .scamper-list li:hover {
+      transform: translateX(6px);
+      background: rgba(155,93,229,.1);
+      border-color: rgba(155,93,229,.3);
+    }
+    .scamper-list li b { font-size: 1.4em; margin-right: 8px; }
 
-    /* ---- Reveal-answer button (Slide 3) ---- */
-    #answer-box {
-      margin-top: 14px;
-      cursor: pointer;
-      user-select: none;
-    }
+    /* ---- Answer box (Slide 3) ---- */
+    #answer-box { margin-top: 16px; }
     #answer-btn {
       background: linear-gradient(135deg, var(--c-purple), var(--c-pink));
-      border: none;
-      color: #fff;
-      font-size: 1em;
-      font-weight: 800;
-      padding: 12px 28px;
-      border-radius: 99px;
-      cursor: pointer;
-      transition: transform .15s, filter .15s;
+      border: none; color: #fff;
+      font-size: 1.05em; font-weight: 800;
+      padding: 14px 32px; border-radius: 99px; cursor: pointer;
+      transition: transform .25s cubic-bezier(.25,.8,.25,1), box-shadow .3s;
+      box-shadow: 0 4px 20px rgba(155,93,229,.3);
     }
-    #answer-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+    #answer-btn:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 30px rgba(241,91,181,.4); }
     #answer-text {
-      display: none;
-      margin-top: 12px;
-      background: rgba(0,245,212,.12);
-      border: 1px solid var(--c-green);
-      border-radius: 14px;
-      padding: 14px 24px;
-      font-size: 1.1em;
-      font-weight: 700;
-      color: var(--c-green);
+      display: none; margin-top: 14px;
+      background: rgba(0,245,212,.08);
+      border: 2px solid var(--c-green);
+      border-radius: 16px; padding: 16px 28px;
+      font-size: 1.15em; font-weight: 700; color: var(--c-green);
+      animation: bounceIn .6s;
     }
 
     /* ---- Timer (Slide 4) ---- */
-    #timer-box {
-      margin-top: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
+    #timer-box { margin-top: 14px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
     #timer-display {
-      font-size: 3em;
-      font-weight: 900;
-      color: var(--c-yellow);
-      letter-spacing: 3px;
+      font-size: 4em; font-weight: 900;
+      color: var(--c-yellow); letter-spacing: 4px;
       font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 30px rgba(254,228,64,.3);
+      transition: color .5s, text-shadow .5s;
     }
-    .timer-btn {
+    #timer-display.urgent { color: var(--c-pink); text-shadow: 0 0 40px rgba(241,91,181,.5); }
+    #timer-display.done { animation: pulse 1s infinite; }
+    #timer-hint {
+      font-size: .85em; color: var(--c-muted);
+      padding: 6px 16px; border-radius: 99px;
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+      animation: fadeInUp .8s;
+    }
+    #timer-hint.hidden-hint { display: none; }
+
+    /* lock indicator */
+    #lock-indicator {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: rgba(241,91,181,.15); border: 1px solid var(--c-pink);
+      color: var(--c-pink); font-weight: 800; font-size: .85em;
+      padding: 8px 22px; border-radius: 99px; z-index: 100;
+      display: none; backdrop-filter: blur(8px);
+      animation: fadeIn .4s;
+    }
+
+    /* ---- Buttons ---- */
+    .action-btn {
+      border: none; font-weight: 900; padding: 12px 28px;
+      border-radius: 99px; cursor: pointer; font-size: .95em;
+      transition: transform .25s cubic-bezier(.25,.8,.25,1), box-shadow .3s;
+    }
+    .action-btn:hover { transform: translateY(-3px); }
+    .btn-primary {
       background: linear-gradient(135deg, var(--c-yellow), var(--c-pink));
-      border: none;
-      color: #0d0d1a;
-      font-size: .95em;
-      font-weight: 900;
-      padding: 10px 26px;
-      border-radius: 99px;
-      cursor: pointer;
-      transition: transform .15s;
+      color: #0a0a18;
+      box-shadow: 0 4px 20px rgba(254,228,64,.25);
     }
-    .timer-btn:hover { transform: translateY(-2px); }
+    .btn-secondary {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15) !important;
+      color: var(--c-text);
+    }
+    .btn-random {
+      background: linear-gradient(135deg, var(--c-pink), var(--c-purple));
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(155,93,229,.3);
+    }
 
-    /* ---- Slide-specific backgrounds ---- */
-    .slide-1  { background: radial-gradient(ellipse at 30% 40%, #2a0d4e 0%, var(--c-bg) 65%); }
-    .slide-2  { background: radial-gradient(ellipse at 70% 30%, #0d2a4e 0%, var(--c-bg) 65%); }
-    .slide-3  { background: radial-gradient(ellipse at 50% 50%, #1a2a0d 0%, var(--c-bg) 65%); }
-    .slide-4  { background: radial-gradient(ellipse at 20% 60%, #4e2a0d 0%, var(--c-bg) 65%); }
-    .slide-5  { background: radial-gradient(ellipse at 80% 50%, #0d1a4e 0%, var(--c-bg) 65%); }
-    .slide-6  { background: radial-gradient(ellipse at 40% 30%, #2a4e0d 0%, var(--c-bg) 65%); }
-    .slide-7  { background: radial-gradient(ellipse at 60% 70%, #4e0d2a 0%, var(--c-bg) 65%); }
-    .slide-8  { background: radial-gradient(ellipse at 50% 40%, #1a0d4e 0%, var(--c-bg) 65%),
-                            radial-gradient(ellipse at 80% 80%, #4e2a0d 0%, transparent 60%); }
+    /* ---- Per-slide backgrounds ---- */
+    .slide-1 { background: radial-gradient(ellipse at 30% 35%, rgba(60,20,120,.6) 0%, transparent 55%),
+                            radial-gradient(ellipse at 75% 75%, rgba(241,91,181,.15) 0%, transparent 50%); }
+    .slide-2 { background: radial-gradient(ellipse at 70% 25%, rgba(0,187,249,.2) 0%, transparent 55%); }
+    .slide-3 { background: radial-gradient(ellipse at 50% 45%, rgba(0,245,212,.12) 0%, transparent 50%); }
+    .slide-4 { background: radial-gradient(ellipse at 25% 60%, rgba(254,228,64,.12) 0%, transparent 50%),
+                            radial-gradient(ellipse at 80% 30%, rgba(241,91,181,.1) 0%, transparent 50%); }
+    .slide-5 { background: radial-gradient(ellipse at 80% 45%, rgba(155,93,229,.18) 0%, transparent 55%); }
+    .slide-6 { background: radial-gradient(ellipse at 35% 30%, rgba(0,245,212,.12) 0%, transparent 50%); }
+    .slide-7 { background: radial-gradient(ellipse at 55% 65%, rgba(241,91,181,.15) 0%, transparent 55%); }
+    .slide-8 { background: radial-gradient(ellipse at 45% 35%, rgba(155,93,229,.2) 0%, transparent 50%),
+                            radial-gradient(ellipse at 80% 80%, rgba(254,228,64,.1) 0%, transparent 50%); }
 
-    /* ---- Emoji big ---- */
-    .big-emoji { font-size: 3em; display: block; margin-bottom: 8px; }
+    .big-emoji { font-size: 3.5em; display: block; margin-bottom: 6px; }
+    .divider { width: 70px; height: 4px; border-radius: 99px; margin: 14px auto; }
 
-    /* ---- Divider line ---- */
-    .divider {
-      width: 60px; height: 4px;
-      border-radius: 99px;
-      margin: 12px auto;
+    /* ---- Glow ring on image ---- */
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(155,93,229,.2), 0 8px 40px rgba(155,93,229,.15); }
+      50%      { box-shadow: 0 0 35px rgba(241,91,181,.3), 0 8px 50px rgba(241,91,181,.2); }
+    }
+    .glow-img { animation: glowPulse 3s ease-in-out infinite; }
+
+    /* ---- Floating animation ---- */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+    .float { animation: float 3s ease-in-out infinite; }
+
+    /* ---- Pulse ---- */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.05); }
+    }
+
+    /* ---- Typewriter for random word ---- */
+    @keyframes typeIn {
+      from { opacity: 0; transform: scale(.7) rotateX(40deg); }
+      to   { opacity: 1; transform: scale(1) rotateX(0); }
+    }
+    .word-pop { animation: typeIn .4s cubic-bezier(.25,.8,.25,1); }
+
+    /* ---- Shake (wrong answer) ---- */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    /* ---- Confetti canvas ---- */
+    #confetti-canvas {
+      position: fixed; inset: 0; z-index: 200;
+      pointer-events: none;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 600px) {
+      .reveal h1 { font-size: 2em; }
+      .reveal h2 { font-size: 1.5em; }
+      .card-row { flex-direction: column; align-items: center; }
+      .scamper-list { grid-template-columns: 1fr; }
+      #timer-display { font-size: 2.5em; }
     }
   </style>
 </head>
@@ -234,305 +277,398 @@
 <div class="reveal">
 <div class="slides">
 
-  <!-- ================================================
-       СЛАЙД 1: Титульный
-       Картинка: presentations/images/01_title.jpg
-       Что подобрать: яркий взрыв мозга, креативная лампочка или
-       абстрактный "взрыв идей" (психоделичная иллюстрация/3D-рендер).
+  <!-- ====== СЛАЙД 1: Титульный ======
+       Картинка: ./images/01_title.jpg
+       Что подобрать: яркий взрыв мозга / креативная лампочка / абстрактный "взрыв идей".
        Поищи: "brain explosion creative illustration" на Unsplash / Pinterest.
-  ================================================ -->
-  <section class="slide-1">
-    <!-- Замените src на ./images/01_title.jpg после добавления файла -->
-    <img class="slide-img" src="./images/01_title.jpg"
-         alt="Взрыв мозга — иллюстрация"
+  -->
+  <section class="slide-1" data-transition="zoom-in fade-out" data-transition-speed="slow">
+    <img class="slide-img glow-img fragment fade-in" data-fragment-index="0"
+         src="./images/01_title.jpg" alt="Взрыв мозга"
          onerror="this.style.display='none'" />
-    <h1 class="grad-title">Взлом мозга 🧠</h1>
-    <div class="divider" style="background: linear-gradient(90deg,var(--c-purple),var(--c-pink))"></div>
-    <p style="font-size:1.2em; color:var(--c-text); max-width:560px;">
+    <h1 class="grad-title fragment fade-up" data-fragment-index="1">Взлом мозга 🧠</h1>
+    <div class="divider fragment fade-up" data-fragment-index="2"
+         style="background:linear-gradient(90deg,var(--c-purple),var(--c-pink))"></div>
+    <p class="fragment fade-up" data-fragment-index="2"
+       style="font-size:1.25em; color:var(--c-text); max-width:560px;">
       Как придумывать гениальные идеи,<br>
       <span class="accent-yellow">когда ничего не лезет в голову</span>
     </p>
-    <p style="margin-top:18px; font-size:.85em;">
-      Нажимай <span class="pill" style="background:rgba(255,255,255,.1)">→</span>
-      или пробел, чтобы идти дальше
+    <p class="fragment fade-in" data-fragment-index="3"
+       style="margin-top:22px; font-size:.82em;">
+      <span class="pill" style="background:rgba(255,255,255,.08)">→ или пробел</span>
+      чтобы идти дальше
     </p>
   </section>
 
-  <!-- ================================================
-       СЛАЙД 2: Что такое латеральное мышление?
-       Картинка: presentations/images/02_lateral.jpg
+  <!-- ====== СЛАЙД 2: Что такое латеральное мышление? ======
+       Картинка: ./images/02_lateral.jpg
        Что подобрать: схема "одна глубокая яма vs много маленьких ям"
-       или мем "вертикальное vs латеральное мышление".
-       Можно нарисовать самим в Canva — это займёт 5 минут.
-  ================================================ -->
-  <section class="slide-2">
-    <h2>Что такое <span class="accent-cyan">латеральное мышление?</span></h2>
-    <img class="slide-img" src="./images/02_lateral.jpg"
-         alt="Схема двух типов мышления"
-         onerror="this.style.display='none'" />
+       или мем "вертикальное vs латеральное мышление". Можно нарисовать в Canva.
+  -->
+  <section class="slide-2" data-transition="convex" data-transition-speed="default">
+    <h2 class="fragment fade-down">Что такое <span class="accent-cyan">латеральное мышление?</span></h2>
+    <img class="slide-img fragment zoom-in" src="./images/02_lateral.jpg"
+         alt="Схема двух типов мышления" onerror="this.style.display='none'" />
     <div class="card-row">
-      <div class="card">
+      <div class="card fragment fade-right">
         <div class="label" style="color:var(--c-muted)">🔽 Вертикальное</div>
         <p>Копаем одну яму всё глубже и глубже.<br><b style="color:var(--c-text)">Логика.</b></p>
       </div>
-      <div class="card" style="border-color:rgba(0,187,249,.3); background:rgba(0,187,249,.07)">
+      <div class="card fragment fade-left" style="border-color:rgba(0,187,249,.3); background:rgba(0,187,249,.06)">
         <div class="label" style="color:var(--c-cyan)">↔️ Латеральное</div>
         <p>Копаем <b style="color:var(--c-cyan)">10 разных ям</b>, чтобы найти клад.<br><b style="color:var(--c-text)">Креатив.</b></p>
       </div>
     </div>
   </section>
 
-  <!-- ================================================
-       СЛАЙД 3: Загадка для разогрева
-       Картинка: presentations/images/03_bottle.png
+  <!-- ====== СЛАЙД 3: Загадка для разогрева ======
+       Картинка: ./images/03_bottle.png
        Что подобрать: бутылка вина с пробкой и монеткой внутри.
        Поищи "wine bottle cork riddle illustration" или нарисуй схему.
-  ================================================ -->
-  <section class="slide-3">
-    <h2>🍾 Загадка для разогрева</h2>
-    <img class="slide-img" src="./images/03_bottle.png"
-         alt="Бутылка с пробкой и монеткой"
-         onerror="this.style.display='none'" />
-    <p style="font-size:1.15em; color:var(--c-text); max-width:540px; margin: 10px auto;">
+  -->
+  <section class="slide-3" data-transition="concave" data-transition-speed="default">
+    <h2 class="fragment fade-down">🍾 Загадка для разогрева</h2>
+    <img class="slide-img fragment zoom-in" src="./images/03_bottle.png"
+         alt="Бутылка с пробкой" onerror="this.style.display='none'" />
+    <p class="fragment fade-up" style="font-size:1.15em; color:var(--c-text); max-width:540px; margin:10px auto;">
       Как достать монетку из пустой бутылки из-под вина,<br>
       <span class="accent-yellow">не вынимая пробку и не разбивая бутылку?</span>
     </p>
-
-    <div id="answer-box">
+    <div id="answer-box" class="fragment fade-up">
       <button id="answer-btn" onclick="revealAnswer()">Показать ответ 💡</button>
-      <div id="answer-text">
-        ✅ Протолкнуть пробку <b>внутрь</b> бутылки!
-      </div>
+      <div id="answer-text">✅ Протолкнуть пробку <b>внутрь</b> бутылки!</div>
     </div>
   </section>
 
-  <!-- ================================================
-       СЛАЙД 4: Игра 1 — Безумная вариативность
-       Картинка: presentations/images/04_object.jpg
-       Что подобрать: фото обычного предмета крупным планом —
-       кирпич, скрепка или пластиковый стаканчик.
-       Лучше — что-то одно конкретное, что дашь группам.
-  ================================================ -->
-  <section class="slide-4">
-    <span class="big-emoji">🎮</span>
-    <h2>Игра 1. <span class="accent-yellow">Безумная вариативность</span></h2>
-    <img class="slide-img" src="./images/04_object.jpg"
-         alt="Обычный предмет для задания"
-         onerror="this.style.display='none'" />
-    <p style="font-size:1.1em; color:var(--c-text); max-width:500px; margin: 8px auto;">
+  <!-- ====== СЛАЙД 4: Игра 1 — Безумная вариативность ======
+       ТАЙМЕР: PageDown запускает таймер.
+       Переход на следующий слайд заблокирован, пока таймер идёт.
+       Картинка: ./images/04_object.jpg
+       Что подобрать: фото обычного предмета крупным планом — кирпич, скрепка, стаканчик.
+  -->
+  <section class="slide-4" data-transition="zoom" data-transition-speed="default" id="timer-slide">
+    <span class="big-emoji float fragment fade-in">🎮</span>
+    <h2 class="fragment fade-up">Игра 1. <span class="accent-yellow">Безумная вариативность</span></h2>
+    <img class="slide-img fragment zoom-in" src="./images/04_object.jpg"
+         alt="Обычный предмет для задания" onerror="this.style.display='none'" />
+    <p class="fragment fade-up" style="font-size:1.1em; color:var(--c-text); max-width:520px; margin:8px auto;">
       Придумайте <b>как можно больше нестандартных</b><br>
       способов применения этого предмета!
     </p>
-
-    <div id="timer-box">
+    <div id="timer-box" class="fragment fade-up">
       <div id="timer-display">3:00</div>
-      <div style="display:flex; gap:10px;">
-        <button class="timer-btn" onclick="startTimer()">▶ Старт</button>
-        <button class="timer-btn" style="background:linear-gradient(135deg,#555,#333); color:#fff;"
-                onclick="resetTimer()">↺ Сброс</button>
-      </div>
+      <div id="timer-hint">Нажмите <b>PageDown</b> или <b>↓</b> чтобы запустить таймер</div>
     </div>
   </section>
 
-  <!-- ================================================
-       СЛАЙД 5: Метод SCAMPER
-       Картинка: presentations/images/05_scamper.jpg
-       Что подобрать: иллюстрация-таблица SCAMPER или
-       схема трансформации обычного предмета (кружка → термос → умная кружка).
-       Можно сделать в Canva с аббревиатурой SCAMPER.
-  ================================================ -->
-  <section class="slide-5">
-    <h2>Игра 2. Метод <span class="accent-purple">SCAMPER</span></h2>
-    <p style="margin-bottom:14px;">Формула взлома реальности 🔧</p>
+  <!-- ====== СЛАЙД 5: Метод SCAMPER ======
+       Картинка: ./images/05_scamper.jpg
+       Что подобрать: иллюстрация-таблица SCAMPER или схема трансформации предмета.
+  -->
+  <section class="slide-5" data-transition="slide-in convex-out" data-transition-speed="default">
+    <h2 class="fragment fade-down">Игра 2. Метод <span class="accent-purple">SCAMPER</span></h2>
+    <p class="fragment fade-in" style="margin-bottom:14px;">Формула взлома реальности 🔧</p>
     <ul class="scamper-list">
-      <li><b class="accent-purple">S</b> — Заменить что-то</li>
-      <li><b class="accent-pink">C</b> — Комбинировать с другим</li>
-      <li><b class="accent-yellow">A</b> — Адаптировать под новое</li>
-      <li><b class="accent-cyan">M</b> — Модифицировать / Увеличить</li>
-      <li><b class="accent-green">P</b> — Применить иначе</li>
-      <li style="grid-column: span 2; text-align:center; background: rgba(155,93,229,.15);">
+      <li class="fragment fade-right" data-fragment-index="2"><b class="accent-purple">S</b> — Заменить что-то</li>
+      <li class="fragment fade-left"  data-fragment-index="2"><b class="accent-pink">C</b> — Комбинировать с другим</li>
+      <li class="fragment fade-right" data-fragment-index="3"><b class="accent-yellow">A</b> — Адаптировать под новое</li>
+      <li class="fragment fade-left"  data-fragment-index="3"><b class="accent-cyan">M</b> — Модифицировать / Увеличить</li>
+      <li class="fragment fade-right" data-fragment-index="4"><b class="accent-green">P</b> — Применить иначе</li>
+      <li class="fragment fade-up"    data-fragment-index="5"
+          style="grid-column:span 2; text-align:center; background:rgba(155,93,229,.1); border-color:rgba(155,93,229,.25);">
         <b class="accent-purple">E</b> — Убрать лишнее &nbsp;|&nbsp;
         <b class="accent-pink">R</b> — Развернуть / Перевернуть
       </li>
     </ul>
-    <img class="slide-img" src="./images/05_scamper.jpg"
-         alt="Иллюстрация метода SCAMPER"
-         style="max-height:140px; margin-top:14px;"
+    <img class="slide-img fragment zoom-in" src="./images/05_scamper.jpg"
+         alt="SCAMPER" style="max-height:130px; margin-top:14px;"
          onerror="this.style.display='none'" />
   </section>
 
-  <!-- ================================================
-       СЛАЙД 6: Практика SCAMPER
-       Картинка: presentations/images/06_desk.jpg
-       Что подобрать: фото скучной школьной парты (желательно старой
-       советской или простой деревянной). Чем скучнее — тем лучше для контраста.
-  ================================================ -->
-  <section class="slide-6">
-    <span class="big-emoji">🛠️</span>
-    <h2>Практика <span class="accent-green">SCAMPER</span></h2>
-    <img class="slide-img" src="./images/06_desk.jpg"
-         alt="Школьная парта"
-         onerror="this.style.display='none'" />
-    <div class="card" style="max-width:480px; text-align:center; margin: 0 auto;">
-      <p style="color:var(--c-text); font-size:1.05em;">
-        Задание: прокачай <b>школьную парту</b>.<br>
-        Сделай <span class="accent-green">«Парту 2050 года»</span><br>
+  <!-- ====== СЛАЙД 6: Практика SCAMPER ======
+       Картинка: ./images/06_desk.jpg
+       Что подобрать: фото скучной школьной парты — чем скучнее, тем лучше.
+  -->
+  <section class="slide-6" data-transition="convex" data-transition-speed="default">
+    <span class="big-emoji float fragment fade-in">🛠️</span>
+    <h2 class="fragment fade-up">Практика <span class="accent-green">SCAMPER</span></h2>
+    <img class="slide-img fragment zoom-in" src="./images/06_desk.jpg"
+         alt="Школьная парта" onerror="this.style.display='none'" />
+    <div class="card fragment fade-up" style="max-width:500px; text-align:center; margin:0 auto;">
+      <p style="color:var(--c-text); font-size:1.08em;">
+        Прокачай <b>школьную парту</b>.<br>
+        Создай <span class="accent-green">«Парту 2050 года»</span><br>
         используя шаги SCAMPER.
       </p>
     </div>
-    <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
-      <span class="pill" style="background:rgba(0,245,212,.15); color:var(--c-green);">⏱ 10 минут</span>
-      <span class="pill" style="background:rgba(255,255,255,.08); color:var(--c-text);">👥 В группах</span>
-      <span class="pill" style="background:rgba(241,91,181,.15); color:var(--c-pink);">🎨 Рисуем / записываем</span>
+    <div class="fragment fade-up" style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+      <span class="pill" style="background:rgba(0,245,212,.12); color:var(--c-green); border:1px solid rgba(0,245,212,.25);">⏱ 10 минут</span>
+      <span class="pill" style="background:rgba(255,255,255,.06); color:var(--c-text); border:1px solid rgba(255,255,255,.12);">👥 В группах</span>
+      <span class="pill" style="background:rgba(241,91,181,.12); color:var(--c-pink); border:1px solid rgba(241,91,181,.25);">🎨 Рисуем / записываем</span>
     </div>
   </section>
 
-  <!-- ================================================
-       СЛАЙД 7: Игра 3 — Решение из шляпы
-       Картинка: presentations/images/07_random_word.jpg
-       Что подобрать: шляпа фокусника с вопросительным знаком или
-       колесо случайных слов / генератор слов на экране.
-       Поищи "magic hat random word generator illustration".
-  ================================================ -->
-  <section class="slide-7">
-    <span class="big-emoji">🎩</span>
-    <h2>Игра 3. <span class="accent-pink">Решение из шляпы</span></h2>
-    <img class="slide-img" src="./images/07_random_word.jpg"
-         alt="Шляпа фокусника с идеями"
-         onerror="this.style.display:'none'" />
-
-    <div class="card-row" style="margin-top:10px;">
-      <div class="card" style="text-align:center; border-color:rgba(241,91,181,.3);">
-        <div class="label" style="color:var(--c-pink)">Нерешаемая проблема</div>
+  <!-- ====== СЛАЙД 7: Игра 3 — Решение из шляпы ======
+       Картинка: ./images/07_random_word.jpg
+       Что подобрать: шляпа фокусника / генератор случайных слов.
+  -->
+  <section class="slide-7" data-transition="concave-in zoom-out" data-transition-speed="default">
+    <span class="big-emoji float fragment fade-in">🎩</span>
+    <h2 class="fragment fade-up">Игра 3. <span class="accent-pink">Решение из шляпы</span></h2>
+    <div class="card-row fragment fade-up">
+      <div class="card" style="text-align:center; border-color:rgba(241,91,181,.25);">
+        <div class="label" style="color:var(--c-pink)">Проблема</div>
         <p>«Все забывают сменку»</p>
       </div>
-      <div class="card" style="font-size:1.8em; display:flex; align-items:center;
-           justify-content:center; padding:14px; background:transparent; border:none;">+</div>
-      <div class="card" style="text-align:center; border-color:rgba(254,228,64,.3);">
+      <div style="font-size:2em; display:flex; align-items:center; color:var(--c-muted);">+</div>
+      <div class="card" style="text-align:center; border-color:rgba(254,228,64,.25);">
         <div class="label" style="color:var(--c-yellow)">Случайное слово</div>
         <p>«Банан» 🍌</p>
       </div>
-      <div class="card" style="font-size:1.8em; display:flex; align-items:center;
-           justify-content:center; padding:14px; background:transparent; border:none;">=</div>
-      <div class="card" style="text-align:center; border-color:rgba(0,245,212,.3); background:rgba(0,245,212,.07);">
-        <div class="label" style="color:var(--c-green)">Гениальная идея 💡</div>
-        <p style="font-size:.85em;">Сменка с жёлтой меткой,<br>как банановая кожура — не заметишь!</p>
+      <div style="font-size:2em; display:flex; align-items:center; color:var(--c-muted);">=</div>
+      <div class="card" style="text-align:center; border-color:rgba(0,245,212,.25); background:rgba(0,245,212,.05);">
+        <div class="label" style="color:var(--c-green)">Идея 💡</div>
+        <p style="font-size:.85em;">Жёлтая метка — не пропустишь!</p>
       </div>
     </div>
-
-    <div id="word-gen" style="margin-top:14px;">
-      <button class="timer-btn" onclick="randomWord()"
-              style="background:linear-gradient(135deg,var(--c-pink),var(--c-purple));">
-        🎲 Случайное слово
-      </button>
-      <div id="random-word-output" style="margin-top:10px; font-size:1.8em;
-           font-weight:900; color:var(--c-yellow); min-height:1.5em;"></div>
+    <div class="fragment fade-up" style="margin-top:16px;">
+      <button class="action-btn btn-random" onclick="randomWord()">🎲 Случайное слово</button>
+      <div id="random-word-output" style="margin-top:12px; font-size:2.2em;
+           font-weight:900; color:var(--c-yellow); min-height:1.6em;
+           text-shadow: 0 0 20px rgba(254,228,64,.3);"></div>
     </div>
   </section>
 
-  <!-- ================================================
-       СЛАЙД 8: Финал
-       Картинка: presentations/images/08_final.jpg
-       Что подобрать: мем про гениальность (например "big brain" meme),
-       команда победителей или позитивная иллюстрация с конфетти.
-       Поищи "big brain genius meme" или "team winner celebration illustration".
-  ================================================ -->
-  <section class="slide-8">
-    <img class="slide-img" src="./images/08_final.jpg"
-         alt="Финальная картинка про гениальность"
-         style="max-height:180px;"
-         onerror="this.style.display='none'" />
-    <h1 class="grad-title">Лучшие идеи<br>рождаются из абсурда!</h1>
-    <div class="divider" style="background:linear-gradient(90deg,var(--c-cyan),var(--c-green))"></div>
-    <p style="font-size:1.2em; color:var(--c-text); max-width:500px; margin:10px auto;">
+  <!-- ====== СЛАЙД 8: Финал ======
+       Картинка: ./images/08_final.jpg
+       Что подобрать: "big brain" мем, команда победителей с конфетти.
+  -->
+  <section class="slide-8" data-transition="zoom-in fade-out" data-transition-speed="slow" id="final-slide">
+    <img class="slide-img glow-img fragment zoom-in" src="./images/08_final.jpg"
+         alt="Гениальность" style="max-height:180px;" onerror="this.style.display='none'" />
+    <h1 class="grad-title fragment fade-up">Лучшие идеи<br>рождаются из абсурда!</h1>
+    <div class="divider fragment fade-up" style="background:linear-gradient(90deg,var(--c-cyan),var(--c-green))"></div>
+    <p class="fragment fade-up" style="font-size:1.2em; color:var(--c-text); max-width:520px; margin:10px auto;">
       Не бойтесь предлагать <span class="accent-pink">самые странные решения</span>.<br>
       Именно из них получаются инновации. 🚀
     </p>
-    <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
-      <span class="pill" style="background:rgba(155,93,229,.2); color:var(--c-purple); font-size:.9em;">🧠 Думай иначе</span>
-      <span class="pill" style="background:rgba(241,91,181,.2); color:var(--c-pink); font-size:.9em;">💡 Задавай вопросы</span>
-      <span class="pill" style="background:rgba(0,245,212,.2); color:var(--c-green); font-size:.9em;">🎲 Пробуй абсурдное</span>
+    <div class="fragment fade-up" style="margin-top:22px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+      <span class="pill" style="background:rgba(155,93,229,.15); color:var(--c-purple); border:1px solid rgba(155,93,229,.3); font-size:.9em;">🧠 Думай иначе</span>
+      <span class="pill" style="background:rgba(241,91,181,.15); color:var(--c-pink); border:1px solid rgba(241,91,181,.3); font-size:.9em;">💡 Задавай вопросы</span>
+      <span class="pill" style="background:rgba(0,245,212,.15); color:var(--c-green); border:1px solid rgba(0,245,212,.3); font-size:.9em;">🎲 Пробуй абсурдное</span>
     </div>
   </section>
 
-</div><!-- /slides -->
-</div><!-- /reveal -->
+</div>
+</div>
+
+<!-- Lock indicator -->
+<div id="lock-indicator">⏳ Таймер идёт — переход заблокирован</div>
+
+<!-- Confetti canvas -->
+<canvas id="confetti-canvas"></canvas>
 
 <!-- Reveal.js -->
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+
 <script>
-  Reveal.initialize({
-    hash: true,
-    slideNumber: 'c/t',
-    progress: true,
-    transition: 'slide',
-    transitionSpeed: 'fast',
-    backgroundTransition: 'fade',
-    controls: true,
-    controlsLayout: 'bottom-right',
-    keyboard: true,
-    overview: true,
-    center: false,
-  });
+/* =============== REVEAL INIT =============== */
+const deck = Reveal.initialize({
+  hash: true,
+  slideNumber: 'c/t',
+  progress: true,
+  transition: 'slide',
+  transitionSpeed: 'default',
+  backgroundTransition: 'zoom',
+  controls: true,
+  controlsLayout: 'bottom-right',
+  keyboard: true,
+  overview: true,
+  center: false,
+  autoAnimateEasing: 'ease-in-out',
+  autoAnimateDuration: 0.8,
+});
 
-  /* ---- Слайд 3: показать ответ ---- */
-  function revealAnswer() {
-    const btn  = document.getElementById('answer-btn');
-    const text = document.getElementById('answer-text');
-    text.style.display = 'block';
-    btn.style.display  = 'none';
+/* =============== SLIDE 3: ANSWER =============== */
+function revealAnswer() {
+  const btn  = document.getElementById('answer-btn');
+  const text = document.getElementById('answer-text');
+  text.style.display = 'block';
+  btn.style.display  = 'none';
+}
+
+/* =============== SLIDE 4: TIMER + LOCK =============== */
+let timerInterval  = null;
+let timerSeconds   = 180;
+let timerRunning   = false;
+let timerFinished  = false;
+const TIMER_SLIDE  = 3; // 0-indexed: slide #4
+
+function fmtTime(s) {
+  const m = Math.floor(s / 60);
+  return `${m}:${String(s % 60).padStart(2, '0')}`;
+}
+
+function startTimer() {
+  if (timerRunning) return;
+  timerRunning = true;
+  timerFinished = false;
+
+  const hint = document.getElementById('timer-hint');
+  if (hint) hint.classList.add('hidden-hint');
+
+  document.getElementById('lock-indicator').style.display = 'block';
+
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    const el = document.getElementById('timer-display');
+    el.textContent = fmtTime(timerSeconds);
+
+    if (timerSeconds <= 10) el.classList.add('urgent');
+
+    if (timerSeconds <= 0) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timerRunning = false;
+      timerFinished = true;
+      el.textContent = '⏰ Время вышло!';
+      el.classList.remove('urgent');
+      el.classList.add('done');
+      document.getElementById('lock-indicator').style.display = 'none';
+    }
+  }, 1000);
+}
+
+/* Intercept navigation: on timer slide, PageDown / ArrowDown / Space starts timer if not started;
+   block forward navigation while timer is running. */
+Reveal.on('slidechanged', evt => {
+  // leaving timer slide: hide lock indicator
+  if (evt.previousSlide && evt.previousSlide.id === 'timer-slide') {
+    document.getElementById('lock-indicator').style.display = 'none';
   }
-
-  /* ---- Слайд 4: таймер 3 минуты ---- */
-  let timerInterval = null;
-  let timerSeconds  = 180;
-
-  function formatTime(s) {
-    const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${m}:${String(sec).padStart(2,'0')}`;
+  // arriving at final slide: launch confetti
+  if (evt.currentSlide.id === 'final-slide') {
+    launchConfetti();
   }
+});
 
-  function startTimer() {
-    if (timerInterval) return;
-    timerInterval = setInterval(() => {
-      timerSeconds--;
-      document.getElementById('timer-display').textContent = formatTime(timerSeconds);
-      if (timerSeconds <= 10) {
-        document.getElementById('timer-display').style.color = '#f15bb5';
+/* Block forward nav while timer is running */
+document.addEventListener('keydown', e => {
+  const currentIdx = Reveal.getIndices().h;
+
+  if (currentIdx === TIMER_SLIDE) {
+    const isForward = ['ArrowRight','ArrowDown','PageDown',' '].includes(e.key);
+
+    // If all fragments are shown, next press = start timer or advance
+    if (isForward) {
+      // Check if all fragments on this slide have been shown
+      const slide = Reveal.getCurrentSlide();
+      const totalFragments = slide.querySelectorAll('.fragment').length;
+      const shownFragments = slide.querySelectorAll('.fragment.visible').length;
+      const allFragmentsShown = (shownFragments >= totalFragments);
+
+      if (allFragmentsShown && !timerRunning && !timerFinished) {
+        // Start timer instead of advancing
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        startTimer();
+        return;
       }
-      if (timerSeconds <= 0) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-        document.getElementById('timer-display').textContent = '⏰ Время!';
+      if (timerRunning) {
+        // Block navigation while timer is running
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        const lockEl = document.getElementById('lock-indicator');
+        lockEl.style.animation = 'none';
+        lockEl.offsetHeight; // reflow
+        lockEl.style.animation = 'shake .4s';
+        return;
       }
-    }, 1000);
+      // timerFinished — allow navigation
+    }
+  }
+}, true); // capture phase — before Reveal.js handles it
+
+/* =============== SLIDE 7: RANDOM WORD =============== */
+const WORDS = [
+  'Банан','Облако','Лестница','Зеркало','Носок','Пингвин',
+  'Спагетти','Парашют','Кактус','Трамплин','Шоколад','Компас',
+  'Батарейка','Вулкан','Лупа','Пропеллер','Термос','Якорь',
+  'Магнит','Скрепка','Зонтик','Фонарик','Клей','Пружина',
+  'Ластик','Мел','Верёвка','Пуговица','Воздушный шар','Бумеранг',
+  'Ложка','Подушка','Шнурок','Карандаш','Тарелка','Рюкзак'
+];
+
+function randomWord() {
+  const el = document.getElementById('random-word-output');
+  // quick shuffle animation
+  let count = 0;
+  const shuffleInterval = setInterval(() => {
+    el.textContent = WORDS[Math.floor(Math.random() * WORDS.length)];
+    el.style.opacity = '0.4';
+    count++;
+    if (count > 8) {
+      clearInterval(shuffleInterval);
+      const final = WORDS[Math.floor(Math.random() * WORDS.length)];
+      el.textContent = final;
+      el.style.opacity = '1';
+      el.className = 'word-pop';
+      setTimeout(() => el.className = '', 500);
+    }
+  }, 70);
+}
+
+/* =============== CONFETTI (final slide) =============== */
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ['#9b5de5','#f15bb5','#fee440','#00bbf9','#00f5d4'];
+  const pieces = [];
+
+  for (let i = 0; i < 120; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      w: Math.random() * 10 + 5,
+      h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      vx: (Math.random() - 0.5) * 3,
+      vy: Math.random() * 3 + 2,
+      rot: Math.random() * 360,
+      rotV: (Math.random() - 0.5) * 8,
+      opacity: 1,
+    });
   }
 
-  function resetTimer() {
-    clearInterval(timerInterval);
-    timerInterval = null;
-    timerSeconds  = 180;
-    document.getElementById('timer-display').textContent = '3:00';
-    document.getElementById('timer-display').style.color = '#fee440';
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    frame++;
+    let alive = false;
+    for (const p of pieces) {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.rotV;
+      if (frame > 120) p.opacity -= 0.01;
+      if (p.opacity <= 0) continue;
+      alive = true;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.globalAlpha = Math.max(0, p.opacity);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    }
+    if (alive) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
-
-  /* ---- Слайд 7: генератор случайного слова ---- */
-  const WORDS = [
-    'Банан','Облако','Лестница','Зеркало','Носок','Пингвин',
-    'Спагетти','Парашют','Кактус','Трамплин','Шоколад','Компас',
-    'Батарейка','Вулкан','Лупа','Пропеллер','Термос','Якорь',
-    'Магнит','Скрепка','Зонтик','Фонарик','Клей','Пружина',
-    'Ластик','Мел','Верёвка','Пуговица','Воздушный шар','Бумеранг'
-  ];
-
-  function randomWord() {
-    const w   = WORDS[Math.floor(Math.random() * WORDS.length)];
-    const el  = document.getElementById('random-word-output');
-    el.style.opacity = '0';
-    el.textContent = w;
-    setTimeout(() => { el.style.transition = 'opacity .3s'; el.style.opacity = '1'; }, 50);
-  }
+  draw();
+}
 </script>
 </body>
 </html>
