@@ -315,11 +315,6 @@
       40%, 80% { transform: translateX(8px); }
     }
 
-    /* ---- Confetti canvas ---- */
-    #confetti-canvas {
-      position: fixed; inset: 0; z-index: 200;
-      pointer-events: none;
-    }
 
     /* ---- Responsive ---- */
     @media (max-width: 600px) {
@@ -503,6 +498,11 @@
       <div id="random-word-output" style="margin-top:12px; font-size:2.2em;
            font-weight:900; color:var(--c-yellow); min-height:1.6em;
            text-shadow: 0 0 25px rgba(250,204,21,.25);"></div>
+      <p style="margin-top:14px; font-size:.75em; color:var(--c-muted);">
+        &#x1F3AE; Кликер = новое слово &nbsp;|&nbsp;
+        <a href="#" onclick="Reveal.next(); return false;"
+           style="color:var(--c-cyan); text-decoration:underline; cursor:pointer;">Дальше &#8594;</a>
+      </p>
     </div>
   </section>
 
@@ -529,8 +529,6 @@
 <!-- Lock indicator -->
 <div id="lock-indicator">&#x23F3; Таймер идёт — переход заблокирован</div>
 
-<!-- Confetti canvas -->
-<canvas id="confetti-canvas"></canvas>
 
 <!-- Three.js (required by Vanta) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
@@ -632,43 +630,61 @@ function startTimer() {
   }, 1000);
 }
 
-/* Intercept navigation on timer slide */
+/* Intercept navigation on timer slide + final slide effect */
 Reveal.on('slidechanged', function(evt) {
   if (evt.previousSlide && evt.previousSlide.id === 'timer-slide') {
     document.getElementById('lock-indicator').style.display = 'none';
   }
   if (evt.currentSlide.id === 'final-slide') {
-    launchConfetti();
+    explodeVantaColors();
+  }
+  // Reset vanta when leaving final slide
+  if (evt.previousSlide && evt.previousSlide.id === 'final-slide') {
+    resetVantaColors();
   }
 });
 
+var RANDOM_SLIDE = 6; // 0-indexed: slide #7
+
 document.addEventListener('keydown', function(e) {
   var currentIdx = Reveal.getIndices().h;
+  var isForward = ['ArrowRight','ArrowDown','PageDown',' '].indexOf(e.key) !== -1;
 
-  if (currentIdx === TIMER_SLIDE) {
-    var isForward = ['ArrowRight','ArrowDown','PageDown',' '].indexOf(e.key) !== -1;
+  /* ---- Slide 4: Timer ---- */
+  if (currentIdx === TIMER_SLIDE && isForward) {
+    var slide = Reveal.getCurrentSlide();
+    var totalFragments = slide.querySelectorAll('.fragment').length;
+    var shownFragments = slide.querySelectorAll('.fragment.visible').length;
+    var allFragmentsShown = (shownFragments >= totalFragments);
 
-    if (isForward) {
-      var slide = Reveal.getCurrentSlide();
-      var totalFragments = slide.querySelectorAll('.fragment').length;
-      var shownFragments = slide.querySelectorAll('.fragment.visible').length;
-      var allFragmentsShown = (shownFragments >= totalFragments);
+    if (allFragmentsShown && !timerRunning && !timerFinished) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      startTimer();
+      return;
+    }
+    if (timerRunning) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      var lockEl = document.getElementById('lock-indicator');
+      lockEl.style.animation = 'none';
+      lockEl.offsetHeight;
+      lockEl.style.animation = 'shake .4s';
+      return;
+    }
+  }
 
-      if (allFragmentsShown && !timerRunning && !timerFinished) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        startTimer();
-        return;
-      }
-      if (timerRunning) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        var lockEl = document.getElementById('lock-indicator');
-        lockEl.style.animation = 'none';
-        lockEl.offsetHeight;
-        lockEl.style.animation = 'shake .4s';
-        return;
-      }
+  /* ---- Slide 7: Random word via clicker (PageDown) ---- */
+  if (currentIdx === RANDOM_SLIDE && isForward) {
+    var slide7 = Reveal.getCurrentSlide();
+    var total7 = slide7.querySelectorAll('.fragment').length;
+    var shown7 = slide7.querySelectorAll('.fragment.visible').length;
+    if (shown7 >= total7) {
+      // All fragments shown — clicker triggers random word instead of advancing
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      randomWord();
+      return;
     }
   }
 }, true);
@@ -701,56 +717,45 @@ function randomWord() {
   }, 70);
 }
 
-/* =============== CONFETTI =============== */
-function launchConfetti() {
-  var canvas = document.getElementById('confetti-canvas');
-  var ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+/* =============== VANTA COLOR EXPLOSION (final slide) =============== */
+var vantaColorCycle = null;
+var originalVantaColor = 0xa855f7;
 
-  var colors = ['#a855f7','#ec4899','#facc15','#22d3ee','#34d399'];
-  var pieces = [];
+function explodeVantaColors() {
+  if (!vantaEffect) return;
+  // Cycle through vivid colors
+  var explosionColors = [0xec4899, 0xfacc15, 0x22d3ee, 0x34d399, 0xa855f7, 0xf97316, 0x8b5cf6];
+  var idx = 0;
+  // First burst: rapid color changes
+  vantaEffect.setOptions({
+    points: 18.0,
+    maxDistance: 30.0,
+    spacing: 14.0,
+    color: explosionColors[0],
+    backgroundColor: 0x0f0520,
+  });
+  vantaColorCycle = setInterval(function() {
+    idx = (idx + 1) % explosionColors.length;
+    if (vantaEffect) {
+      vantaEffect.setOptions({ color: explosionColors[idx] });
+    }
+  }, 800);
+}
 
-  for (var i = 0; i < 120; i++) {
-    pieces.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height - canvas.height,
-      w: Math.random() * 10 + 5,
-      h: Math.random() * 6 + 3,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      vx: (Math.random() - 0.5) * 3,
-      vy: Math.random() * 3 + 2,
-      rot: Math.random() * 360,
-      rotV: (Math.random() - 0.5) * 8,
-      opacity: 1,
+function resetVantaColors() {
+  if (vantaColorCycle) {
+    clearInterval(vantaColorCycle);
+    vantaColorCycle = null;
+  }
+  if (vantaEffect) {
+    vantaEffect.setOptions({
+      color: originalVantaColor,
+      backgroundColor: 0x0b0b1a,
+      points: 12.0,
+      maxDistance: 22.0,
+      spacing: 18.0,
     });
   }
-
-  var frame = 0;
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    frame++;
-    var alive = false;
-    for (var j = 0; j < pieces.length; j++) {
-      var p = pieces[j];
-      p.x += p.vx;
-      p.y += p.vy;
-      p.rot += p.rotV;
-      if (frame > 120) p.opacity -= 0.01;
-      if (p.opacity <= 0) continue;
-      alive = true;
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot * Math.PI / 180);
-      ctx.globalAlpha = Math.max(0, p.opacity);
-      ctx.fillStyle = p.color;
-      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-      ctx.restore();
-    }
-    if (alive) requestAnimationFrame(draw);
-    else ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-  draw();
 }
 </script>
 </body>
