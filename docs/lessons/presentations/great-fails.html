@@ -290,7 +290,9 @@ p,.desc{
 /* ===== PRODUCT SVG ===== */
 .product-img{
   width:clamp(180px,25vw,320px);
+  max-height:30vh;
   height:auto;
+  object-fit:contain;
   opacity:0;
   filter:drop-shadow(0 20px 40px rgba(0,0,0,0.5));
   margin:0.5rem 0;
@@ -309,15 +311,15 @@ p,.desc{
   white-space:nowrap;
   font-family:'Unbounded',sans-serif;
   font-weight:900;
-  font-size:clamp(4rem,12vw,10rem);
+  font-size:clamp(2.5rem,7vw,6rem);
   line-height:1;
   opacity:0.06;
   transform:rotate(-15deg);
   will-change:transform;
 }
-.diag-text:nth-child(1){top:5%;left:-20%}
-.diag-text:nth-child(2){top:35%;left:10%}
-.diag-text:nth-child(3){top:65%;left:-30%}
+.diag-text:nth-child(1){top:2%;left:-20%}
+.diag-text:nth-child(2){top:40%;left:10%}
+.diag-text:nth-child(3){top:75%;left:-30%}
 
 .q-content{
   position:relative;
@@ -391,15 +393,7 @@ p,.desc{
   <div class="content">
     <span class="tag anim-el" style="background:rgba(6,182,212,0.15);color:#22d3ee">Кейс #1</span>
     <h1 class="anim-el">🥽 Google Glass</h1>
-    <svg class="product-img anim-el" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
-      <defs><linearGradient id="gg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e0e0e0"/><stop offset="100%" stop-color="#a0a0a0"/></linearGradient></defs>
-      <path d="M60,80 Q60,55 90,50 L310,45 Q340,43 355,55 L370,70 Q380,80 370,90 L355,100 Q340,108 310,105 L90,100 Q60,95 60,80Z" fill="url(#gg1)" opacity="0.9"/>
-      <rect x="340" y="48" width="45" height="30" rx="6" fill="#22d3ee" opacity="0.8"/>
-      <circle cx="362" cy="63" r="8" fill="#0e7490" opacity="0.9"/>
-      <circle cx="362" cy="63" r="4" fill="#06b6d4"/>
-      <rect x="70" y="62" width="260" height="3" rx="1.5" fill="#888" opacity="0.5"/>
-      <ellipse cx="200" cy="130" rx="140" ry="8" fill="#06b6d4" opacity="0.08"/>
-    </svg>
+    <img class="product-img anim-el" src="../../img/google-glass.svg" alt="Google Glass">
     <p class="anim-el subtitle" style="color:#67e8f9">Очки будущего, которые никому не понравились</p>
     <div class="stats anim-el">
       <div class="stat"><div class="label" style="color:#67e8f9">Год</div><div class="val">2013</div></div>
@@ -446,17 +440,7 @@ p,.desc{
   <div class="content">
     <span class="tag anim-el" style="background:rgba(245,158,11,0.15);color:#fbbf24">Кейс #2</span>
     <h1 class="anim-el">🛴 Segway</h1>
-    <svg class="product-img anim-el" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-      <defs><linearGradient id="sg1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#555"/><stop offset="100%" stop-color="#222"/></linearGradient></defs>
-      <circle cx="150" cy="250" r="42" fill="none" stroke="#f59e0b" stroke-width="5" opacity="0.8"/>
-      <circle cx="150" cy="250" r="32" fill="#333"/>
-      <circle cx="150" cy="250" r="6" fill="#f59e0b"/>
-      <rect x="145" y="70" width="10" height="180" rx="5" fill="url(#sg1)"/>
-      <rect x="120" y="55" width="60" height="22" rx="11" fill="#444"/>
-      <rect x="125" y="60" width="50" height="12" rx="6" fill="#f59e0b" opacity="0.6"/>
-      <rect x="130" y="200" width="40" height="14" rx="3" fill="#555"/>
-      <ellipse cx="150" cy="292" rx="50" ry="6" fill="#f59e0b" opacity="0.06"/>
-    </svg>
+    <img class="product-img anim-el" src="../../img/segway.svg" alt="Segway">
     <p class="anim-el subtitle" style="color:#fcd34d">Транспорт будущего, который никуда не поехал</p>
     <div class="stats anim-el">
       <div class="stat"><div class="label" style="color:#fcd34d">Год</div><div class="val">2001</div></div>
@@ -582,7 +566,7 @@ p,.desc{
   <div class="orb" style="width:400px;height:400px;background:#f59e0b;bottom:-10%;right:-10%"></div>
   <div class="content">
     <h2 class="anim-el">🎮 Безумный спаситель</h2>
-    <p class="anim-el" style="opacity:0.6;font-size:1rem;max-width:600px">Назови своё слово → выпадает проблема → спаси продукт своим словом!</p>
+    <p class="anim-el" style="opacity:0.6;font-size:1rem;max-width:600px">Придумай любой предмет → выпадает безумная проблема → объясни, как твой предмет её решает!</p>
 
     <div class="fan-container" id="fanContainer"></div>
 
@@ -813,18 +797,22 @@ const cardColors = [
 ];
 
 const problemsData = [
-  { emoji: "🥽", text: "Очки Google Glass пугают людей — думают, что их снимают" },
-  { emoji: "🛴", text: "Сегвей: некуда ехать — ни тротуар, ни дорога" },
-  { emoji: "📱", text: "Телефон Amazon: от 3D-экрана болят глаза" },
-  { emoji: "🛴", text: "Сегвей стоит как мотоцикл, но выглядит нелепо" },
-  { emoji: "📱", text: "На телефоне Amazon нет нужных приложений" },
-  { emoji: "🥽", text: "Google Glass стоят $1500 — кто это купит?" },
-  { emoji: "🛴", text: "Сегвей слишком тяжёлый, чтобы носить с собой" },
-  { emoji: "📱", text: "Fire Phone: батарейка садится за 3 часа" },
-  { emoji: "🥽", text: "Google Glass выглядит странно на лице" },
-  { emoji: "🛴", text: "Для Сегвея нет парковочных стоек" },
-  { emoji: "📱", text: "Fire Phone: камера хуже, чем у конкурентов" },
-  { emoji: "🥽", text: "Google Glass: нет нормальных приложений" },
+  { emoji: "🧊", text: "Ваш продукт работает только при температуре ниже -20°C" },
+  { emoji: "👻", text: "Пользователи видят ваш продукт, но не могут объяснить друзьям, зачем он нужен" },
+  { emoji: "🦑", text: "Ваш конкурент — гигантский кальмар (серьёзно, он выпустил аналог)" },
+  { emoji: "🔮", text: "Продукт предсказывает будущее, но только по вторникам" },
+  { emoji: "🎭", text: "Каждый пользователь хочет уникальный дизайн — и грозит судом, если не получит" },
+  { emoji: "🌋", text: "Ваш склад находится на вулкане, и он вот-вот проснётся" },
+  { emoji: "🐈", text: "Коты массово воруют ваш продукт с полок магазинов" },
+  { emoji: "⏳", text: "Продукт исчезает через 24 часа после покупки (буквально)" },
+  { emoji: "🪐", text: "Единственные фанаты живут на МКС — 7 человек" },
+  { emoji: "🎪", text: "Продукт идеален, но его можно использовать только стоя на одной ноге" },
+  { emoji: "🧲", text: "Ваш продукт намагничивает всё в радиусе 3 метров" },
+  { emoji: "🦜", text: "Попугаи научились идеально копировать голосовое управление вашего продукта" },
+  { emoji: "🌙", text: "Продукт работает только ночью, а ваша аудитория — жаворонки" },
+  { emoji: "🎰", text: "Цена меняется каждый час по алгоритму, который никто не понимает" },
+  { emoji: "🧪", text: "При контакте с водой продукт начинает светиться и петь оперу" },
+  { emoji: "🗿", text: "Инструкция написана на древнеегипетском — и это фича, а не баг" },
 ];
 
 let shuffledProblems = [];
