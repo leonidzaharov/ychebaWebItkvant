@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Великие провалы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:hidden}
+body{
+  font-family:'Nunito',sans-serif;
+  background:#08080f;
+  color:#e8e8f0;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ===== PANELS ===== */
+.panel{
+  position:relative;
+  width:100vw;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  padding:3rem 2rem;
+}
+
+/* ===== FLOATING ORBs ===== */
+.orb{
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  filter:blur(80px);
+  opacity:0;
+  will-change:transform,opacity;
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1{
+  font-family:'Unbounded',sans-serif;
+  font-weight:900;
+  font-size:clamp(2.8rem,7vw,6rem);
+  line-height:1.05;
+  letter-spacing:-0.03em;
+}
+h2{
+  font-family:'Unbounded',sans-serif;
+  font-weight:700;
+  font-size:clamp(1.6rem,4vw,3rem);
+  line-height:1.15;
+}
+h3{
+  font-family:'Unbounded',sans-serif;
+  font-weight:700;
+  font-size:clamp(1.1rem,2vw,1.5rem);
+}
+p,.desc{
+  font-size:clamp(1rem,1.6vw,1.25rem);
+  line-height:1.7;
+  max-width:700px;
+  opacity:0.8;
+}
+.tag{
+  display:inline-block;
+  padding:6px 20px;
+  border-radius:999px;
+  font-family:'Unbounded',sans-serif;
+  font-weight:700;
+  font-size:0.8rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  margin-bottom:0.8rem;
+}
+.subtitle{
+  font-size:clamp(1rem,2vw,1.4rem);
+  font-style:italic;
+  opacity:0.5;
+}
+
+/* ===== CONTENT ===== */
+.content{
+  position:relative;z-index:2;
+  max-width:1000px;width:100%;
+  display:flex;flex-direction:column;
+  align-items:center;gap:1.5rem;
+  text-align:center;
+}
+
+/* ===== STAT BLOCKS ===== */
+.stats{
+  display:flex;gap:1.5rem;flex-wrap:wrap;
+  justify-content:center;
+}
+.stat{
+  text-align:center;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  padding:1.2rem 2.5rem;
+}
+.stat .val{
+  font-family:'Unbounded',sans-serif;
+  font-weight:900;
+  font-size:clamp(1.8rem,3vw,2.5rem);
+}
+.stat .label{
+  font-size:0.7rem;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  opacity:0.4;
+  margin-bottom:0.3rem;
+}
+
+/* ===== PROBLEM ITEMS ===== */
+.problems{
+  width:100%;max-width:750px;
+  display:flex;flex-direction:column;gap:0.7rem;
+  text-align:left;
+}
+.problem-item{
+  display:flex;align-items:center;gap:1rem;
+  padding:1rem 1.5rem;
+  border-radius:14px;
+  opacity:0;
+  transform:translateX(-40px);
+}
+.problem-item .idx{
+  font-family:'Unbounded',sans-serif;
+  font-weight:900;font-size:1.6rem;
+  opacity:0.25;flex-shrink:0;
+  width:2rem;text-align:center;
+}
+
+/* ===== THREE-COLUMN CARDS ===== */
+.trio{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1.2rem;width:100%;max-width:900px;
+}
+.trio-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:18px;
+  padding:2rem 1.5rem;
+  text-align:left;
+  opacity:0;
+  transform:translateY(60px);
+}
+.trio-card .emoji{font-size:2.2rem;margin-bottom:0.8rem}
+.trio-card h3{margin-bottom:0.5rem}
+.trio-card p{font-size:0.95rem;opacity:0.65}
+
+/* ===== LESSON ROWS ===== */
+.lessons{
+  width:100%;max-width:800px;
+  display:flex;flex-direction:column;gap:1rem;
+  text-align:left;
+}
+.lesson{
+  display:flex;align-items:flex-start;gap:1.2rem;
+  padding:1.4rem 1.8rem;
+  border-radius:16px;
+  opacity:0;transform:translateY(40px);
+}
+.lesson .lnum{
+  font-family:'Unbounded',sans-serif;
+  font-weight:900;font-size:2.2rem;
+  flex-shrink:0;line-height:1;
+  opacity:0.7;
+}
+
+/* ===== FAN CARDS (game) ===== */
+.fan-container{
+  position:relative;
+  width:100%;max-width:800px;
+  height:420px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:1rem auto;
+}
+.fan-card{
+  position:absolute;
+  width:280px;
+  height:380px;
+  border-radius:20px;
+  padding:2rem 1.5rem;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-family:'Unbounded',sans-serif;
+  cursor:pointer;
+  transform-origin:bottom center;
+  box-shadow:0 15px 40px rgba(0,0,0,0.5);
+  transition:box-shadow 0.3s;
+  user-select:none;
+  backface-visibility:hidden;
+}
+.fan-card:hover{box-shadow:0 20px 60px rgba(0,0,0,0.6)}
+.fan-card .card-emoji{font-size:3.5rem;margin-bottom:1rem}
+.fan-card .card-text{
+  font-weight:700;
+  font-size:1rem;
+  line-height:1.4;
+  color:#111;
+}
+.fan-card .card-num{
+  position:absolute;
+  top:14px;right:18px;
+  font-size:0.75rem;
+  font-weight:900;
+  opacity:0.3;
+}
+.fan-card .card-label{
+  position:absolute;
+  top:14px;left:18px;
+  font-size:0.55rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  opacity:0.5;
+}
+
+.game-controls{
+  display:flex;gap:1rem;justify-content:center;
+  flex-wrap:wrap;margin-top:0.5rem;
+}
+.btn{
+  font-family:'Unbounded',sans-serif;
+  font-weight:700;
+  font-size:0.85rem;
+  padding:14px 36px;
+  border:none;border-radius:14px;
+  cursor:pointer;
+  transition:all 0.25s;
+  letter-spacing:0.03em;
+}
+.btn-glow{
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  color:#fff;
+  box-shadow:0 4px 24px rgba(124,58,237,0.4);
+}
+.btn-glow:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 8px 36px rgba(124,58,237,0.5)}
+.btn-ghost{
+  background:rgba(255,255,255,0.06);
+  color:#e8e8f0;
+  border:1px solid rgba(255,255,255,0.1);
+}
+.btn-ghost:hover{background:rgba(255,255,255,0.1)}
+
+.game-counter{
+  font-family:'Unbounded',sans-serif;
+  font-weight:700;font-size:0.75rem;
+  color:#f59e0b;margin-top:0.5rem;
+}
+
+/* ===== SLIDE COUNTER ===== */
+.slide-counter{
+  position:fixed;
+  bottom:28px;left:40px;
+  font-family:'Unbounded',sans-serif;
+  font-weight:700;
+  font-size:0.7rem;
+  letter-spacing:0.1em;
+  opacity:0.2;
+  z-index:100;
+}
+
+
+/* ===== BGs ===== */
+.bg-title{background:#08080f}
+.bg-intro{background:linear-gradient(160deg,#0d1117 0%,#111827 100%)}
+.bg-gg{background:linear-gradient(160deg,#071620 0%,#0c2a38 100%)}
+.bg-sg{background:linear-gradient(160deg,#1a110a 0%,#2a1c10 100%)}
+.bg-fp{background:linear-gradient(160deg,#1a0a0a 0%,#2a1010 100%)}
+.bg-lessons{background:linear-gradient(160deg,#0a1a10 0%,#102a18 100%)}
+.bg-game{background:radial-gradient(ellipse at 50% 40%,#1e1145 0%,#08080f 70%)}
+.bg-final{background:linear-gradient(160deg,#0a0a20 0%,#1a1a40 100%)}
+
+/* ===== PRODUCT SVG ===== */
+.product-img{
+  width:clamp(180px,25vw,320px);
+  height:auto;
+  opacity:0;
+  filter:drop-shadow(0 20px 40px rgba(0,0,0,0.5));
+  margin:0.5rem 0;
+}
+
+/* ===== DIAGONAL SCROLL TEXT (question slides) ===== */
+.diag-wrap{
+  position:absolute;
+  top:0;left:0;right:0;bottom:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:1;
+}
+.diag-text{
+  position:absolute;
+  white-space:nowrap;
+  font-family:'Unbounded',sans-serif;
+  font-weight:900;
+  font-size:clamp(4rem,12vw,10rem);
+  line-height:1;
+  opacity:0.06;
+  transform:rotate(-15deg);
+  will-change:transform;
+}
+.diag-text:nth-child(1){top:5%;left:-20%}
+.diag-text:nth-child(2){top:35%;left:10%}
+.diag-text:nth-child(3){top:65%;left:-30%}
+
+.q-content{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:1.5rem;
+  text-align:center;
+  max-width:800px;
+}
+
+@media(max-width:768px){
+  .fan-card{width:200px;height:280px;padding:1.2rem 1rem}
+  .fan-card .card-emoji{font-size:2.5rem}
+  .fan-card .card-text{font-size:0.85rem}
+  .fan-container{height:320px}
+  .trio{grid-template-columns:1fr}
+  .stats{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<div class="slide-counter" id="slideCounter">001</div>
+
+<!-- ===== 1. TITLE ===== -->
+<section class="panel bg-title" id="s1">
+  <div class="orb" style="width:600px;height:600px;background:#7c3aed;top:-10%;left:-10%"></div>
+  <div class="orb" style="width:500px;height:500px;background:#a855f7;bottom:-15%;right:-10%"></div>
+  <div class="orb" style="width:300px;height:300px;background:#06b6d4;bottom:10%;left:5%"></div>
+  <div class="content">
+    <div class="anim-el" style="font-size:5rem">⚠️</div>
+    <h1 class="anim-el">ВЕЛИКИЕ<br>ПРОВАЛЫ</h1>
+    <p class="anim-el subtitle">Почему крутые идеи не взлетели?</p>
+    <p class="anim-el" style="font-size:0.85rem;opacity:0.2;margin-top:3rem">Основы проектной деятельности · 2026</p>
+  </div>
+</section>
+
+<!-- ===== 2. ЗАЧЕМ ===== -->
+<section class="panel bg-intro" id="s2">
+  <div class="orb" style="width:400px;height:400px;background:#7c3aed;top:5%;right:-5%"></div>
+  <div class="orb" style="width:300px;height:300px;background:#06b6d4;bottom:5%;left:-5%"></div>
+  <div class="content">
+    <h2 class="anim-el">🔍 Зачем изучать провалы?</h2>
+    <div class="trio">
+      <div class="trio-card">
+        <div class="emoji">💡</div>
+        <h3>Учиться на ошибках</h3>
+        <p>Чужие ошибки — бесплатный урок. Умные люди тоже ошибаются!</p>
+      </div>
+      <div class="trio-card">
+        <div class="emoji">🚀</div>
+        <h3>Понять, что важно</h3>
+        <p>Крутая технология ≠ нужный продукт. Главное — решать реальную проблему.</p>
+      </div>
+      <div class="trio-card">
+        <div class="emoji">✅</div>
+        <h3>Свой проект — лучше</h3>
+        <p>Зная ловушки, вы их обойдёте в своих проектах.</p>
+      </div>
+    </div>
+    <p class="anim-el" style="color:#f59e0b;font-weight:800;font-style:italic">Сегодня мы — детективы продуктов!</p>
+  </div>
+</section>
+
+<!-- ===== 3. GOOGLE GLASS ===== -->
+<section class="panel bg-gg" id="s3">
+  <div class="orb" style="width:500px;height:500px;background:#06b6d4;top:-5%;right:-10%"></div>
+  <div class="orb" style="width:300px;height:300px;background:#0891b2;bottom:5%;left:-5%"></div>
+  <div class="content">
+    <span class="tag anim-el" style="background:rgba(6,182,212,0.15);color:#22d3ee">Кейс #1</span>
+    <h1 class="anim-el">🥽 Google Glass</h1>
+    <svg class="product-img anim-el" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="gg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e0e0e0"/><stop offset="100%" stop-color="#a0a0a0"/></linearGradient></defs>
+      <path d="M60,80 Q60,55 90,50 L310,45 Q340,43 355,55 L370,70 Q380,80 370,90 L355,100 Q340,108 310,105 L90,100 Q60,95 60,80Z" fill="url(#gg1)" opacity="0.9"/>
+      <rect x="340" y="48" width="45" height="30" rx="6" fill="#22d3ee" opacity="0.8"/>
+      <circle cx="362" cy="63" r="8" fill="#0e7490" opacity="0.9"/>
+      <circle cx="362" cy="63" r="4" fill="#06b6d4"/>
+      <rect x="70" y="62" width="260" height="3" rx="1.5" fill="#888" opacity="0.5"/>
+      <ellipse cx="200" cy="130" rx="140" ry="8" fill="#06b6d4" opacity="0.08"/>
+    </svg>
+    <p class="anim-el subtitle" style="color:#67e8f9">Очки будущего, которые никому не понравились</p>
+    <div class="stats anim-el">
+      <div class="stat"><div class="label" style="color:#67e8f9">Год</div><div class="val">2013</div></div>
+      <div class="stat"><div class="label" style="color:#67e8f9">Цена</div><div class="val">$1 500</div></div>
+      <div class="stat"><div class="label" style="color:#67e8f9">Компания</div><div class="val">Google</div></div>
+    </div>
+    <p class="anim-el">Очки со встроенным компьютером: видео, интернет, подсказки прямо перед глазами. Звучит как фантастика!</p>
+  </div>
+</section>
+
+<!-- ===== 4. GG ПРОБЛЕМЫ ===== -->
+<section class="panel bg-gg" id="s4">
+  <div class="orb" style="width:400px;height:400px;background:#f43f5e;top:0;right:-5%"></div>
+  <div class="content">
+    <h2 class="anim-el" style="color:#f43f5e">⚠️ Что пошло не так?</h2>
+    <div class="problems">
+      <div class="problem-item" style="background:rgba(244,63,94,0.07);border-left:4px solid #f43f5e"><span class="idx">1</span><span>Люди боялись, что их тайно снимают на камеру</span></div>
+      <div class="problem-item" style="background:rgba(244,63,94,0.07);border-left:4px solid #f43f5e"><span class="idx">2</span><span>Тех, кто носил очки, называли «Glassholes»</span></div>
+      <div class="problem-item" style="background:rgba(244,63,94,0.07);border-left:4px solid #f43f5e"><span class="idx">3</span><span>В кафе и кинотеатрах вешали таблички «Google Glass запрещены»</span></div>
+      <div class="problem-item" style="background:rgba(244,63,94,0.07);border-left:4px solid #f43f5e"><span class="idx">4</span><span>Люди не хотели сидеть рядом с человеком в этих очках</span></div>
+    </div>
+    <p class="anim-el" style="color:#fca5a5;font-weight:700;margin-top:0.5rem">Итог: Google свернул проект</p>
+  </div>
+</section>
+
+<!-- ===== 5. GG ВОПРОС ===== -->
+<section class="panel bg-gg" id="s5">
+  <div class="orb" style="width:600px;height:600px;background:#06b6d4;top:10%;left:20%"></div>
+  <div class="diag-wrap">
+    <div class="diag-text dt-gg" style="color:#22d3ee">Что бы вы изменили?</div>
+    <div class="diag-text dt-gg" style="color:#22d3ee">Как убрать страх?</div>
+    <div class="diag-text dt-gg" style="color:#22d3ee">Google Glass</div>
+  </div>
+  <div class="q-content">
+    <h2 class="anim-el" style="color:#fbbf24;font-size:clamp(2rem,5vw,4rem)">Как думаете?</h2>
+    <p class="anim-el" style="font-size:clamp(1.2rem,2.5vw,1.8rem);opacity:1;max-width:700px">Что бы вы изменили в Google Glass, чтобы люди не боялись?</p>
+  </div>
+</section>
+
+<!-- ===== 6. SEGWAY ===== -->
+<section class="panel bg-sg" id="s6">
+  <div class="orb" style="width:450px;height:450px;background:#f59e0b;top:-5%;left:-8%"></div>
+  <div class="orb" style="width:300px;height:300px;background:#d97706;bottom:5%;right:-5%"></div>
+  <div class="content">
+    <span class="tag anim-el" style="background:rgba(245,158,11,0.15);color:#fbbf24">Кейс #2</span>
+    <h1 class="anim-el">🛴 Segway</h1>
+    <svg class="product-img anim-el" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="sg1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#555"/><stop offset="100%" stop-color="#222"/></linearGradient></defs>
+      <circle cx="150" cy="250" r="42" fill="none" stroke="#f59e0b" stroke-width="5" opacity="0.8"/>
+      <circle cx="150" cy="250" r="32" fill="#333"/>
+      <circle cx="150" cy="250" r="6" fill="#f59e0b"/>
+      <rect x="145" y="70" width="10" height="180" rx="5" fill="url(#sg1)"/>
+      <rect x="120" y="55" width="60" height="22" rx="11" fill="#444"/>
+      <rect x="125" y="60" width="50" height="12" rx="6" fill="#f59e0b" opacity="0.6"/>
+      <rect x="130" y="200" width="40" height="14" rx="3" fill="#555"/>
+      <ellipse cx="150" cy="292" rx="50" ry="6" fill="#f59e0b" opacity="0.06"/>
+    </svg>
+    <p class="anim-el subtitle" style="color:#fcd34d">Транспорт будущего, который никуда не поехал</p>
+    <div class="stats anim-el">
+      <div class="stat"><div class="label" style="color:#fcd34d">Год</div><div class="val">2001</div></div>
+      <div class="stat"><div class="label" style="color:#fcd34d">Цена</div><div class="val">$5 000</div></div>
+      <div class="stat"><div class="label" style="color:#fcd34d">Создатель</div><div class="val">Дин Кеймен</div></div>
+    </div>
+    <p class="anim-el">До презентации ходили безумные слухи: «Это изменит города!», «Люди перестанут ходить пешком!»</p>
+  </div>
+</section>
+
+<!-- ===== 7. SEGWAY ПРОБЛЕМЫ ===== -->
+<section class="panel bg-sg" id="s7">
+  <div class="orb" style="width:400px;height:400px;background:#f43f5e;bottom:0;right:-5%"></div>
+  <div class="content">
+    <h2 class="anim-el" style="color:#f43f5e">⚠️ Что пошло не так?</h2>
+    <div class="problems">
+      <div class="problem-item" style="background:rgba(245,158,11,0.07);border-left:4px solid #f59e0b"><span class="idx">1</span><span>Человек на Сегвее выглядел нелепо</span></div>
+      <div class="problem-item" style="background:rgba(245,158,11,0.07);border-left:4px solid #f59e0b"><span class="idx">2</span><span>По тротуару — мешаешь пешеходам</span></div>
+      <div class="problem-item" style="background:rgba(245,158,11,0.07);border-left:4px solid #f59e0b"><span class="idx">3</span><span>По дороге — страшно рядом с машинами</span></div>
+      <div class="problem-item" style="background:rgba(245,158,11,0.07);border-left:4px solid #f59e0b"><span class="idx">4</span><span>Сегвеи остались у охранников и турист-гидов</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 8. SEGWAY ВОПРОС ===== -->
+<section class="panel bg-sg" id="s8">
+  <div class="orb" style="width:600px;height:600px;background:#f59e0b;top:10%;left:20%"></div>
+  <div class="diag-wrap">
+    <div class="diag-text dt-sg" style="color:#fbbf24">Для кого идеален?</div>
+    <div class="diag-text dt-sg" style="color:#fbbf24">Где использовать?</div>
+    <div class="diag-text dt-sg" style="color:#fbbf24">Segway</div>
+  </div>
+  <div class="q-content">
+    <h2 class="anim-el" style="color:#fbbf24;font-size:clamp(2rem,5vw,4rem)">Как думаете?</h2>
+    <p class="anim-el" style="font-size:clamp(1.2rem,2.5vw,1.8rem);opacity:1;max-width:700px">Для КОГО этот транспорт идеален? ГДЕ его использовать?</p>
+  </div>
+</section>
+
+<!-- ===== 9. FIRE PHONE ===== -->
+<section class="panel bg-fp" id="s9">
+  <div class="orb" style="width:500px;height:500px;background:#f43f5e;top:-5%;right:-8%"></div>
+  <div class="orb" style="width:300px;height:300px;background:#dc2626;bottom:5%;left:-5%"></div>
+  <div class="content">
+    <span class="tag anim-el" style="background:rgba(244,63,94,0.15);color:#fb7185">Кейс #3</span>
+    <h1 class="anim-el">📱 Fire Phone</h1>
+    <svg class="product-img anim-el" viewBox="0 0 200 340" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="fp1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#1a1a1a"/><stop offset="100%" stop-color="#111"/></linearGradient></defs>
+      <rect x="30" y="10" width="140" height="280" rx="18" fill="url(#fp1)" stroke="#333" stroke-width="2"/>
+      <rect x="40" y="40" width="120" height="200" rx="4" fill="#f43f5e" opacity="0.15"/>
+      <text x="100" y="150" text-anchor="middle" font-family="Unbounded,sans-serif" font-weight="900" font-size="28" fill="#f43f5e" opacity="0.7">3D</text>
+      <circle cx="100" cy="265" r="12" fill="none" stroke="#444" stroke-width="2"/>
+      <rect x="80" y="22" width="40" height="4" rx="2" fill="#333"/>
+      <rect x="42" y="42" width="116" height="2" fill="#f43f5e" opacity="0.3"/>
+      <rect x="42" y="80" width="116" height="1" fill="#f43f5e" opacity="0.15"/>
+      <rect x="42" y="120" width="116" height="1" fill="#f43f5e" opacity="0.15"/>
+      <rect x="42" y="160" width="116" height="1" fill="#f43f5e" opacity="0.15"/>
+      <ellipse cx="100" cy="300" rx="60" ry="6" fill="#f43f5e" opacity="0.06"/>
+    </svg>
+    <p class="anim-el subtitle" style="color:#fca5a5">3D-телефон, от которого болели глаза</p>
+    <div class="stats anim-el">
+      <div class="stat"><div class="label" style="color:#fca5a5">Год</div><div class="val">2014</div></div>
+      <div class="stat"><div class="label" style="color:#fca5a5">Убыток</div><div class="val">$170 млн</div></div>
+      <div class="stat"><div class="label" style="color:#fca5a5">Компания</div><div class="val">Amazon</div></div>
+    </div>
+    <p class="anim-el">Amazon решил: «Сделаем свой телефон!» Главная фишка — 3D-экран, картинка как бы выпрыгивает.</p>
+  </div>
+</section>
+
+<!-- ===== 10. FP ПРОБЛЕМЫ ===== -->
+<section class="panel bg-fp" id="s10">
+  <div class="orb" style="width:400px;height:400px;background:#f43f5e;top:0;left:-5%"></div>
+  <div class="content">
+    <h2 class="anim-el" style="color:#f43f5e">⚠️ Что пошло не так?</h2>
+    <div class="problems">
+      <div class="problem-item" style="background:rgba(244,63,94,0.07);border-left:4px solid #f43f5e"><span class="idx">1</span><span>От 3D-экрана болели глаза</span></div>
+      <div class="problem-item" style="background:rgba(244,63,94,0.07);border-left:4px solid #f43f5e"><span class="idx">2</span><span>Батарейка садилась моментально</span></div>
+      <div class="problem-item" style="background:rgba(244,63,94,0.07);border-left:4px solid #f43f5e"><span class="idx">3</span><span>Стоил как iPhone, но приложений в разы меньше</span></div>
+      <div class="problem-item" style="background:rgba(244,63,94,0.07);border-left:4px solid #f43f5e"><span class="idx">4</span><span>Amazon потерял $170 млн и снял телефон через год</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 11. FP ВОПРОС ===== -->
+<section class="panel bg-fp" id="s11">
+  <div class="orb" style="width:600px;height:600px;background:#f43f5e;top:10%;left:20%"></div>
+  <div class="diag-wrap">
+    <div class="diag-text dt-fp" style="color:#fb7185">Что оставить?</div>
+    <div class="diag-text dt-fp" style="color:#fb7185">Что убрать?</div>
+    <div class="diag-text dt-fp" style="color:#fb7185">Fire Phone</div>
+  </div>
+  <div class="q-content">
+    <h2 class="anim-el" style="color:#fbbf24;font-size:clamp(2rem,5vw,4rem)">Как думаете?</h2>
+    <p class="anim-el" style="font-size:clamp(1.2rem,2.5vw,1.8rem);opacity:1;max-width:700px">Вы — советники главы Amazon ДО запуска. Что оставить? Что убрать? Что добавить?</p>
+  </div>
+</section>
+
+<!-- ===== 12. 3 УРОКА ===== -->
+<section class="panel bg-lessons" id="s12">
+  <div class="orb" style="width:400px;height:400px;background:#10b981;top:-5%;left:-5%"></div>
+  <div class="orb" style="width:300px;height:300px;background:#059669;bottom:-5%;right:-5%"></div>
+  <div class="content">
+    <h2 class="anim-el">💡 3 урока из провалов</h2>
+    <div class="lessons">
+      <div class="lesson" style="background:rgba(16,185,129,0.08)">
+        <span class="lnum" style="color:#34d399">1</span>
+        <div><h3>Делай для кого-то конкретного</h3><p style="opacity:0.6;font-size:0.95rem">Не «для всех», а для человека с конкретной проблемой</p></div>
+      </div>
+      <div class="lesson" style="background:rgba(245,158,11,0.08)">
+        <span class="lnum" style="color:#fbbf24">2</span>
+        <div><h3>Спроси людей ДО запуска</h3><p style="opacity:0.6;font-size:0.95rem">Тестируй идею раньше, чем потратишь кучу денег</p></div>
+      </div>
+      <div class="lesson" style="background:rgba(96,165,250,0.08)">
+        <span class="lnum" style="color:#60a5fa">3</span>
+        <div><h3>Крутая технология ≠ нужный продукт</h3><p style="opacity:0.6;font-size:0.95rem">Важно решать реальную проблему, а не просто быть «вау»</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 13. GAME — FAN CARDS ===== -->
+<section class="panel bg-game" id="s13" style="padding-top:2rem">
+  <div class="orb" style="width:500px;height:500px;background:#7c3aed;top:-10%;left:-10%"></div>
+  <div class="orb" style="width:400px;height:400px;background:#f59e0b;bottom:-10%;right:-10%"></div>
+  <div class="content">
+    <h2 class="anim-el">🎮 Безумный спаситель</h2>
+    <p class="anim-el" style="opacity:0.6;font-size:1rem;max-width:600px">Назови своё слово → выпадает проблема → спаси продукт своим словом!</p>
+
+    <div class="fan-container" id="fanContainer"></div>
+
+    <div class="game-controls">
+      <button class="btn btn-glow" onclick="dealCard()">🎲 Выдать карточку</button>
+      <button class="btn btn-ghost" onclick="resetFan()">🔄 Заново</button>
+    </div>
+    <div class="game-counter" id="gameCounter"></div>
+  </div>
+</section>
+
+<!-- ===== 14. FINAL ===== -->
+<section class="panel bg-final" id="s14">
+  <div class="orb" style="width:600px;height:600px;background:#7c3aed;top:5%;left:15%"></div>
+  <div class="orb" style="width:300px;height:300px;background:#06b6d4;bottom:10%;right:10%"></div>
+  <div class="content">
+    <div class="anim-el" style="font-size:4.5rem">⭐</div>
+    <h2 class="anim-el">А теперь про ваш проект</h2>
+    <p class="anim-el" style="color:#fbbf24;font-weight:800">Подумайте:</p>
+    <div class="lessons" style="max-width:550px">
+      <div class="lesson" style="background:rgba(124,58,237,0.08)">
+        <span style="font-size:1.5rem">😊</span>
+        <h3 style="font-size:1.05rem">Кто ваш пользователь?</h3>
+      </div>
+      <div class="lesson" style="background:rgba(124,58,237,0.08)">
+        <span style="font-size:1.5rem">🎯</span>
+        <h3 style="font-size:1.05rem">Какую его проблему вы решаете?</h3>
+      </div>
+      <div class="lesson" style="background:rgba(124,58,237,0.08)">
+        <span style="font-size:1.5rem">🚧</span>
+        <h3 style="font-size:1.05rem">Не попадёте в ловушку, как Google или Amazon?</h3>
+      </div>
+    </div>
+    <p class="anim-el" style="opacity:0.2;font-style:italic;margin-top:2rem">Спасибо за урок!</p>
+  </div>
+</section>
+
+<script>
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+// ===== PANELS & NAVIGATION =====
+const panels = document.querySelectorAll('.panel');
+const totalPanels = panels.length;
+let currentPanel = 0;
+let isScrolling = false;
+
+function updateCounter() {
+  document.getElementById('slideCounter').textContent = String(currentPanel + 1).padStart(3, '0');
+}
+
+function goToPanel(idx) {
+  if (idx < 0 || idx >= totalPanels || isScrolling) return;
+  isScrolling = true;
+  currentPanel = idx;
+  updateCounter();
+  gsap.to(window, {
+    scrollTo: { y: panels[idx], autoKill: false },
+    duration: 1,
+    ease: "power3.inOut",
+    onComplete: () => { isScrolling = false; }
+  });
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if (e.key === 'PageDown' || e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+    // If on game slide, deal card instead
+    if (currentPanel === 12 && !isCardAnimating) {
+      e.preventDefault();
+      dealCard();
+      return;
+    }
+    e.preventDefault();
+    goToPanel(currentPanel + 1);
+  } else if (e.key === 'PageUp' || e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    goToPanel(currentPanel - 1);
+  }
+});
+
+// Mouse wheel
+let wheelTimeout;
+window.addEventListener('wheel', e => {
+  e.preventDefault();
+  clearTimeout(wheelTimeout);
+  wheelTimeout = setTimeout(() => {
+    if (e.deltaY > 30) {
+      if (currentPanel === 12 && !isCardAnimating) { dealCard(); return; }
+      goToPanel(currentPanel + 1);
+    } else if (e.deltaY < -30) {
+      goToPanel(currentPanel - 1);
+    }
+  }, 80);
+}, { passive: false });
+
+// ===== ORB PARALLAX on mouse =====
+const orbs = document.querySelectorAll('.orb');
+document.addEventListener('mousemove', e => {
+  const mx = (e.clientX / window.innerWidth - 0.5) * 2;
+  const my = (e.clientY / window.innerHeight - 0.5) * 2;
+  orbs.forEach((orb, i) => {
+    const speed = 15 + (i % 3) * 10;
+    gsap.to(orb, {
+      x: mx * speed,
+      y: my * speed,
+      duration: 1.2,
+      ease: "power2.out"
+    });
+  });
+});
+
+// ===== SCROLL-TRIGGERED ANIMATIONS =====
+panels.forEach((panel, idx) => {
+  // Orb fade in
+  const panelOrbs = panel.querySelectorAll('.orb');
+  panelOrbs.forEach(orb => {
+    gsap.to(orb, {
+      opacity: 0.3,
+      duration: 1.5,
+      scrollTrigger: { trigger: panel, start: "top 80%", end: "top 20%", scrub: 1 }
+    });
+  });
+
+  // Anim elements stagger
+  const animEls = panel.querySelectorAll('.anim-el');
+  if (animEls.length) {
+    gsap.from(animEls, {
+      y: 60, opacity: 0,
+      duration: 0.8,
+      stagger: 0.15,
+      ease: "power3.out",
+      scrollTrigger: { trigger: panel, start: "top 60%", toggleActions: "play none none reverse" }
+    });
+  }
+
+  // Trio cards
+  const trioCards = panel.querySelectorAll('.trio-card');
+  if (trioCards.length) {
+    gsap.to(trioCards, {
+      y: 0, opacity: 1,
+      duration: 0.7,
+      stagger: 0.12,
+      ease: "power3.out",
+      scrollTrigger: { trigger: panel, start: "top 50%", toggleActions: "play none none reverse" }
+    });
+  }
+
+  // Problem items
+  const probs = panel.querySelectorAll('.problem-item');
+  if (probs.length) {
+    gsap.to(probs, {
+      x: 0, opacity: 1,
+      duration: 0.6,
+      stagger: 0.1,
+      ease: "power3.out",
+      scrollTrigger: { trigger: panel, start: "top 50%", toggleActions: "play none none reverse" }
+    });
+  }
+
+  // Lesson rows
+  const lessons = panel.querySelectorAll('.lesson');
+  if (lessons.length) {
+    gsap.to(lessons, {
+      y: 0, opacity: 1,
+      duration: 0.7,
+      stagger: 0.12,
+      ease: "power3.out",
+      scrollTrigger: { trigger: panel, start: "top 50%", toggleActions: "play none none reverse" }
+    });
+  }
+});
+
+// ===== PRODUCT IMAGES fade in =====
+document.querySelectorAll('.product-img').forEach(img => {
+  gsap.to(img, {
+    opacity: 1,
+    y: 0,
+    duration: 1,
+    ease: "power3.out",
+    scrollTrigger: { trigger: img, start: "top 80%", toggleActions: "play none none reverse" }
+  });
+  gsap.from(img, { y: 30 });
+});
+
+// ===== DIAGONAL SCROLLING TEXT on question slides =====
+// Google Glass
+gsap.utils.toArray('.dt-gg').forEach((el, i) => {
+  gsap.fromTo(el, 
+    { x: i % 2 === 0 ? '-30%' : '20%', opacity: 0 },
+    { x: i % 2 === 0 ? '10%' : '-20%', opacity: 0.07,
+      scrollTrigger: { trigger: el.closest('.panel'), start: "top bottom", end: "bottom top", scrub: 1.5 }
+    }
+  );
+});
+// Segway
+gsap.utils.toArray('.dt-sg').forEach((el, i) => {
+  gsap.fromTo(el,
+    { x: i % 2 === 0 ? '-30%' : '20%', opacity: 0 },
+    { x: i % 2 === 0 ? '10%' : '-20%', opacity: 0.07,
+      scrollTrigger: { trigger: el.closest('.panel'), start: "top bottom", end: "bottom top", scrub: 1.5 }
+    }
+  );
+});
+// Fire Phone
+gsap.utils.toArray('.dt-fp').forEach((el, i) => {
+  gsap.fromTo(el,
+    { x: i % 2 === 0 ? '-30%' : '20%', opacity: 0 },
+    { x: i % 2 === 0 ? '10%' : '-20%', opacity: 0.07,
+      scrollTrigger: { trigger: el.closest('.panel'), start: "top bottom", end: "bottom top", scrub: 1.5 }
+    }
+  );
+});
+
+// ===== FAN CARD GAME =====
+const cardColors = [
+  { bg: '#f43f5e', text: '#fff' },
+  { bg: '#fb923c', text: '#111' },
+  { bg: '#fbbf24', text: '#111' },
+  { bg: '#a3e635', text: '#111' },
+  { bg: '#34d399', text: '#111' },
+  { bg: '#22d3ee', text: '#111' },
+  { bg: '#818cf8', text: '#fff' },
+  { bg: '#f472b6', text: '#111' },
+  { bg: '#f87171', text: '#fff' },
+  { bg: '#38bdf8', text: '#111' },
+  { bg: '#a78bfa', text: '#fff' },
+  { bg: '#fb7185', text: '#fff' },
+];
+
+const problemsData = [
+  { emoji: "🥽", text: "Очки Google Glass пугают людей — думают, что их снимают" },
+  { emoji: "🛴", text: "Сегвей: некуда ехать — ни тротуар, ни дорога" },
+  { emoji: "📱", text: "Телефон Amazon: от 3D-экрана болят глаза" },
+  { emoji: "🛴", text: "Сегвей стоит как мотоцикл, но выглядит нелепо" },
+  { emoji: "📱", text: "На телефоне Amazon нет нужных приложений" },
+  { emoji: "🥽", text: "Google Glass стоят $1500 — кто это купит?" },
+  { emoji: "🛴", text: "Сегвей слишком тяжёлый, чтобы носить с собой" },
+  { emoji: "📱", text: "Fire Phone: батарейка садится за 3 часа" },
+  { emoji: "🥽", text: "Google Glass выглядит странно на лице" },
+  { emoji: "🛴", text: "Для Сегвея нет парковочных стоек" },
+  { emoji: "📱", text: "Fire Phone: камера хуже, чем у конкурентов" },
+  { emoji: "🥽", text: "Google Glass: нет нормальных приложений" },
+];
+
+let shuffledProblems = [];
+let dealtCount = 0;
+let isCardAnimating = false;
+const fanContainer = document.getElementById('fanContainer');
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function resetFan() {
+  fanContainer.innerHTML = '';
+  shuffledProblems = shuffle(problemsData);
+  dealtCount = 0;
+  updateGameCounter();
+}
+
+function updateGameCounter() {
+  const el = document.getElementById('gameCounter');
+  el.textContent = dealtCount > 0 ? `Выдано: ${dealtCount} / ${problemsData.length}` : '';
+}
+
+function dealCard() {
+  if (isCardAnimating) return;
+  if (shuffledProblems.length === 0) {
+    shuffledProblems = shuffle(problemsData);
+    dealtCount = 0;
+    fanContainer.innerHTML = '';
+  }
+
+  isCardAnimating = true;
+  const problem = shuffledProblems.pop();
+  dealtCount++;
+  const colorIdx = (dealtCount - 1) % cardColors.length;
+  const color = cardColors[colorIdx];
+
+  const card = document.createElement('div');
+  card.className = 'fan-card';
+  card.style.background = color.bg;
+  card.style.color = color.text;
+  card.innerHTML = `
+    <span class="card-label">Проблема</span>
+    <span class="card-num">#${String(dealtCount).padStart(2,'0')}</span>
+    <div class="card-emoji">${problem.emoji}</div>
+    <div class="card-text">${problem.text}</div>
+  `;
+
+  fanContainer.appendChild(card);
+
+  // Calculate fan position
+  const existingCards = fanContainer.querySelectorAll('.fan-card');
+  const total = existingCards.length;
+
+  // Re-layout all cards in fan
+  const maxAngle = Math.min(total * 8, 45);
+  const startAngle = -maxAngle / 2;
+  const step = total > 1 ? maxAngle / (total - 1) : 0;
+
+  existingCards.forEach((c, i) => {
+    const angle = total === 1 ? 0 : startAngle + step * i;
+    const xOffset = total === 1 ? 0 : (i - (total - 1) / 2) * 30;
+    gsap.to(c, {
+      rotation: angle,
+      x: xOffset,
+      duration: 0.6,
+      ease: "back.out(1.2)"
+    });
+  });
+
+  // Animate new card entrance
+  gsap.fromTo(card, {
+    y: 300,
+    opacity: 0,
+    scale: 0.7,
+    rotation: 20
+  }, {
+    y: 0,
+    opacity: 1,
+    scale: 1,
+    duration: 0.7,
+    ease: "back.out(1.5)",
+    onComplete: () => {
+      isCardAnimating = false;
+      updateGameCounter();
+    }
+  });
+}
+
+// Init game
+resetFan();
+
+// ===== SYNC CURRENT PANEL with scroll position =====
+panels.forEach((panel, idx) => {
+  ScrollTrigger.create({
+    trigger: panel,
+    start: "top center",
+    end: "bottom center",
+    onEnter: () => { currentPanel = idx; updateCounter(); },
+    onEnterBack: () => { currentPanel = idx; updateCounter(); },
+  });
+});
+</script>
+</body>
+</html>
