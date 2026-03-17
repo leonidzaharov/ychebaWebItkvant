@@ -729,14 +729,14 @@ panels.forEach((panel, idx) => {
 
 // ===== PRODUCT IMAGES fade in =====
 document.querySelectorAll('.product-img').forEach(img => {
+  gsap.set(img, { y: 30 });
   gsap.to(img, {
     opacity: 1,
     y: 0,
     duration: 1,
     ease: "power3.out",
-    scrollTrigger: { trigger: img, start: "top 80%", toggleActions: "play none none reverse" }
+    scrollTrigger: { trigger: img, start: "top 85%", toggleActions: "play none play reverse" }
   });
-  gsap.from(img, { y: 30 });
 });
 
 // ===== DIAGONAL SCROLLING TEXT on question slides =====
